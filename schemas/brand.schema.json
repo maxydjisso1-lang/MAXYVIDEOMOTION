@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/brand.schema.json",
+  "title": "Brand DNA",
+  "description": "Machine-readable brand identity. Consumed by every skill that makes a visual, motion, caption or audio decision.",
+  "type": "object",
+  "required": ["schemaVersion", "name", "identity", "visual", "motion", "caption", "audio"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "identity": {
+      "type": "object",
+      "required": ["primaryColors", "fonts", "logo"],
+      "additionalProperties": false,
+      "properties": {
+        "primaryColors": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "$ref": "#/$defs/colorToken" } },
+        "secondaryColors": { "type": "array", "maxItems": 6, "items": { "$ref": "#/$defs/colorToken" } },
+        "accentColors": { "type": "array", "maxItems": 4, "items": { "$ref": "#/$defs/colorToken" } },
+        "neutrals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "background": { "$ref": "common.schema.json#/$defs/hexColor" },
+            "foreground": { "$ref": "common.schema.json#/$defs/hexColor" },
+            "muted": { "$ref": "common.schema.json#/$defs/hexColor" }
+          }
+        },
+        "fonts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/font" } },
+        "logo": { "$ref": "#/$defs/logo" }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "required": ["contrast", "radius", "shadows", "composition"],
+      "additionalProperties": false,
+      "properties": {
+        "contrast": { "enum": ["low", "medium", "high"] },
+        "radius": { "type": "number", "minimum": 0, "maximum": 200, "description": "Corner radius in px at 1080p reference height." },
+        "shadows": { "enum": ["none", "soft", "hard", "glow"] },
+        "composition": { "enum": ["centered", "asymmetric", "grid", "editorial"] },
+        "shapes": { "enum": ["none", "line", "block", "pill", "circle"], "default": "block" },
+        "density": { "enum": ["airy", "balanced", "dense"], "default": "balanced" },
+        "texture": { "enum": ["clean", "grain", "paper", "noise"], "default": "clean" }
+      }
+    },
+    "grade": {
+      "type": "object",
+      "description": "Brand look applied AFTER technical color correction.",
+      "additionalProperties": false,
+      "properties": {
+        "look": { "enum": ["natural", "warm", "cool", "filmic", "high-contrast", "muted", "vibrant", "mono"], "default": "natural" },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.5 },
+        "saturation": { "$ref": "common.schema.json#/$defs/unit" },
+        "warmth": { "$ref": "common.schema.json#/$defs/unit" },
+        "lut": { "$ref": "common.schema.json#/$defs/relPath" },
+        "protectSkinTones": { "type": "boolean", "default": true }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": ["speed", "easing", "amplitude", "transitionStyle"],
+      "additionalProperties": false,
+      "properties": {
+        "speed": { "enum": ["slow", "medium", "fast"] },
+        "easing": {
+          "oneOf": [
+            { "enum": ["linear", "standard", "emphasized", "decelerate", "spring-soft", "spring-snappy", "bounce"] },
+            { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4, "description": "cubic-bezier(x1,y1,x2,y2)" }
+          ]
+        },
+        "amplitude": { "enum": ["subtle", "moderate", "bold"] },
+        "transitionStyle": { "enum": ["cut", "fade", "slide", "wipe", "mask", "zoom", "blur"] },
+        "energy": { "type": "number", "minimum": 0, "maximum": 1, "description": "0 = still/minimal, 1 = kinetic. Drives stagger, overshoot and secondary motion." },
+        "personality": { "type": "array", "maxItems": 6, "items": { "type": "string", "maxLength": 30 }, "description": "Free keywords, e.g. 'precise', 'playful', 'luxurious'." }
+      }
+    },
+    "caption": {
+      "type": "object",
+      "required": ["font", "position", "highlightColor", "animation"],
+      "additionalProperties": false,
+      "properties": {
+        "font": { "type": "string", "description": "Font role ('display'|'body'|'caption') or explicit family name." },
+        "weight": { "type": "integer", "minimum": 100, "maximum": 900, "default": 700 },
+        "sizeScale": { "type": "number", "minimum": 0.5, "maximum": 2, "default": 1 },
+        "position": { "enum": ["bottom", "center", "lower-third", "auto"] },
+        "textColor": { "$ref": "common.schema.json#/$defs/hexColor" },
+        "highlightColor": { "$ref": "common.schema.json#/$defs/hexColor" },
+        "background": { "enum": ["none", "box", "shadow", "stroke"], "default": "shadow" },
+        "case": { "enum": ["as-spoken", "sentence", "upper"], "default": "as-spoken" },
+        "animation": { "enum": ["none", "fade", "pop", "karaoke", "word-by-word", "slide"] },
+        "emphasisStyle": { "enum": ["color", "scale", "box", "underline", "weight"], "default": "color" },
+        "maxWordsPerLine": { "type": "integer", "minimum": 1, "maximum": 12, "default": 5 },
+        "maxLines": { "type": "integer", "minimum": 1, "maximum": 3, "default": 2 }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "required": ["energy", "voiceStyle"],
+      "additionalProperties": false,
+      "properties": {
+        "energy": { "enum": ["calm", "moderate", "high"] },
+        "voiceStyle": { "type": "string", "maxLength": 200 },
+        "musicMoods": { "type": "array", "items": { "type": "string" } },
+        "sonicLogo": { "$ref": "common.schema.json#/$defs/relPath" }
+      }
+    },
+    "tone": {
+      "type": "object",
+      "description": "Verbal identity used when Claude writes on-screen copy (titles, CTA).",
+      "additionalProperties": false,
+      "properties": {
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "do": { "type": "array", "items": { "type": "string" } },
+        "dont": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Map of JSON pointer (e.g. '/motion/speed') to where the value came from.",
+      "additionalProperties": { "$ref": "common.schema.json#/$defs/provenance" }
+    }
+  },
+  "$defs": {
+    "colorToken": {
+      "type": "object",
+      "required": ["hex"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "hex": { "$ref": "common.schema.json#/$defs/hexColor" },
+        "usage": { "type": "string", "description": "e.g. 'backgrounds', 'CTA only', 'never on text'" }
+      }
+    },
+    "font": {
+      "type": "object",
+      "required": ["role", "family"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["display", "body", "caption", "mono"] },
+        "family": { "type": "string" },
+        "weights": { "type": "array", "items": { "type": "integer", "minimum": 100, "maximum": 900 } },
+        "source": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "enum": ["file", "google", "system"] },
+            "path": { "$ref": "common.schema.json#/$defs/relPath" }
+          }
+        },
+        "fallback": { "type": "string", "description": "Google Font used if the brand font is unavailable or unlicensed." }
+      }
+    },
+    "logo": {
+      "type": "object",
+      "required": ["primary"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "$ref": "common.schema.json#/$defs/relPath" },
+        "monochrome": { "$ref": "common.schema.json#/$defs/relPath" },
+        "icon": { "$ref": "common.schema.json#/$defs/relPath" },
+        "clearSpace": { "type": "number", "minimum": 0, "description": "Minimum clear space as a fraction of logo height." },
+        "minHeightPx": { "type": "integer", "minimum": 1, "description": "At 1080p reference height." },
+        "allowedBackgrounds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/hexColor" } },
+        "watermark": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "anchor": { "$ref": "common.schema.json#/$defs/anchor" },
+            "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

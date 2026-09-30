@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0",
+  "name": "Volt Street",
+  "identity": {
+    "primaryColors": [{ "name": "Night", "hex": "#0A0A0A" }],
+    "secondaryColors": [{ "name": "Concrete", "hex": "#2B2B2B" }],
+    "accentColors": [{ "name": "Volt", "hex": "#39FF14", "usage": "highlights, CTA, emphasis" }, { "name": "Hot Pink", "hex": "#FF2E88", "usage": "secondary accent, sparingly" }],
+    "neutrals": { "background": "#0A0A0A", "foreground": "#FFFFFF", "muted": "#9A9A9A" },
+    "fonts": [
+      { "role": "display", "family": "Anton", "weights": [400], "source": { "kind": "google" } },
+      { "role": "body", "family": "Space Grotesk", "weights": [500, 700], "source": { "kind": "google" } },
+      { "role": "caption", "family": "Montserrat", "weights": [800], "source": { "kind": "google" } }
+    ],
+    "logo": { "primary": "assets/logo/volt.png", "icon": "assets/logo/volt-icon.png", "clearSpace": 0.25, "minHeightPx": 64, "allowedBackgrounds": ["#0A0A0A", "#39FF14"] }
+  },
+  "visual": { "contrast": "high", "radius": 48, "shadows": "glow", "composition": "asymmetric", "shapes": "pill", "density": "dense", "texture": "noise" },
+  "grade": { "look": "vibrant", "intensity": 0.6, "saturation": 0.25, "warmth": -0.05, "protectSkinTones": true },
+  "motion": { "speed": "fast", "easing": "spring-snappy", "amplitude": "bold", "transitionStyle": "zoom", "energy": 0.9, "personality": ["playful", "loud", "urban"] },
+  "caption": {
+    "font": "caption", "weight": 800, "sizeScale": 1.2, "position": "center", "textColor": "#FFFFFF", "highlightColor": "#39FF14",
+    "background": "stroke", "case": "upper", "animation": "pop", "emphasisStyle": "scale", "maxWordsPerLine": 3, "maxLines": 2
+  },
+  "audio": { "energy": "high", "voiceStyle": "direct, tutoiement, rythmé", "musicMoods": ["trap", "drill", "electro"] },
+  "tone": { "keywords": ["street", "énergie", "communauté"], "do": ["tutoiement", "verbes d'action"], "dont": ["jargon corporate"] },
+  "provenance": {
+    "/identity/accentColors": { "source": "extracted", "confidence": 0.95, "evidence": "Logo PNG dominant non-black cluster" },
+    "/motion": { "source": "inferred", "confidence": 0.8, "evidence": "Tagline 'on fait bouger la street', neon palette, past campaign reels cut on beat" }
+  }
+}

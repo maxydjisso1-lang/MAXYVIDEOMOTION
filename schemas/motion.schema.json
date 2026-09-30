@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/motion.schema.json",
+  "title": "Motion graphics",
+  "description": "Instances of brand motion components on the output timeline. Visual style (colors, fonts, easing, speed, amplitude, shapes) is NOT stored here: it is derived from Brand DNA at render time, so changing the brand restyles every instance.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "instances"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "$ref": "common.schema.json#/$defs/schemaVersion"
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/instance"
+      }
+    }
+  },
+  "$defs": {
+    "componentName": {
+      "enum": [
+        "BrandIntro",
+        "BrandOutro",
+        "LogoReveal",
+        "Title",
+        "Subtitle",
+        "LowerThird",
+        "CTA",
+        "Quote",
+        "Statistic",
+        "ProductReveal",
+        "FeatureCard",
+        "Callout",
+        "Transition",
+        "Watermark"
+      ]
+    },
+    "instance": {
+      "type": "object",
+      "required": [
+        "id",
+        "component",
+        "start",
+        "durationSec",
+        "props"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "component": {
+          "$ref": "#/$defs/componentName"
+        },
+        "start": {
+          "$ref": "common.schema.json#/$defs/seconds"
+        },
+        "durationSec": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 60
+        },
+        "layer": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20,
+          "default": 1
+        },
+        "anchor": {
+          "$ref": "common.schema.json#/$defs/anchor",
+          "default": "auto"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "description": "Restrict to some targets; omitted = all."
+        },
+        "variant": {
+          "type": "string",
+          "description": "Optional component variant; default is chosen from Brand DNA."
+        },
+        "tokenOverrides": {
+          "type": "object",
+          "description": "Local deviation from Brand DNA motion tokens. QC reports every override.",
+          "additionalProperties": false,
+          "properties": {
+            "speed": {
+              "enum": [
+                "slow",
+                "medium",
+                "fast"
+              ]
+            },
+            "amplitude": {
+              "enum": [
+                "subtle",
+                "moderate",
+                "bold"
+              ]
+            },
+            "colorRole": {
+              "enum": [
+                "primary",
+                "secondary",
+                "accent",
+                "neutral"
+              ]
+            }
+          }
+        },
+        "props": {
+          "type": "object"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 200
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "Title"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsTitle"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "Subtitle"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsTitle"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "LowerThird"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsLowerThird"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "CTA"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsCta"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "Quote"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsQuote"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "Statistic"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsStatistic"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "FeatureCard"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsFeatureCard"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "Callout"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsCallout"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component": {
+                "const": "ProductReveal"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/propsProductReveal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "propsTitle": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "kicker": {
+          "type": "string",
+          "maxLength": 40
+        }
+      }
+    },
+    "propsLowerThird": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 60
+        }
+      }
+    },
+    "propsCta": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "subtext": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "showLogo": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "propsQuote": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 60
+        }
+      }
+    },
+    "propsStatistic": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "suffix": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "decimals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    },
+    "propsFeatureCard": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "iconAssetId": {
+          "type": "string"
+        }
+      }
+    },
+    "propsCallout": {
+      "type": "object",
+      "required": [
+        "text",
+        "x",
+        "y"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "propsProductReveal": {
+      "type": "object",
+      "required": [
+        "imageAssetId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "imageAssetId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "price": {
+          "type": "string",
+          "maxLength": 20
+        }
+      }
+    }
+  }
+}

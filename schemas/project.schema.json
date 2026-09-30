@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/project.schema.json",
+  "title": "Project manifest",
+  "description": "Root of a post-production project. Registers sources/assets, points to the current documents and tracks versions and exports. Source media are referenced, never modified.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "createdAt", "engineVersion", "sources", "documents", "targets", "versioning"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "name": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "engineVersion": { "type": "string" },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "description": "User brief, verbatim." },
+        "objective": { "enum": ["awareness", "conversion", "education", "engagement", "recruitment", "other"] },
+        "audience": { "type": "string" },
+        "tone": { "type": "string" },
+        "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+        "targetDurationSec": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" }, "default": [] },
+    "documents": {
+      "type": "object",
+      "description": "Working-copy paths of the mutable documents. Snapshotted on every version.",
+      "additionalProperties": false,
+      "properties": {
+        "brand": { "$ref": "common.schema.json#/$defs/relPath" },
+        "analysis": { "$ref": "common.schema.json#/$defs/relPath" },
+        "transcript": { "$ref": "common.schema.json#/$defs/relPath" },
+        "plan": { "$ref": "common.schema.json#/$defs/relPath" },
+        "timeline": { "$ref": "common.schema.json#/$defs/relPath" },
+        "color": { "$ref": "common.schema.json#/$defs/relPath" },
+        "audio": { "$ref": "common.schema.json#/$defs/relPath" },
+        "captions": { "$ref": "common.schema.json#/$defs/relPath" },
+        "motion": { "$ref": "common.schema.json#/$defs/relPath" }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "description": "Output formats to produce. Each references a preset in presets/.",
+      "items": {
+        "type": "object",
+        "required": ["id", "preset"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "preset": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$", "description": "e.g. 'instagram/reels', 'youtube/landscape'" },
+          "overrides": { "type": "object", "description": "Shallow overrides of preset fields (e.g. maxDurationSec)." }
+        }
+      }
+    },
+    "versioning": {
+      "type": "object",
+      "required": ["head"],
+      "additionalProperties": false,
+      "properties": {
+        "head": { "type": "string", "pattern": "^v[0-9]{4}$" },
+        "autoCommit": { "type": "boolean", "default": true }
+      }
+    },
+    "exports": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "targetId", "version", "path", "sha256", "createdAt", "qcReport"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "targetId": { "$ref": "common.schema.json#/$defs/id" },
+          "version": { "type": "string", "pattern": "^v[0-9]{4}$" },
+          "path": { "$ref": "common.schema.json#/$defs/relPath" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "qcReport": { "$ref": "common.schema.json#/$defs/relPath" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["id", "path", "sha256", "bytes", "probe"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "path": { "$ref": "common.schema.json#/$defs/relPath", "description": "Usually under source/. Read-only." },
+        "originalPath": { "type": "string", "description": "Informational: where the user file came from." },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "role": { "enum": ["a-roll", "b-roll", "music", "voiceover", "other"], "default": "a-roll" },
+        "probe": { "$ref": "#/$defs/probe" },
+        "mezzanine": { "$ref": "common.schema.json#/$defs/relPath", "description": "Constant-frame-rate, edit-friendly copy used by the engine when the source is VFR or long-GOP." },
+        "proxy": { "$ref": "common.schema.json#/$defs/relPath", "description": "Low-res copy used for analysis and previews." }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "required": ["durationSec", "hasVideo", "hasAudio"],
+      "additionalProperties": false,
+      "properties": {
+        "durationSec": { "type": "number", "minimum": 0 },
+        "hasVideo": { "type": "boolean" },
+        "hasAudio": { "type": "boolean" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "rotation": { "type": "integer", "enum": [0, 90, 180, 270, -90, -180, -270] },
+        "fps": { "type": "number" },
+        "fpsMode": { "enum": ["cfr", "vfr"] },
+        "videoCodec": { "type": "string" },
+        "pixFmt": { "type": "string" },
+        "colorSpace": { "type": "string" },
+        "colorTransfer": { "type": "string" },
+        "bitDepth": { "type": "integer" },
+        "audioCodec": { "type": "string" },
+        "sampleRate": { "type": "integer" },
+        "channels": { "type": "integer" }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "kind", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "kind": { "enum": ["logo", "image", "font", "music", "sfx", "lut", "video", "brandbook", "reference"] },
+        "path": { "$ref": "common.schema.json#/$defs/relPath" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "license": { "type": "string", "description": "License / usage rights. QC warns on missing license for music and fonts." }
+      }
+    }
+  }
+}

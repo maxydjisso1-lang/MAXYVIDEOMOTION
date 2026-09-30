@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/transcript.schema.json",
+  "title": "Transcript",
+  "description": "Word-level transcript in SOURCE time. Captions are derived from it by remapping through the timeline.",
+  "type": "object",
+  "required": ["schemaVersion", "language", "model", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "language": { "type": "string" },
+    "model": { "type": "string", "description": "e.g. 'faster-whisper/large-v3'" },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "segments"],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": { "$ref": "common.schema.json#/$defs/id" },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "start", "end", "text", "words"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "$ref": "common.schema.json#/$defs/id" },
+                "start": { "$ref": "common.schema.json#/$defs/seconds" },
+                "end": { "$ref": "common.schema.json#/$defs/seconds" },
+                "text": { "type": "string" },
+                "speaker": { "type": "string" },
+                "words": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["w", "start", "end"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "w": { "type": "string" },
+                      "start": { "$ref": "common.schema.json#/$defs/seconds" },
+                      "end": { "$ref": "common.schema.json#/$defs/seconds" },
+                      "p": { "type": "number", "minimum": 0, "maximum": 1, "description": "Confidence." },
+                      "filler": { "type": "boolean", "description": "Hesitation ('euh', 'um', 'du coup'...)." }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

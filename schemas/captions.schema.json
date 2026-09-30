@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/captions.schema.json",
+  "title": "Captions",
+  "description": "Segmented, emphasis-tagged captions in OUTPUT (timeline) time. Style resolves from Brand DNA unless overridden. Layout is resolved per target at render time against safe zones.",
+  "type": "object",
+  "required": ["schemaVersion", "language", "cues"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "language": { "type": "string" },
+    "renderer": { "enum": ["remotion", "ass"], "default": "remotion", "description": "'ass' = libass fallback (fast, fewer animations)." },
+    "styleOverrides": { "type": "object", "description": "Partial Brand DNA 'caption' object." },
+    "cues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "start", "end", "words"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "start": { "$ref": "common.schema.json#/$defs/seconds" },
+          "end": { "$ref": "common.schema.json#/$defs/seconds" },
+          "words": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["text", "start", "end"],
+              "additionalProperties": false,
+              "properties": {
+                "text": { "type": "string" },
+                "start": { "$ref": "common.schema.json#/$defs/seconds" },
+                "end": { "$ref": "common.schema.json#/$defs/seconds" },
+                "emphasis": { "enum": ["none", "strong", "key"], "default": "none" },
+                "lineBreakAfter": { "type": "boolean", "default": false }
+              }
+            }
+          },
+          "anchor": { "$ref": "common.schema.json#/$defs/anchor" },
+          "hidden": { "type": "boolean", "default": false, "description": "e.g. hidden while a full-screen Title is on." }
+        }
+      }
+    }
+  }
+}

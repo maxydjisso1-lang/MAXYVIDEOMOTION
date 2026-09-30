@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/qc-report.schema.json",
+  "title": "QC report",
+  "description": "Result of quality-control on one rendered target. Any failed check with severity 'blocker' makes status 'fail' and prevents export.",
+  "type": "object",
+  "required": ["schemaVersion", "targetId", "version", "createdAt", "renderPath", "status", "categories"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "targetId": { "$ref": "common.schema.json#/$defs/id" },
+    "version": { "type": "string", "pattern": "^v[0-9]{4}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "renderPath": { "$ref": "common.schema.json#/$defs/relPath" },
+    "status": { "enum": ["pass", "warn", "fail"] },
+    "categories": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "technical": { "$ref": "#/$defs/category" },
+        "audio": { "$ref": "#/$defs/category" },
+        "captions": { "$ref": "#/$defs/category" },
+        "color": { "$ref": "#/$defs/category" },
+        "brand": { "$ref": "#/$defs/category" },
+        "motion": { "$ref": "#/$defs/category" },
+        "export": { "$ref": "#/$defs/category" }
+      }
+    }
+  },
+  "$defs": {
+    "category": {
+      "type": "object",
+      "required": ["status", "checks"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["pass", "warn", "fail", "skip"] },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "status", "severity", "message"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "description": "e.g. 'technical.resolution', 'audio.loudness', 'captions.safe-zone'" },
+              "status": { "enum": ["pass", "warn", "fail", "skip"] },
+              "severity": { "enum": ["blocker", "major", "minor", "info"] },
+              "message": { "type": "string" },
+              "expected": {},
+              "measured": {},
+              "at": { "$ref": "common.schema.json#/$defs/timeRange" },
+              "fix": { "type": "string", "description": "Suggested remediation (skill + command)." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

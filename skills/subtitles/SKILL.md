@@ -1,0 +1,59 @@
+---
+name: subtitles
+description: Generate brand-styled, animated captions (subtitles/captions.json) - Whisper transcription with word timestamps, remapping through the edit, segmentation into readable lines, detection of key words to emphasize, styling from Brand DNA, safe-zone aware layout, SRT/VTT export. Use when the user wants subtitles/captions/sous-titres, animated captions, or when a social target needs sound-off readability.
+---
+
+# subtitles
+
+## Purpose
+Readable, perfectly synced captions that look like the brand. Pipeline:
+
+```text
+audio → transcription (word timestamps) → remap to edited timeline → segmentation → emphasis → style (Brand DNA) → layout per target (safe zones) → render (Remotion | ASS)
+```
+
+## Inputs
+- `analysis/transcript.json` (source time)
+- `timeline/timeline.json`
+- `brand/brand.json` → `caption`
+- The target presets (safe zones)
+
+## Outputs
+`subtitles/captions.json` (schema: `schemas/captions.schema.json`) in timeline time. Optional `exports/*.srt` / `*.vtt` sidecars.
+
+## Tools
+- `bve captions build [--max-words 5 --max-lines 2] [--emphasis auto|off]`:
+  - remaps words through the cuts, dropping removed words
+  - segments at punctuation, pauses (> 0.3 s) and syntactic breaks, and never splits a group like "une marque" across cues
+  - auto-emphasizes words using heuristics: numbers, brand and product names, words also in `onScreenText`/`cta`, and stressed words (energy peaks)
+- `bve captions emphasize --cue <id> --word <index> --level key|strong|none` for manual emphasis.
+- `bve captions fix --cue <id> --text "..."` fixes a transcription error while keeping the timings.
+- `bve captions preview --target <id> --at <sec>` renders a still.
+- `bve captions export --format srt|vtt`.
+
+## Workflow
+1. Run `bve captions build`.
+2. **Proofread.** Run `bve captions list --json`, then fix brand names, proper nouns and technical terms that Whisper often misspells. The brand name must be spelled exactly as in `brand.json`.
+3. **Refine emphasis semantically.** Heuristics are a starting point. Choose 1 key word per cue at most and 1 in 3 cues or fewer for `key`. Pick the words that carry the message ("COMMENT", "CRÉER", "UNE MARQUE").
+4. Preview at the hook, a dense cue and the CTA for each target. Check the following:
+   - nothing is cut or off-screen
+   - no overlap with lower-thirds or the CTA (captions auto-hide under full-screen motion)
+   - the text stays inside the safe zones
+5. Offer SRT/VTT sidecars for platforms that support native captions (YouTube, LinkedIn).
+
+## Constraints
+- Reading speed must stay at 17 characters per second or fewer for FR/EN. Cues last at least 0.7 s. There are at most `maxLines` lines and never more than 42 characters per line.
+- Captions never overlap each other in time, and they never cover a face (Phase 2 uses face boxes; Phase 1 respects the anchor and safe zones).
+- Keep the style from Brand DNA. Put per-project changes in `styleOverrides` (QC reports them), never in brand.json, unless the user wants a brand-wide change.
+- Languages: FR and EN are first-class. Other Whisper languages work, but emphasis heuristics are generic.
+
+## Examples
+Transcript "Aujourd'hui je vais vous montrer comment créer une marque", brand caption `upper, pop, emphasisStyle color`:
+- cue 1: "AUJOURD'HUI JE VAIS VOUS MONTRER" (no emphasis)
+- cue 2: "**COMMENT**" (key, accent color, pop)
+- cue 3: "**CRÉER** UNE **MARQUE**" (key, strong)
+
+## Failure handling
+- Low-confidence words (p < 0.5) are listed by `build`. Review them first.
+- A word drifts after cuts (a caption appears before the voice): run `bve captions resync --cue <id>`, which realigns to speech onsets from the analysis.
+- Text overflows in the 9:16 layout: the engine auto-reduces words per line. If it still overflows, lower `sizeScale` in the overrides and report it.

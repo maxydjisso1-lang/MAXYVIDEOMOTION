@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "name": "Maison Lune",
+  "identity": {
+    "primaryColors": [{ "name": "Encre", "hex": "#111111", "usage": "text, backgrounds" }],
+    "secondaryColors": [{ "name": "Ivoire", "hex": "#F4EFE6", "usage": "backgrounds" }],
+    "accentColors": [{ "name": "Or", "hex": "#B8975A", "usage": "hairlines, CTA only" }],
+    "neutrals": { "background": "#F4EFE6", "foreground": "#111111", "muted": "#8A8378" },
+    "fonts": [
+      { "role": "display", "family": "Canela", "weights": [300, 400], "source": { "kind": "file", "path": "assets/fonts/Canela-Light.woff2" }, "fallback": "Cormorant Garamond" },
+      { "role": "body", "family": "Inter", "weights": [400, 600], "source": { "kind": "google" } },
+      { "role": "caption", "family": "Inter", "weights": [600], "source": { "kind": "google" } }
+    ],
+    "logo": {
+      "primary": "assets/logo/maison-lune.svg",
+      "monochrome": "assets/logo/maison-lune-white.svg",
+      "clearSpace": 0.5,
+      "minHeightPx": 48,
+      "allowedBackgrounds": ["#F4EFE6", "#111111"],
+      "watermark": { "anchor": "top-right", "opacity": 0.6 }
+    }
+  },
+  "visual": { "contrast": "medium", "radius": 0, "shadows": "none", "composition": "editorial", "shapes": "line", "density": "airy", "texture": "grain" },
+  "grade": { "look": "filmic", "intensity": 0.4, "saturation": -0.15, "warmth": 0.1, "protectSkinTones": true },
+  "motion": { "speed": "slow", "easing": "decelerate", "amplitude": "subtle", "transitionStyle": "fade", "energy": 0.2, "personality": ["luxurious", "calm", "precise"] },
+  "caption": {
+    "font": "caption", "weight": 600, "position": "lower-third", "textColor": "#FFFFFF", "highlightColor": "#B8975A",
+    "background": "shadow", "case": "sentence", "animation": "fade", "emphasisStyle": "color", "maxWordsPerLine": 6, "maxLines": 2
+  },
+  "audio": { "energy": "calm", "voiceStyle": "posée, chaleureuse, intimiste", "musicMoods": ["ambient piano", "minimal strings"] },
+  "tone": { "keywords": ["intemporel", "artisanal", "précis"], "do": ["phrases courtes", "vouvoiement"], "dont": ["points d'exclamation", "superlatifs", "emojis"] },
+  "provenance": {
+    "/identity/primaryColors": { "source": "user" },
+    "/identity/accentColors": { "source": "extracted", "confidence": 0.9, "evidence": "Brand book p.4 swatch, measured #B8975A" },
+    "/motion": { "source": "inferred", "confidence": 0.7, "evidence": "Minimal jewellery brand, editorial layouts, generous white space in brand book" },
+    "/caption/animation": { "source": "inferred", "confidence": 0.55, "evidence": "Fade matches restrained motion; to confirm with user" }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/timeline.schema.json",
+  "title": "Timeline (edit decision list)",
+  "description": "Non-destructive, format-agnostic edit. Clips reference source ranges; per-target reframing is stored separately so one edit yields every aspect ratio.",
+  "type": "object",
+  "required": ["schemaVersion", "fps", "tracks"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "fps": { "type": "number", "enum": [23.976, 24, 25, 29.97, 30, 50, 59.94, 60] },
+    "durationSec": { "type": "number", "minimum": 0, "description": "Computed by the engine; informational." },
+    "tracks": {
+      "type": "object",
+      "required": ["video", "audio"],
+      "additionalProperties": false,
+      "properties": {
+        "video": { "type": "array", "items": { "$ref": "#/$defs/videoTrack" } },
+        "audio": { "type": "array", "items": { "$ref": "#/$defs/audioTrack" } }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "fromClip", "toClip", "type", "durationSec"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "fromClip": { "$ref": "common.schema.json#/$defs/id" },
+          "toClip": { "$ref": "common.schema.json#/$defs/id" },
+          "type": { "enum": ["cut", "fade", "dissolve", "dip-to-color", "slide", "wipe", "zoom", "brand"], "description": "'brand' = use Brand DNA transitionStyle." },
+          "durationSec": { "type": "number", "minimum": 0, "maximum": 3 }
+        }
+      }
+    },
+    "markers": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["id", "time", "kind"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "time": { "$ref": "common.schema.json#/$defs/seconds" },
+          "kind": { "enum": ["hook", "section", "cta", "beat", "drop", "note"] },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "reframe": {
+      "type": "object",
+      "description": "Keyed by target id. How each clip is cropped for that target's aspect ratio.",
+      "additionalProperties": { "$ref": "#/$defs/reframePlan" }
+    }
+  },
+  "$defs": {
+    "clip": {
+      "type": "object",
+      "required": ["id", "sourceId", "sourceIn", "sourceOut", "timelineStart"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "sourceId": { "$ref": "common.schema.json#/$defs/id" },
+        "sourceIn": { "$ref": "common.schema.json#/$defs/seconds" },
+        "sourceOut": { "$ref": "common.schema.json#/$defs/seconds" },
+        "timelineStart": { "$ref": "common.schema.json#/$defs/seconds" },
+        "speed": { "type": "number", "minimum": 0.25, "maximum": 4, "default": 1 },
+        "enabled": { "type": "boolean", "default": true },
+        "sectionId": { "type": "string", "description": "Creative-plan section this clip belongs to." },
+        "reason": { "type": "string", "maxLength": 300, "description": "Why this clip exists / was trimmed. Used to explain edits." },
+        "zoom": {
+          "type": "array",
+          "description": "Punch-in keyframes (clip-relative time). Used for jump-cut variety and emphasis.",
+          "items": {
+            "type": "object",
+            "required": ["t", "scale"],
+            "additionalProperties": false,
+            "properties": {
+              "t": { "$ref": "common.schema.json#/$defs/seconds" },
+              "scale": { "type": "number", "minimum": 1, "maximum": 2.5 },
+              "ease": { "enum": ["hold", "linear", "brand"], "default": "brand" }
+            }
+          }
+        }
+      }
+    },
+    "videoTrack": {
+      "type": "object",
+      "required": ["id", "kind", "clips"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "kind": { "enum": ["primary", "broll"] },
+        "clips": { "type": "array", "items": { "$ref": "#/$defs/clip" } }
+      }
+    },
+    "audioTrack": {
+      "type": "object",
+      "required": ["id", "kind", "clips"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "kind": { "enum": ["dialogue", "music", "sfx"] },
+        "followVideoTrack": { "type": "string", "description": "Dialogue track that mirrors a video track's cuts (linked A/V)." },
+        "clips": { "type": "array", "items": { "$ref": "#/$defs/clip" } }
+      }
+    },
+    "reframePlan": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["fit-blur", "center", "face", "subject", "manual"] },
+        "smoothingSec": { "type": "number", "minimum": 0, "maximum": 5, "default": 0.8 },
+        "keyframes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["clipId", "t", "cx", "cy"],
+            "additionalProperties": false,
+            "properties": {
+              "clipId": { "$ref": "common.schema.json#/$defs/id" },
+              "t": { "$ref": "common.schema.json#/$defs/seconds" },
+              "cx": { "type": "number", "minimum": 0, "maximum": 1, "description": "Crop window center, normalized to source width." },
+              "cy": { "type": "number", "minimum": 0, "maximum": 1 },
+              "scale": { "type": "number", "minimum": 1, "maximum": 3, "default": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

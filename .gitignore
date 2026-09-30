@@ -1,0 +1,35 @@
+# dependencies & builds
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+
+# secrets / local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# engine caches, renders and generated media
+.cache/
+renders/
+tests/.tmp/
+tests/fixtures/generated/
+engine/remotion/.bundle/
+models/
+*.log
+
+# user projects created while testing (keep examples/ small and text-only)
+/projects/
+examples/**/source/
+examples/**/exports/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea/

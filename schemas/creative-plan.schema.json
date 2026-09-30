@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/creative-plan.schema.json",
+  "title": "Creative plan",
+  "description": "Semantic intent authored by the creative-director skill (brief + analysis + Brand DNA). The engine compiles it into timeline/color/audio/captions/motion documents. Editing the plan never touches sources.",
+  "type": "object",
+  "required": ["schemaVersion", "objective", "targetDurationSec", "narrative", "hook", "sections", "pacing"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "objective": { "type": "string", "maxLength": 300 },
+    "targetDurationSec": { "type": "number", "exclusiveMinimum": 0 },
+    "durationToleranceSec": { "type": "number", "minimum": 0, "default": 2 },
+    "targets": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "description": "Project target ids this plan is written for." },
+    "narrative": {
+      "type": "object",
+      "required": ["structure"],
+      "additionalProperties": false,
+      "properties": {
+        "structure": { "enum": ["hook-problem-solution-cta", "aida", "pas", "story-arc", "listicle", "demo", "testimonial", "teaser", "custom"] },
+        "rationale": { "type": "string" }
+      }
+    },
+    "hook": {
+      "type": "object",
+      "required": ["start", "end", "technique"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "$ref": "common.schema.json#/$defs/seconds" },
+        "end": { "$ref": "common.schema.json#/$defs/seconds" },
+        "technique": { "enum": ["bold-claim", "question", "result-first", "pattern-interrupt", "stat", "visual-reveal", "quote"] },
+        "sourceRefs": { "type": "array", "items": { "$ref": "#/$defs/sourceRef" } },
+        "onScreenText": { "type": "string", "maxLength": 80 }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "role", "sourceRefs"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "role": { "enum": ["hook", "context", "problem", "solution", "proof", "demo", "benefit", "testimonial", "cta", "outro"] },
+          "intent": { "type": "string", "maxLength": 300 },
+          "sourceRefs": { "type": "array", "items": { "$ref": "#/$defs/sourceRef" } },
+          "targetDurationSec": { "type": "number", "minimum": 0 },
+          "broll": { "type": "array", "items": { "$ref": "#/$defs/sourceRef" } },
+          "onScreenText": { "type": "string", "maxLength": 120 },
+          "motion": { "type": "array", "items": { "type": "string" }, "description": "Motion component names requested for this section (resolved by motion-brand)." }
+        }
+      }
+    },
+    "pacing": {
+      "type": "object",
+      "required": ["style"],
+      "additionalProperties": false,
+      "properties": {
+        "style": { "enum": ["calm", "medium", "fast", "aggressive"] },
+        "avgShotSec": { "type": "number", "minimum": 0.3 },
+        "jumpCuts": { "type": "boolean", "default": false },
+        "punchIns": { "type": "boolean", "default": false },
+        "removeSilences": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "minSilenceSec": { "type": "number", "minimum": 0.1, "default": 0.45 },
+            "keepPaddingSec": { "type": "number", "minimum": 0, "default": 0.12 }
+          }
+        },
+        "removeFillers": { "type": "boolean", "default": false }
+      }
+    },
+    "transitions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "default": { "enum": ["cut", "brand"], "default": "cut" },
+        "betweenSections": { "enum": ["cut", "brand", "fade", "dissolve"], "default": "brand" }
+      }
+    },
+    "music": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "mood": { "type": "string" },
+        "assetId": { "$ref": "common.schema.json#/$defs/id" },
+        "bpmRange": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "syncCutsToBeats": { "type": "boolean", "default": false },
+        "duckUnderVoiceDb": { "type": "number", "minimum": 0, "maximum": 30, "default": 12 }
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "emphasis": { "enum": ["auto", "manual", "off"], "default": "auto" },
+        "language": { "type": "string" }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "density": { "enum": ["none", "low", "medium", "high"], "default": "medium" },
+        "intro": { "enum": ["none", "BrandIntro", "LogoReveal"], "default": "none" },
+        "outro": { "enum": ["none", "BrandOutro", "LogoReveal"], "default": "BrandOutro" },
+        "lowerThirds": { "type": "array", "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "title": { "type": "string" }, "at": { "type": "number" } } } }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "required": ["text"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "maxLength": 60 },
+        "subtext": { "type": "string", "maxLength": 80 },
+        "at": { "oneOf": [{ "type": "number", "minimum": 0 }, { "const": "end" }], "default": "end" },
+        "durationSec": { "type": "number", "minimum": 0.5, "maximum": 10, "default": 3 }
+      }
+    },
+    "logo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "watermark": { "type": "boolean", "default": false }
+      }
+    },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "intent": { "enum": ["correct-only", "brand-look", "custom"], "default": "brand-look" },
+        "notes": { "type": "string" }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cleanup": { "enum": ["off", "gentle", "standard", "aggressive"], "default": "standard" }
+      }
+    },
+    "rationale": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 300 },
+      "description": "Plain-language justification of key choices, shown to the user."
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "description": "Point to material by exact range, by transcript segment, or by analysed shot.",
+      "oneOf": [
+        { "$ref": "common.schema.json#/$defs/sourceRange" },
+        {
+          "type": "object", "required": ["segmentId"], "additionalProperties": false,
+          "properties": { "segmentId": { "$ref": "common.schema.json#/$defs/id" }, "sourceId": { "$ref": "common.schema.json#/$defs/id" } }
+        },
+        {
+          "type": "object", "required": ["shotId", "sourceId"], "additionalProperties": false,
+          "properties": { "shotId": { "$ref": "common.schema.json#/$defs/id" }, "sourceId": { "$ref": "common.schema.json#/$defs/id" } }
+        }
+      ]
+    }
+  }
+}

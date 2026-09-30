@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/common.schema.json",
+  "title": "Common definitions",
+  "description": "Shared primitives referenced by every other brand-video-engine schema.",
+  "$defs": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^1\\.[0-9]+$",
+      "description": "Major.minor. Major bumps are breaking and require a migration."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+      "description": "Stable, human-readable identifier (e.g. 'src_interview', 'clip_012')."
+    },
+    "seconds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Time in seconds. Snapped to the nearest frame at render time."
+    },
+    "timeRange": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "$ref": "#/$defs/seconds" },
+        "end": { "$ref": "#/$defs/seconds" }
+      }
+    },
+    "sourceRange": {
+      "type": "object",
+      "description": "A range inside one registered source, in source time.",
+      "required": ["sourceId", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": { "$ref": "#/$defs/id" },
+        "start": { "$ref": "#/$defs/seconds" },
+        "end": { "$ref": "#/$defs/seconds" }
+      }
+    },
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    },
+    "relPath": {
+      "type": "string",
+      "description": "Path relative to the project root. Absolute paths and parent traversal are rejected.",
+      "pattern": "^(?![/\\\\])(?![A-Za-z]:)(?!.*(^|[/\\\\])\\.\\.([/\\\\]|$)).+$"
+    },
+    "unit": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "Normalized adjustment. 0 = neutral."
+    },
+    "aspectRatio": {
+      "type": "string",
+      "enum": ["16:9", "9:16", "1:1", "4:5"]
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Where a value came from — makes every decision explainable.",
+      "required": ["source"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "enum": ["user", "extracted", "inferred", "default"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "anchor": {
+      "enum": [
+        "top-left", "top", "top-right",
+        "left", "center", "right",
+        "bottom-left", "bottom", "bottom-right",
+        "lower-third", "safe-bottom", "auto"
+      ]
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/analysis.schema.json",
+  "title": "Video analysis",
+  "description": "Measured facts about every source (engine-computed) plus optional semantic labels (added by Claude from contact sheets or by vision models). Never contains decisions.",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "tools": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Tool name → version, for reproducibility." },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/sourceAnalysis" } }
+  },
+  "$defs": {
+    "sourceAnalysis": {
+      "type": "object",
+      "required": ["sourceId", "shots", "audio"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": { "$ref": "common.schema.json#/$defs/id" },
+        "shots": { "type": "array", "items": { "$ref": "#/$defs/shot" } },
+        "blackSegments": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
+        "frozenSegments": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
+        "audio": { "$ref": "#/$defs/audioAnalysis" },
+        "transcriptRef": { "$ref": "common.schema.json#/$defs/relPath" },
+        "contactSheets": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/relPath" } }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "required": ["id", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "start": { "$ref": "common.schema.json#/$defs/seconds" },
+        "end": { "$ref": "common.schema.json#/$defs/seconds" },
+        "sceneScore": { "type": "number", "minimum": 0, "maximum": 1, "description": "Strength of the cut that opens this shot." },
+        "keyframe": { "$ref": "common.schema.json#/$defs/relPath" },
+        "luma": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mean": { "type": "number", "minimum": 0, "maximum": 1 },
+            "p05": { "type": "number", "minimum": 0, "maximum": 1 },
+            "p95": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "exposure": { "enum": ["under", "ok", "over", "mixed"] },
+        "saturationMean": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rgbMean": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3, "description": "Used for white-balance estimation and camera matching." },
+        "dominantColors": { "type": "array", "maxItems": 6, "items": { "$ref": "common.schema.json#/$defs/hexColor" } },
+        "motionScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sharpness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "faces": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxCount": { "type": "integer", "minimum": 0 },
+            "track": { "$ref": "common.schema.json#/$defs/relPath", "description": "Per-frame boxes stored out-of-line (can be large)." }
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "source"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "description": "e.g. 'person', 'product', 'talking-head', 'wide', 'close-up', 'logo'" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "source": { "enum": ["claude", "model", "user"] }
+            }
+          }
+        },
+        "notes": { "type": "string", "maxLength": 500, "description": "Free semantic description (Claude annotation)." },
+        "qualityScore": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "audioAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "integratedLufs": { "type": "number" },
+        "loudnessRange": { "type": "number" },
+        "truePeakDb": { "type": "number" },
+        "noiseFloorDb": { "type": "number" },
+        "clipping": { "type": "boolean" },
+        "humHz": { "enum": [50, 60, null] },
+        "silences": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
+        "speech": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
+        "musicDetected": { "type": "boolean" },
+        "noiseProfile": { "type": "array", "items": { "enum": ["broadband", "hum", "hiss", "wind", "traffic", "hvac", "reverb", "crowd"] } },
+        "qualityScore": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}
