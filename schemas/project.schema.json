@@ -40,7 +40,8 @@
         "color": { "$ref": "common.schema.json#/$defs/relPath" },
         "audio": { "$ref": "common.schema.json#/$defs/relPath" },
         "captions": { "$ref": "common.schema.json#/$defs/relPath" },
-        "motion": { "$ref": "common.schema.json#/$defs/relPath" }
+        "motion": { "$ref": "common.schema.json#/$defs/relPath" },
+        "styleTokens": { "$ref": "common.schema.json#/$defs/relPath" }
       }
     },
     "targets": {

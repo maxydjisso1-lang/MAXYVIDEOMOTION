@@ -1,0 +1,8 @@
+{
+  "name": "brand-video-engine",
+  "version": "0.1.0",
+  "description": "AI-native, brand-aware video post-production for Claude: Brand DNA -> style tokens -> deterministic FFmpeg/Remotion rendering, with QC-gated export.",
+  "author": { "name": "brand-video-engine contributors" },
+  "license": "MIT",
+  "keywords": ["video", "post-production", "brand", "remotion", "ffmpeg", "captions", "motion-design"]
+}

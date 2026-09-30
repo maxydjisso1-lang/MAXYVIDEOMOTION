@@ -18,10 +18,11 @@ Turn a QC-passed render into deliverables. Also generate the other formats from 
 - An entry in `project.json.exports` with its sha256 and QC report path
 
 ## Tools
-- `bve target add <id> --preset <platform/name>` / `bve target list`. See `presets/` for all presets.
-- `bve render --target <id>` renders the final quality.
-- `bve export --target <id>|--all [--sidecars srt,vtt] [--thumbnail <sec>]` **refuses when QC is missing or failed** for that exact render.
-- `bve frames --target <id> --at hook,cta` lets you visually check each format.
+- `bve target add <id> --preset <platform/name>` / `bve target list` — see `presets/`.
+- `bve render --target <id>` — final quality (never deliver a `--draft` render).
+- `bve export --target <id>|--all [--sidecars srt,vtt]` — **refuses (exit 5, QC_BLOCKED) when QC is missing, failed, or ran on a different file or version**.
+- `bve frames --target <id> --at <seconds>` — visual check per format.
+- `bve clean` — removes caches and intermediate renders (never sources or exports).
 
 ### Presets (Phase 1)
 | Preset | Size | fps | Video | Audio | Loudness |

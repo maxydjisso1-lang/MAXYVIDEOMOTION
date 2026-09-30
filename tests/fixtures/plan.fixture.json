@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "objective": "10-second Instagram Reels teaser that drives people to join the community",
+  "targetDurationSec": 10,
+  "durationToleranceSec": 3,
+  "targets": ["ig_reels"],
+  "narrative": {
+    "structure": "hook-problem-solution-cta",
+    "rationale": "Result-first hook from the middle of the talk, then context, proof and the spoken CTA."
+  },
+  "hook": {
+    "start": 0,
+    "end": 3,
+    "technique": "result-first",
+    "sourceRefs": [{ "segmentId": "seg_002" }],
+    "onScreenText": "Créer une marque forte"
+  },
+  "sections": [
+    { "id": "context", "role": "context", "intent": "Set up the promise", "sourceRefs": [{ "segmentId": "seg_001" }] },
+    { "id": "proof", "role": "proof", "intent": "Why it is different", "sourceRefs": [{ "segmentId": "seg_003" }] },
+    { "id": "cta", "role": "cta", "intent": "Spoken call to action", "sourceRefs": [{ "segmentId": "seg_004" }] }
+  ],
+  "pacing": {
+    "style": "fast",
+    "punchIns": true,
+    "jumpCuts": false,
+    "removeSilences": { "enabled": true, "minSilenceSec": 0.45, "keepPaddingSec": 0.12 },
+    "removeFillers": true
+  },
+  "transitions": { "default": "cut", "betweenSections": "brand" },
+  "music": { "enabled": false },
+  "captions": { "enabled": true, "emphasis": "auto", "language": "fr" },
+  "motion": { "density": "low", "intro": "none", "outro": "BrandOutro" },
+  "cta": { "text": "Rejoignez la communauté", "at": "end", "durationSec": 3 },
+  "logo": { "watermark": true },
+  "color": { "intent": "brand-look" },
+  "audio": { "cleanup": "standard" },
+  "rationale": [
+    "The strongest line ('comment créer une marque forte') opens the video: sound-off viewers get the promise in the first second.",
+    "Silences and the hesitation 'euh' are removed; cuts land between words only.",
+    "Brand-driven transitions mark section changes; motion density stays low so the speaker remains the focus."
+  ]
+}

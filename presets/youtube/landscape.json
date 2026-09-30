@@ -1,0 +1,32 @@
+{
+  "id": "youtube/landscape",
+  "label": "YouTube 16:9",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "maxDurationSec": 3600,
+  "video": {
+    "codec": "h264",
+    "profile": "high",
+    "crf": 18,
+    "maxBitrateKbps": 16000,
+    "pixFmt": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "bitrateKbps": 320,
+    "sampleRate": 48000
+  },
+  "loudness": {
+    "integratedLufs": -14,
+    "truePeakDb": -1,
+    "toleranceLu": 1
+  },
+  "safeZone": {
+    "top": 0.05,
+    "bottom": 0.1,
+    "left": 0.05,
+    "right": 0.05
+  }
+}

@@ -4,33 +4,66 @@
   "title": "Color decisions",
   "description": "Per-shot color. 'correction' makes the image technically right (exposure, WB, matching). 'grade' applies the creative/brand look on top. Both are parameters, never baked into sources.",
   "type": "object",
-  "required": ["schemaVersion", "shots"],
+  "required": [
+    "schemaVersion",
+    "shots"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
-    "globalGrade": { "$ref": "#/$defs/grade" },
+    "schemaVersion": {
+      "$ref": "common.schema.json#/$defs/schemaVersion"
+    },
+    "globalGrade": {
+      "$ref": "#/$defs/grade"
+    },
     "shots": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["sourceId", "shotId"],
+        "required": [
+          "sourceId",
+          "shotId"
+        ],
         "additionalProperties": false,
         "properties": {
-          "sourceId": { "$ref": "common.schema.json#/$defs/id" },
-          "shotId": { "$ref": "common.schema.json#/$defs/id" },
-          "correction": { "$ref": "#/$defs/correction" },
-          "grade": { "$ref": "#/$defs/grade", "description": "Per-shot override of globalGrade." },
-          "matchTo": { "type": "string", "description": "shotId used as reference for camera matching." },
-          "locked": { "type": "boolean", "default": false, "description": "User-approved; auto passes must not change it." },
+          "sourceId": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "shotId": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "correction": {
+            "$ref": "#/$defs/correction"
+          },
+          "grade": {
+            "$ref": "#/$defs/grade",
+            "description": "Per-shot override of globalGrade."
+          },
+          "matchTo": {
+            "type": "string",
+            "description": "shotId used as reference for camera matching."
+          },
+          "locked": {
+            "type": "boolean",
+            "default": false,
+            "description": "User-approved; auto passes must not change it."
+          },
           "measurements": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "before": { "$ref": "#/$defs/stats" },
-              "after": { "$ref": "#/$defs/stats" }
+              "before": {
+                "$ref": "#/$defs/stats"
+              },
+              "after": {
+                "$ref": "#/$defs/stats"
+              }
             }
           },
-          "reason": { "type": "string", "maxLength": 300 }
+          "reason": {
+            "type": "string",
+            "maxLength": 300
+          }
         }
       }
     }
@@ -40,48 +73,139 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "exposure": { "type": "number", "minimum": -3, "maximum": 3, "description": "Stops." },
-        "contrast": { "$ref": "common.schema.json#/$defs/unit" },
-        "highlights": { "$ref": "common.schema.json#/$defs/unit" },
-        "shadows": { "$ref": "common.schema.json#/$defs/unit" },
-        "whites": { "$ref": "common.schema.json#/$defs/unit" },
-        "blacks": { "$ref": "common.schema.json#/$defs/unit" },
-        "saturation": { "$ref": "common.schema.json#/$defs/unit" },
-        "temperature": { "$ref": "common.schema.json#/$defs/unit", "description": "-1 cooler … +1 warmer." },
-        "tint": { "$ref": "common.schema.json#/$defs/unit", "description": "-1 green … +1 magenta." },
+        "exposure": {
+          "type": "number",
+          "minimum": -3,
+          "maximum": 3,
+          "description": "Stops."
+        },
+        "contrast": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "highlights": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "shadows": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "whites": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "blacks": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "saturation": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "temperature": {
+          "$ref": "common.schema.json#/$defs/unit",
+          "description": "-1 cooler … +1 warmer."
+        },
+        "tint": {
+          "$ref": "common.schema.json#/$defs/unit",
+          "description": "-1 green … +1 magenta."
+        },
         "whiteBalance": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "mode": { "enum": ["as-shot", "auto-gray-world", "auto-skin", "manual"] },
-            "gains": { "type": "array", "items": { "type": "number", "minimum": 0.5, "maximum": 2 }, "minItems": 3, "maxItems": 3 }
+            "mode": {
+              "enum": [
+                "as-shot",
+                "auto-gray-world",
+                "auto-skin",
+                "manual"
+              ]
+            },
+            "gains": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0.5,
+                "maximum": 2
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
           }
         },
-        "protectSkinTones": { "type": "boolean", "default": true }
+        "protectSkinTones": {
+          "type": "boolean",
+          "default": true
+        }
       }
     },
     "grade": {
+      "title": "ShotGrade",
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "look": { "enum": ["none", "natural", "warm", "cool", "filmic", "high-contrast", "muted", "vibrant", "mono"] },
-        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
-        "lut": { "$ref": "common.schema.json#/$defs/relPath" },
-        "lift": { "$ref": "#/$defs/rgb" },
-        "gamma": { "$ref": "#/$defs/rgb" },
-        "gain": { "$ref": "#/$defs/rgb" }
+        "look": {
+          "enum": [
+            "none",
+            "natural",
+            "warm",
+            "cool",
+            "filmic",
+            "high-contrast",
+            "muted",
+            "vibrant",
+            "mono"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "lut": {
+          "$ref": "common.schema.json#/$defs/relPath"
+        },
+        "lift": {
+          "$ref": "#/$defs/rgb"
+        },
+        "gamma": {
+          "$ref": "#/$defs/rgb"
+        },
+        "gain": {
+          "$ref": "#/$defs/rgb"
+        }
       }
     },
-    "rgb": { "type": "array", "items": { "type": "number", "minimum": -1, "maximum": 1 }, "minItems": 3, "maxItems": 3 },
+    "rgb": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": -1,
+        "maximum": 1
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
     "stats": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "lumaMean": { "type": "number" },
-        "lumaP05": { "type": "number" },
-        "lumaP95": { "type": "number" },
-        "saturationMean": { "type": "number" },
-        "rgbMean": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 }
+        "lumaMean": {
+          "type": "number"
+        },
+        "lumaP05": {
+          "type": "number"
+        },
+        "lumaP95": {
+          "type": "number"
+        },
+        "saturationMean": {
+          "type": "number"
+        },
+        "rgbMean": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
       }
     }
   }

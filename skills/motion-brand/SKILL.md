@@ -18,12 +18,13 @@ Motion design that looks like the brand, not like a template. You choose **what*
 `motion/motion.json` (schema: `schemas/motion.schema.json`): component instances with timing, content props and anchors. No style values are stored there.
 
 ## Tools
-- `bve motion from-plan` creates the instances requested by the plan (CTA, outro, titles for `onScreenText`, lower thirds), timed to the section markers.
-- `bve motion add <Component> --at <sec> --duration <sec> --props '<json>' [--anchor lower-third] [--targets a,b]`
-- `bve motion edit <id> ...` / `bve motion remove <id>`
-- `bve motion list --json`
-- `bve motion preview <id> --target <id> [--frames 5]` renders a filmstrip of the animation (in → hold → out). **Look at it.**
-- `bve brand tokens` shows the exact durations, easing and distances in effect.
+- `bve motion from-plan` — creates the instances requested by the plan (hook/section titles, lower thirds, brand transitions between sections, CTA, watermark if the brand defines one, end card). Timing and variant come from the style tokens.
+- `bve motion list` — current instances.
+- Add/edit/remove an instance: `bve doc get motion`, edit `instances[]` (schemas/motion.schema.json; content props only, never colors/fonts), `bve doc set motion <file>`.
+- `bve brand tokens` — the exact durations, easing and distances in effect.
+- Preview: `bve render --target <id> --draft` then `bve frames --target <id> --at <seconds>`.
+- Renderer: Remotion when available, else the ASS/libass fallback automatically (`--renderer auto|remotion|ass`).
+- `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 
 ### Components (Phase 1 in bold)
 **Title**, Subtitle, **LowerThird**, **CTA**, **LogoReveal**, BrandIntro, **BrandOutro**, **Watermark**, Quote, Statistic, ProductReveal, FeatureCard, Callout, Transition. Captions are rendered by the same Remotion composition but managed by the subtitles skill.
@@ -40,7 +41,7 @@ Motion design that looks like the brand, not like a template. You choose **what*
 
    Motion should support the message and never compete with a speaking face.
 3. Write the on-screen copy following `brand.tone`. Keep it short: titles ≤ 6 words, CTA ≤ 5 words.
-4. Run `bve motion preview` for each new instance and target. Check the following:
+4. Render a draft and extract frames during each new instance (`bve render --target <id> --draft`, `bve frames --target <id> --at <seconds>`). Check the following:
    - legibility (duration ≥ 1 s for every 3 words of reading)
    - safe zones
    - no collision with captions
@@ -61,4 +62,4 @@ Same `motion.json` (`CTA "Découvrir la collection"` at 26 s for 4 s, anchor saf
 ## Failure handling
 - Font failed to load (`FONT_UNAVAILABLE`): the renderer uses the brand `fallback` font. Report it and have QC flag it.
 - The preview shows clipping or overflow: shorten the copy, change the anchor or the variant. Never scale the text below the caption size.
-- Remotion is unavailable or unlicensed for the user: use `--renderer ffmpeg`, which supports basic Title, CTA and Watermark (static plus fade only). Tell the user what is lost.
+- Remotion is unavailable or unlicensed for the user: the engine switches to the ASS/libass renderer automatically, or you can force it with `--renderer ass`. It supports titles, CTA, captions with emphasis, transitions, watermark and end card, but with fades and slides only (no springs, no per-word stagger). Tell the user what is lost.

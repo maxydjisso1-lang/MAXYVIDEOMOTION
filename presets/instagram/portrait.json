@@ -1,0 +1,32 @@
+{
+  "id": "instagram/portrait",
+  "label": "Instagram feed 4:5",
+  "width": 1080,
+  "height": 1350,
+  "fps": 30,
+  "aspectRatio": "4:5",
+  "maxDurationSec": 60,
+  "video": {
+    "codec": "h264",
+    "profile": "high",
+    "crf": 18,
+    "maxBitrateKbps": 12000,
+    "pixFmt": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "bitrateKbps": 256,
+    "sampleRate": 48000
+  },
+  "loudness": {
+    "integratedLufs": -14,
+    "truePeakDb": -1,
+    "toleranceLu": 1
+  },
+  "safeZone": {
+    "top": 0.05,
+    "bottom": 0.08,
+    "left": 0.05,
+    "right": 0.05
+  }
+}

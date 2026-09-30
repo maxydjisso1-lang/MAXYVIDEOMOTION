@@ -19,10 +19,10 @@ Make the editorial decisions. This skill combines the **brief**, the **analysis*
 `plan/creative-plan.json` (schema: `schemas/creative-plan.schema.json`), with a `rationale` array written in plain language.
 
 ## Tools
-- `bve analysis summary --json` and `bve transcript show --format segments` (numbered segments with timecodes).
-- The **storytelling** skill, a reference for structures, hook techniques and pacing norms per platform.
-- `bve plan validate --json` checks the schema. It also checks that referenced segments and shots exist and estimates the resulting duration against `targetDurationSec`.
-- `bve plan estimate --json` returns the per-section durations after silence and filler removal.
+- `bve analysis summary --json` and `bve transcript show` (numbered segments with timecodes).
+- The **storytelling** skill (structures, hook techniques, platform pacing norms).
+- `bve plan set <plan.json>` — validates the plan AND its references (unknown segment/shot ids fail) and returns a duration estimate; creates a version.
+- `bve plan validate` / `bve plan estimate` — per-section durations after silence/filler removal, and whether the total is within tolerance.
 
 ## Workflow
 1. **Read.** Read the brief, the analysis summary and the numbered transcript segments. Check the brand tone (`tone.do` / `tone.dont`) and motion energy.

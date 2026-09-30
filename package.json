@@ -1,0 +1,44 @@
+{
+  "name": "brand-video-engine",
+  "version": "0.1.0",
+  "description": "An open-source AI-native video post-production engine for Claude that understands brand identity and applies it across editing, color, audio, captions and motion design.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20.11"
+  },
+  "bin": {
+    "bve": "./bin/bve.js"
+  },
+  "scripts": {
+    "bve": "tsx engine/cli/src/bin.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "gen:types": "tsx scripts/gen-types.ts",
+    "fixtures": "tsx scripts/gen-fixtures.ts",
+    "doctor": "tsx engine/cli/src/bin.ts doctor",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:e2e": "vitest run --project e2e"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.530",
+    "@remotion/renderer": "4.0.530",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "commander": "^14.0.0",
+    "pino": "^9.7.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.530",
+    "tsx": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "json-schema-to-typescript": "^15.0.4",
+    "typescript": "~5.9.0",
+    "vitest": "^5.0.0"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "instagram/reels",
+  "label": "Instagram Reels 9:16",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "aspectRatio": "9:16",
+  "maxDurationSec": 90,
+  "video": {
+    "codec": "h264",
+    "profile": "high",
+    "crf": 18,
+    "maxBitrateKbps": 12000,
+    "pixFmt": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "bitrateKbps": 256,
+    "sampleRate": 48000
+  },
+  "loudness": {
+    "integratedLufs": -14,
+    "truePeakDb": -1,
+    "toleranceLu": 1
+  },
+  "safeZone": {
+    "top": 0.1,
+    "bottom": 0.2,
+    "left": 0.06,
+    "right": 0.14
+  }
+}

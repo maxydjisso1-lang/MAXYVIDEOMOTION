@@ -2,39 +2,41 @@
 
 ## Phases
 
-### Phase 0 — Foundations (this commit: design only)
-Architecture, schemas, SKILL.md drafts, example Brand DNA files. No engine code.
+### Phase 0 — Foundations (done)
+Architecture, schemas, SKILL.md drafts, example Brand DNA files.
 
-### Phase 1 — MVP: a vertical slice, from talking-head footage to a branded vertical ad
+### Phase 1 — MVP vertical slice (done)
 
-| # | Capability | Scope in Phase 1 | Deferred |
-|---|---|---|---|
-| 1 | Project + versioning | init, ingest (hash, probe, CFR mezzanine), docs read/write with validation, auto-commit, undo/checkout/list/diff | branches, OTIO export |
-| 2 | Video analysis | probe, shots (`scdet`), luma/saturation/RGB stats (`signalstats`), black/freeze, silence, loudness, keyframes, contact sheets, `annotate` | object/product detection models |
-| 3 | FFmpeg editing | plan → timeline compiler, silence removal, filler removal (from word timestamps), section ordering, punch-in zooms, cut/fade transitions, `center` + `fit-blur` reframe | face-tracking reframe, B-roll auto-placement |
-| 4 | Audio cleanup | measurement + preset chains (highpass, dehum, `afftdn`/`arnndn`, deess, EQ, compressor, `loudnorm` 2-pass, limiter), before/after metrics | dereverb (DeepFilterNet), spectral repair |
-| 5 | Color correction | auto exposure/contrast from luma percentiles, gray-world WB with skin protection, brand look presets + LUT, before/after stills | shot matching across cameras, curves UI |
-| 6 | Whisper subtitles | faster-whisper word timestamps (FR/EN plus auto-detect), remap through the timeline, segmentation, heuristic + Claude emphasis, Remotion + ASS renderers | diarization, translation |
-| 7 | Brand DNA | schema, palette extraction from logo/images, `tokens` compiler, `brand preview` frame, 2 example brands | website scraping, PDF brand-book parsing |
-| 8 | Remotion motion | Title, LowerThird, CTA, LogoReveal, BrandOutro, Watermark, Captions, and token-driven variants | the other 8 components (Phase 2) |
-| 9 | Quality control | technical, audio (LUFS/TP), black frames, duration, ratio, A/V drift, caption bounds/overlap/CPS, brand colors/fonts, missing media | perceptual color QC |
-| 10 | Claude skills | 13 SKILL.md, plugin manifest | — |
-| + | Presets | instagram/reels, instagram/square, instagram/portrait, tiktok/vertical, youtube/landscape, linkedin/landscape, advertising/broadcast | — |
+Status legend: ✅ implemented and tested · 🟡 implemented, not yet exercised end to end · ⏭ moved to a later phase.
 
-**MVP acceptance test** (automated e2e on a synthetic fixture, plus a manual run on real footage):
+| # | Capability | Phase 1 status |
+|---|---|---|
+| 1 | Project + versioning | ✅ `init`, `ingest` (sha256, probe, hard link or copy, CFR mezzanine for VFR sources), schema-validated reads and writes, auto-commit, `undo` / `checkout` / `list` / `diff`, `doc get`/`doc set` · ⏭ branches, OTIO export |
+| 2 | Video analysis | ✅ shots (`scdet`), luma/saturation/RGB stats (`signalstats`), exposure classes, black segments, silences, loudness, noise floor, keyframes, contact sheet, Claude `annotate` · ⏭ freeze detection, hum detection, object/product models |
+| 3 | FFmpeg editing | ✅ plan → timeline compiler, reordering, silence and filler removal with word-safe cuts and padding, frame-exact clips, punch-ins on jump cuts, `delete`/`trim` ripple, `center` + `fit-blur` reframing · ⏭ face-tracking reframe, B-roll placement, split/move commands |
+| 4 | Audio cleanup | ✅ chains built from measured problems (highpass, dehum, `afftdn`, EQ, compressor, de-esser), two-pass `loudnorm` + limiter, edge fades at cuts, music bed with sidechain ducking (data-driven) · 🟡 `arnndn` (needs a model file) · ⏭ dereverb, A/B preview |
+| 5 | Color | ✅ measured exposure/contrast/gray-world WB with clamps and skin protection, 7 brand looks + LUT, locked shots · ⏭ cross-camera matching, stills command |
+| 6 | Subtitles | ✅ remap through the edit, brand-driven segmentation (never across a source jump, never after an article), emphasis, min duration and no overlaps, SRT/VTT · 🟡 faster-whisper provider (implemented; the E2E test uses the transcript-import provider so it runs without a 3 GB model) |
+| 7 | Brand DNA | ✅ schema with provenance, kit install (`brand set`), WCAG and file checks, deterministic **style-token compiler**, stale-token detection, 2 contrasting example brands · ⏭ automatic palette extraction, PDF and URL ingestion |
+| 8 | Motion | ✅ Remotion components Title/Subtitle, CTA, LowerThird, Watermark, BrandOutro (Intro/LogoReveal aliases), Transition, Captions, with token-driven variants and motion; ✅ ASS/libass fallback renderer with automatic capability detection · ⏭ Quote, Statistic, ProductReveal, FeatureCard, Callout |
+| 9 | Quality control | ✅ up to 30 checks (29 when the preset has no file-size limit): technical, audio (LUFS/TP/drift), black frames, source integrity, caption overlap/speed/safe zone, brand tokens/logo/fonts/**rendered brand color (ΔE)**, motion safe zone and collisions, export integrity/faststart; blockers gate export; user waivers |
+| 10 | Claude skills | ✅ 13 SKILL.md files reconciled with the real CLI (unimplemented features are marked *planned*), plugin manifest |
+| + | Presets | ✅ instagram/reels, instagram/square, instagram/portrait, tiktok/vertical, youtube/landscape, linkedin/landscape, advertising/broadcast |
 
-1. `bve init`, then `bve ingest talk.mp4 logo.png`, then `bve analyze --transcribe`.
-2. Apply the example brand and a checked-in creative plan.
-3. Run `bve plan compile`, `bve color auto`, `bve audio clean`, `bve captions build` and `bve motion from-plan`.
-4. Run `bve render --target ig_reels`, `bve qc` and `bve export`.
-5. The result must meet all of the following:
-   - a 1080×1920 30 fps H.264/AAC file at −14 LUFS ±1 and TP ≤ −1 dBTP
-   - silences removed
-   - captions inside the safe zones
-   - CTA and outro in brand colors
-   - QC PASS
-   - `bve version undo` restores the previous timeline
-6. Re-running with the second example brand gives visibly different motion and captions and the same edit.
+**Acceptance test.** `tests/e2e/brand-ab.test.ts` drives the real CLI on synthetic footage. It checks the following:
+- Same video with brand A and with brand B gives an **identical timeline**.
+- `style-tokens.json`, `motion.json` and `captions.json` all differ between the two brands.
+- The deliverables meet the Reels spec.
+- The renders are visibly different: PSNR is below 25 dB, and each end card's measured color matches its own brand (ΔE < 8).
+- QC passes, and export is refused before QC.
+- The sources are never modified.
+- `undo` restores the timeline without rewriting history.
+- The ASS fallback delivers a QC-passing video.
+
+**Still to do before calling Phase 1 production-ready:**
+- a manual run on real footage with real Whisper transcription
+- a Linux/macOS CI matrix
+- `npm run build` packaging checks
 
 ### Phase 2 — Advanced editing and motion
 Face-tracking smart reframe (MediaPipe), all 14 motion components, beat detection (librosa) with beat-synced cuts and animations, cross-camera color matching, skin-tone qualifier, multi-version generation (15 s, 30 s, 60 s cutdowns from one plan), B-roll placement, dereverb.
@@ -70,27 +72,3 @@ On Windows: `winget install Gyan.FFmpeg astral-sh.uv`.
 | Large analysis files vs. Claude context | Claude can't read everything | `bve analysis summary` / `--brief` views. Heavy data (face tracks) is stored out of line. |
 | Disk usage (mezzanines, renders) | Disk full | Free-space check, `bve clean`, and mezzanines only when needed |
 | Scope creep | Never shipping | Phase gates. Phase 2 starts only after the MVP acceptance test passes. |
-
-## Files to create in Phase 1 (after approval)
-
-```text
-package.json  tsconfig.base.json  .gitignore  .env.example  .editorconfig  LICENSE (MIT)  README.md
-.claude-plugin/plugin.json
-engine/core/        src/{project.ts,versions.ts,validate.ts,paths.ts,cache.ts,log.ts,errors.ts,tempdir.ts,index.ts}  package.json
-engine/ffmpeg/      src/{runner.ts,probe.ts,filtergraph.ts,escape.ts,analyzers.ts,capabilities.ts,index.ts}
-engine/vision/      src/{shots.ts,stats.ts,keyframes.ts,contactSheet.ts,analyze.ts,index.ts}
-engine/audio/       src/{measure.ts,processors.ts,chains.ts,mix.ts,index.ts}
-engine/transcription/ src/{provider.ts,fasterWhisper.ts,remap.ts,segment.ts,emphasis.ts,fillers.ts,index.ts}
-engine/brand/       src/{palette.ts,tokens.ts,fonts.ts,index.ts}
-engine/remotion/    src/{Root.tsx,Composition.tsx,tokens.ts,components/{Title,LowerThird,CTA,LogoReveal,BrandOutro,Watermark,Captions}.tsx,layout/safeZones.ts}
-engine/rendering/   src/{basePlate.ts,graphics.ts,audioMix.ts,mux.ts,renderTarget.ts,index.ts}
-engine/editing/     src/{compilePlan.ts,silenceCut.ts,fillerCut.ts,punchIn.ts,reframe.ts,index.ts}
-engine/color/       src/{autoCorrect.ts,looks.ts,compile.ts,stills.ts,index.ts}
-engine/qc/          src/{registry.ts,checks/{technical,audio,captions,color,brand,motion,export}.ts,report.ts}
-engine/cli/         src/{bin.ts,commands/*.ts,output.ts}
-engine/python/      pyproject.toml  uv.lock  bve_py/{transcribe.py,__main__.py}
-presets/**.json     (7 presets) + presets/preset.schema.json
-scripts/            doctor, gen-fixtures, download-models, gen-types
-tests/              fixtures generator + unit tests per module + e2e/mvp.test.ts
-examples/           prompts.md, project-walkthrough.md
-```

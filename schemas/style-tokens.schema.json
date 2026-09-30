@@ -1,0 +1,483 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/style-tokens.schema.json",
+  "title": "Style tokens",
+  "description": "Deterministic compilation of Brand DNA for one fps. The ONLY style input accepted by motion components, caption renderers and the color look. Pixel values are expressed for a 1080 px short side and scaled by the renderer.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "brandName",
+    "brandHash",
+    "fps",
+    "color",
+    "type",
+    "shape",
+    "motion",
+    "caption",
+    "layout",
+    "grade"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "$ref": "common.schema.json#/$defs/schemaVersion"
+    },
+    "brandName": {
+      "type": "string"
+    },
+    "brandHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "sha256 of the brand.json these tokens were compiled from."
+    },
+    "fps": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "color": {
+      "type": "object",
+      "required": [
+        "primary",
+        "secondary",
+        "accent",
+        "background",
+        "foreground",
+        "muted",
+        "onPrimary",
+        "onAccent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "secondary": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "accent": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "background": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "foreground": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "muted": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "onPrimary": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "onAccent": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/hexColor"
+          },
+          "description": "Every brand color; QC checks rendered graphics against it."
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "required": [
+        "display",
+        "body",
+        "caption"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "display": {
+          "$ref": "#/$defs/font"
+        },
+        "body": {
+          "$ref": "#/$defs/font"
+        },
+        "caption": {
+          "$ref": "#/$defs/font"
+        }
+      }
+    },
+    "shape": {
+      "type": "object",
+      "required": [
+        "style",
+        "radiusPx",
+        "shadow",
+        "strokePx"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "enum": [
+            "none",
+            "line",
+            "block",
+            "pill",
+            "circle"
+          ]
+        },
+        "radiusPx": {
+          "type": "number",
+          "minimum": 0
+        },
+        "shadow": {
+          "enum": [
+            "none",
+            "soft",
+            "hard",
+            "glow"
+          ]
+        },
+        "strokePx": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": [
+        "enterFrames",
+        "exitFrames",
+        "minHoldFrames",
+        "staggerFrames",
+        "easing",
+        "distancePx",
+        "scaleFrom",
+        "overshoot",
+        "transition",
+        "transitionFrames",
+        "energy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "enterFrames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exitFrames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minHoldFrames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "staggerFrames": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "easing": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "bezier"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "bezier"
+                },
+                "bezier": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "kind",
+                "damping",
+                "stiffness",
+                "mass"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "spring"
+                },
+                "damping": {
+                  "type": "number"
+                },
+                "stiffness": {
+                  "type": "number"
+                },
+                "mass": {
+                  "type": "number"
+                }
+              }
+            }
+          ]
+        },
+        "distancePx": {
+          "type": "number",
+          "minimum": 0
+        },
+        "scaleFrom": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "overshoot": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "transition": {
+          "enum": [
+            "cut",
+            "fade",
+            "slide",
+            "wipe",
+            "mask",
+            "zoom",
+            "blur"
+          ]
+        },
+        "transitionFrames": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "energy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "caption": {
+      "type": "object",
+      "required": [
+        "family",
+        "weight",
+        "sizePx",
+        "case",
+        "position",
+        "animation",
+        "emphasisStyle",
+        "background",
+        "maxWordsPerLine",
+        "maxLines",
+        "textColor",
+        "highlightColor",
+        "strokePx"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "type": "string"
+        },
+        "fallback": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "integer"
+        },
+        "sizePx": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "case": {
+          "enum": [
+            "as-spoken",
+            "sentence",
+            "upper"
+          ]
+        },
+        "position": {
+          "enum": [
+            "bottom",
+            "center",
+            "lower-third",
+            "auto"
+          ]
+        },
+        "animation": {
+          "enum": [
+            "none",
+            "fade",
+            "pop",
+            "karaoke",
+            "word-by-word",
+            "slide"
+          ]
+        },
+        "emphasisStyle": {
+          "enum": [
+            "color",
+            "scale",
+            "box",
+            "underline",
+            "weight"
+          ]
+        },
+        "background": {
+          "enum": [
+            "none",
+            "box",
+            "shadow",
+            "stroke"
+          ]
+        },
+        "maxWordsPerLine": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxLines": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "textColor": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "highlightColor": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "strokePx": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "required": [
+        "density",
+        "composition",
+        "marginPx"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "density": {
+          "enum": [
+            "airy",
+            "balanced",
+            "dense"
+          ]
+        },
+        "composition": {
+          "enum": [
+            "centered",
+            "asymmetric",
+            "grid",
+            "editorial"
+          ]
+        },
+        "marginPx": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "grade": {
+      "type": "object",
+      "required": [
+        "look",
+        "intensity",
+        "saturation",
+        "warmth"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "look": {
+          "enum": [
+            "natural",
+            "warm",
+            "cool",
+            "filmic",
+            "high-contrast",
+            "muted",
+            "vibrant",
+            "mono"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "saturation": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "warmth": {
+          "$ref": "common.schema.json#/$defs/unit"
+        },
+        "lut": {
+          "$ref": "common.schema.json#/$defs/relPath"
+        },
+        "protectSkinTones": {
+          "type": "boolean"
+        }
+      }
+    },
+    "logo": {
+      "type": "object",
+      "required": [
+        "primary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "$ref": "common.schema.json#/$defs/relPath"
+        },
+        "monochrome": {
+          "$ref": "common.schema.json#/$defs/relPath"
+        },
+        "clearSpace": {
+          "type": "number"
+        },
+        "minHeightPx": {
+          "type": "number"
+        },
+        "watermark": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "anchor": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "font": {
+      "title": "TokenFont",
+      "type": "object",
+      "required": [
+        "family",
+        "weight"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "integer"
+        },
+        "fallback": {
+          "type": "string"
+        },
+        "file": {
+          "$ref": "common.schema.json#/$defs/relPath"
+        }
+      }
+    }
+  }
+}

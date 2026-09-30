@@ -23,9 +23,10 @@ Color: PASS        Brand: PASS    Motion: PASS    Export: PASS
 ```
 
 ## Tools
-- `bve qc --target <id> [--json]`
-- `bve qc explain <checkId>` gives the details, the timecodes and the suggested fix.
-- `bve frames --target <id> --at <sec,...>` lets you visually inspect flagged moments.
+- `bve qc --target <id> [--json]` — runs every check on the exact rendered file, writes `renders/<target>-<version>.qc.json`, exits 5 on blockers.
+- Read the report JSON for details (`expected`, `measured`, `at`, `fix`).
+- `bve frames --target <id> --at <sec,...>` — visually inspect flagged moments.
+- `bve qc waive <checkId> --reason "..."` — **user decision only**.
 
 ### Checks
 | Category | Check | Blocker when |
@@ -60,7 +61,7 @@ Color: PASS        Brand: PASS    Motion: PASS    Export: PASS
 - Never edit the QC report by hand.
 
 ## Examples
-- `captions.safe-zone` fail at 00:07.4 in tiktok → cue 12 is 3 lines on a long word. Fix with `bve captions fix` (split the cue), then re-render.
+- `captions.safe-zone` fail at 00:07.4 in tiktok → cue 12 is 3 lines on a long word. Split the cue with `bve doc get captions` and `bve doc set captions <file>`, then re-render.
 - `audio.loudness` fail at −17.8 LUFS → master normalization was disabled. Re-enable it, then re-render.
 
 ## Failure handling

@@ -1,6 +1,6 @@
 # Architecture — brand-video-engine
 
-> Status: **design draft (pre-implementation)**. The CLI commands referenced here and in `skills/*/SKILL.md` are the target interface for Phase 1.
+> Status: **Phase 1 implemented.** The vertical slice runs end to end and is covered by unit tests and by the A/B brand E2E test. Anything marked *Phase 2/3* is not implemented yet.
 
 ## 1. Core idea
 
@@ -30,20 +30,23 @@ brand-video-engine/
 │   ├── video-editing/  color-grading/  audio-cleanup/  music/
 │   ├── subtitles/  motion-brand/  quality-control/  export/
 ├── schemas/                        # JSON Schema 2020-12 — single source of truth
-├── engine/                         # npm workspaces
-│   ├── core/          # project store, versioning, validation, logging, errors, fs safety, cache
-│   ├── ffmpeg/        # ffprobe/ffmpeg runner, filtergraph builder, progress parsing
-│   ├── vision/        # shot detection, exposure/color stats, keyframes, contact sheets (ffmpeg-based)
-│   ├── editing/       # creative-plan → timeline compiler, silence/filler cuts, punch-ins, reframe paths
-│   ├── color/         # auto correction, brand looks, color.json → FFmpeg filters, before/after stills
-│   ├── audio/         # loudness/noise analysis, cleanup chain compiler, mix/ducking graph
-│   ├── transcription/ # TranscriptionProvider interface + faster-whisper bridge
-│   ├── brand/         # Brand DNA: palette extraction, token compiler (brand.json → BrandTokens)
-│   ├── remotion/      # React/Remotion brand components + compositions
-│   ├── rendering/     # render graph: base plate → graphics → mux → encode, per target
-│   ├── qc/            # quality-control checks registry
-│   ├── cli/           # `bve` binary (commander), JSON output mode for Claude
-│   └── python/        # uv project: whisper, (Phase 2) face tracking, beat detection
+├── engine/                         # one module per domain (single npm package, see §3)
+│   ├── core/          # project store, snapshot versioning, schema validation, logging, errors, path safety, time math
+│   ├── ffmpeg/        # binary resolution, spawn runner, ffprobe, analysis filters (scdet, signalstats, ebur128…)
+│   ├── vision/        # ingest (hash, probe, CFR mezzanine) + analysis (shots, exposure, color, silences, loudness)
+│   ├── transcription/ # TranscriptionProvider: faster-whisper bridge + transcript import
+│   ├── brand/         # Brand DNA checks + the token compiler (brand.json → style-tokens.json)
+│   ├── editing/       # creative-plan → timeline compiler, word-safe silence/filler cuts, punch-ins, reframing
+│   ├── color/         # measured correction, brand looks, color.json → FFmpeg filters
+│   ├── audio/         # cleanup chain builder/compiler, two-pass loudness
+│   ├── captions/      # remap through the edit, brand-driven segmentation, emphasis
+│   ├── motion/        # layout.ts (pure: safe zones, text fitting — shared by renderers and QC) + plan → motion.json
+│   ├── remotion/      # React/Remotion brand components (transparent graphics layer)
+│   ├── rendering/     # base plate → graphics (Remotion | ASS) → audio mix → final encode, stage cache
+│   ├── qc/            # quality-control checks and report
+│   ├── export/        # QC-gated delivery, SRT/VTT sidecars
+│   ├── cli/           # `bve` (commander), one JSON envelope on stdout
+│   └── python/        # uv project (Python 3.12): faster-whisper; Phase 2: MediaPipe, librosa
 ├── presets/  instagram/ tiktok/ youtube/ linkedin/ advertising/   # target format definitions
 ├── examples/          # brand kits + sample projects + prompts
 ├── tests/             # fixtures (generated synthetic media) + e2e
@@ -53,7 +56,7 @@ brand-video-engine/
 
 Why the directories differ slightly from the initial brief:
 
-- **`engine/brand`, `engine/editing`, `engine/color`, `engine/qc`, `engine/core` and `engine/cli` are added.** Brand DNA, editing, color and QC each have enough logic to need their own module, with one module per skill domain. `core` holds the project model that every module imports.
+- **Several modules are added: `engine/brand`, `editing`, `color`, `captions`, `motion`, `qc`, `export`, `core` and `cli`.** Each skill domain has its own module. `core` holds the project model that every module imports. `motion/layout.ts` is deliberately pure (no Node imports) so that Remotion can bundle it, and the ASS renderer and QC use the same code.
 - **`engine/python` is a single uv project** instead of Python code spread across `vision/` and `transcription/`. You get one environment, one lockfile and one install step. The TS modules call it through a thin, typed bridge.
 - **A 13th skill, `post-production`, is added.** It is the single entry point that fires on requests like "turn this into an Instagram ad". `creative-director` stays focused on *planning*, and orchestration lives in `post-production`.
 
@@ -65,14 +68,15 @@ Why the directories differ slightly from the initial brief:
 | Python | Only for ML models without solid JS equivalents: faster-whisper (Phase 1), MediaPipe and librosa (Phase 2) | Best-in-class word timestamps and VAD | whisper in JS/WASM, which is slower and less accurate |
 | Python runtime | `uv` with a pinned **Python 3.12** venv | The ML wheels (ctranslate2, mediapipe) lag behind the newest Python, and 3.14 is installed on this machine. uv isolates the version. | System Python |
 | Contracts | JSON Schema as the source of truth, validated with **Ajv**, TS types generated by `json-schema-to-typescript` | Claude reads JSON Schema natively, it works across languages (Python validates the same files), and there is one source of truth | Zod-first, which is TS-only and makes Claude read generated schemas |
-| Media ops | FFmpeg ≥ 6.1 CLI via `execa` (no fluent-ffmpeg) | FFmpeg already covers cut, scale, crop, color (`eq`, `colorbalance`, `lut3d`), audio (`afftdn`, `arnndn`, `deesser`, `acompressor`, `loudnorm`, `sidechaincompress`) and analysis (`scdet`, `signalstats`, `blackdetect`, `silencedetect`, `ebur128`). fluent-ffmpeg is unmaintained. | Custom decoding |
-| Motion | Remotion 4 (React) | Programmatic, parametric, frame-accurate. Components take `BrandTokens`. | After Effects templates or Lottie, which are not parametric enough and not code-reviewable |
+| Media ops | FFmpeg ≥ 6.1 CLI via `node:child_process` spawn with argument arrays (no shell, no fluent-ffmpeg) | FFmpeg already covers cut, scale, crop, color (`eq`, `colorbalance`, `lut3d`), audio (`afftdn`, `arnndn`, `deesser`, `acompressor`, `loudnorm`, `sidechaincompress`) and analysis (`scdet`, `signalstats`, `blackdetect`, `silencedetect`, `ebur128`). fluent-ffmpeg is unmaintained. | Custom decoding |
+| Motion | Remotion 4 (React) renders a **transparent graphics layer** (PNG frames) that FFmpeg composites | Programmatic, parametric and frame-accurate. Components take only style tokens. Chrome never decodes video: in testing, Remotion's video frame extraction failed intermittently under concurrency ("No frame found at position"), and removing it also halved render time. | After Effects templates or Lottie, which are not parametric enough and not code-reviewable |
 | Captions | Remotion (animated) with an **ASS/libass fallback** | The ASS fallback keeps captions working if Remotion is unavailable or unlicensed, and renders fast drafts | — |
 | Claude integration | Skills + CLI with `--json` output. Distributed as a Claude Code plugin. | Zero server to run, works in Claude Code today, every step is inspectable in the terminal | MCP server (planned for Phase 3 as an optional adapter over the same core) |
 | Project state | Plain JSON files + snapshot versioning | Human-readable and diffable. Git works on top of it. | SQLite, event sourcing |
 | Logging | `pino` JSON lines to `project/logs/`. Human-readable logs on stderr. The result JSON goes on stdout. | Claude parses stdout reliably, and logs stay auditable | — |
 | Tests | `vitest`, with **synthetic fixtures generated by FFmpeg** (`testsrc2`, `sine`, `anoisesrc`) | No large binaries in git, and properties are known exactly (a silence at 2.0–2.8 s, a black frame at 5 s, and so on) | Committed sample videos |
-| Workspace | npm workspaces | Built into Node, with no extra tool | pnpm or turbo, which are unnecessary at this size |
+| Packaging | **One npm package** with one directory per module (relative imports, NodeNext). `bin/bve.js` runs the TypeScript through `tsx`, and `npm run build` emits `dist/`. | Nothing is published separately yet, so workspaces would only add install and build overhead. It can be split later without changing module boundaries. | npm workspaces, pnpm or turbo |
+| Timing | Documents store seconds, and **every renderer derives clip length from integer frame counts** (`clipFrames`) | Rounding source in/out points to milliseconds made the edit drift by one frame over a few cuts. Frame-exact durations keep picture, audio, captions and QC in agreement. | Float arithmetic on seconds |
 
 ## 4. Project on disk
 
@@ -148,9 +152,10 @@ sources ──► [A] BASE PLATE (FFmpeg)                              ──►
             → renders/<hash>-base.mp4 (high-bitrate, muted)           loudnorm 2-pass, limiter
                           │                                           → renders/<hash>-mix.wav
                           ▼                                                    │
-            [B] GRAPHICS (Remotion) — only if motion/captions exist            │
-            <OffthreadVideo src=base/> + <Captions/> + <Motion…/>              │
-            BrandTokens injected as props → renders/<hash>-comp.mp4 (muted)    │
+            [B] GRAPHICS — only if motion/captions exist                       │
+            Remotion: transparent PNG frames (tokens as props), or             │
+            ASS/libass fallback; FFmpeg overlays them on the base plate        │
+            → renders/cache/gfx-<hash>.mp4 (muted)                             │
                           │                                                    │
                           └──────────────► [D] MUX + ENCODE (FFmpeg) ◄─────────┘
                                           preset codec/bitrate/fps/color tags
@@ -159,14 +164,15 @@ sources ──► [A] BASE PLATE (FFmpeg)                              ──►
 
 Why this approach:
 
-- **Graphics are rendered over the base plate in one Remotion pass**, not as an alpha overlay composited later. Alpha intermediates (ProRes 4444) are huge, and a single pass keeps captions frame-accurate against the picture.
+- **Remotion renders only the graphics, as transparent PNG frames**, and FFmpeg overlays them frame for frame. The first implementation had Remotion decode the base plate (`OffthreadVideo`), but that failed intermittently. The PNG sequence lives in a scoped temp dir and is deleted after compositing, so no large alpha intermediates (ProRes 4444) are kept.
+- **Renderer choice is automatic.** Remotion is used when its packages and headless browser are available. Otherwise the engine uses the ASS/libass renderer, with the same tokens and the same layout module. `--renderer` forces one. The render record and QC report say which renderer was used.
 - **When there are no graphics, [B] is skipped** and the pipeline is FFmpeg-only, which is fast.
 - **Each stage output is cached by `sha256(inputs + params + engineVersion)`.** Changing only the captions re-runs [B] and [D], not [A].
 - **`--draft`** renders at half resolution with a fast preset, for review loops.
 
 ## 8. Brand DNA → motion
 
-`brand.json` is **compiled** into `BrandTokens` (in `engine/brand`), and those tokens are the only props style source that components accept:
+`brand.json` is **compiled** into `brand/style-tokens.json` (`engine/brand/src/tokens.ts`, schema `schemas/style-tokens.schema.json`). The tokens are a versioned project document that stores the `brandHash` of the Brand DNA it came from. The render recompiles stale tokens automatically, and QC blocks a render whose tokens do not match the current brand. Tokens are the only style input that components accept. Conceptually:
 
 ```ts
 interface BrandTokens {
@@ -251,6 +257,8 @@ function renderTarget(project: Project, targetId: string, opts: { draft?: boolea
 // engine/qc
 interface QcCheck { id: string; category: QcCategory; severity: Severity; run(ctx: QcContext): Promise<QcCheckResult>; }
 ```
+
+Any document can also be read and replaced with `bve doc get|set <doc>`. The write is validated, versioned and undoable. It covers fine adjustments that have no dedicated command yet.
 
 The CLI contract for Claude is:
 

@@ -1,0 +1,29 @@
+{
+  "id": "advertising/broadcast",
+  "label": "Broadcast HD (EBU R128)",
+  "width": 1920,
+  "height": 1080,
+  "fps": 25,
+  "aspectRatio": "16:9",
+  "maxDurationSec": 60,
+  "video": {
+    "codec": "prores",
+    "profile": "hq",
+    "pixFmt": "yuv422p10le"
+  },
+  "audio": {
+    "codec": "pcm_s24le",
+    "sampleRate": 48000
+  },
+  "loudness": {
+    "integratedLufs": -23,
+    "truePeakDb": -1,
+    "toleranceLu": 0.5
+  },
+  "safeZone": {
+    "top": 0.05,
+    "bottom": 0.05,
+    "left": 0.1,
+    "right": 0.1
+  }
+}

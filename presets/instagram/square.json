@@ -1,0 +1,32 @@
+{
+  "id": "instagram/square",
+  "label": "Instagram feed 1:1",
+  "width": 1080,
+  "height": 1080,
+  "fps": 30,
+  "aspectRatio": "1:1",
+  "maxDurationSec": 60,
+  "video": {
+    "codec": "h264",
+    "profile": "high",
+    "crf": 18,
+    "maxBitrateKbps": 12000,
+    "pixFmt": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "bitrateKbps": 256,
+    "sampleRate": 48000
+  },
+  "loudness": {
+    "integratedLufs": -14,
+    "truePeakDb": -1,
+    "toleranceLu": 1
+  },
+  "safeZone": {
+    "top": 0.05,
+    "bottom": 0.05,
+    "left": 0.05,
+    "right": 0.05
+  }
+}

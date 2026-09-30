@@ -18,10 +18,13 @@ Produce `analysis/analysis.json` and `analysis/transcript.json`. These are **mea
 - `analysis/keyframes/*.jpg`, `analysis/contact-sheets/*.jpg`
 
 ## Tools
-- `bve analyze [--source <id>] [--transcribe] [--language fr|en|auto] [--model large-v3]` runs technical analysis (FFmpeg: scdet, signalstats, blackdetect, freezedetect, silencedetect, ebur128) and transcription (faster-whisper).
-- `bve analysis summary --json` gives a compact view that fits in context. Use it instead of reading the whole file for long videos.
-- `bve analysis annotate --file <annotations.json>` merges your semantic labels into shots with `source: "claude"`.
-- The Read tool on `analysis/contact-sheets/*.jpg` lets you view them.
+- `bve analyze [--source <ids>] [--transcribe] [--language fr|en|auto] [--model large-v3]` — technical analysis (FFmpeg: scdet, signalstats, blackdetect, silencedetect, ebur128, astats) + transcription (faster-whisper, needs `uv sync --project engine/python`).
+- `bve transcript import <file>` — use an existing word-level transcript instead (schemas/transcript.schema.json).
+- `bve transcript show` — numbered segments with timecodes and filler counts.
+- `bve analysis summary --json` — compact view that fits in context; prefer it over reading the whole file for long videos.
+- `bve analysis annotate --file <annotations.json>` — merge your semantic labels (`[{sourceId, shotId, labels, notes, qualityScore}]`) into shots, marked `source: "claude"`.
+- Read tool on `analysis/contact-sheets/*.jpg` and `analysis/keyframes/**` to see the footage.
+- Planned (not yet available): face tracks, object/product detection models, hum detection.
 
 ## Workflow
 1. Run `bve analyze --transcribe --json`. Transcription is the slowest step (roughly 0.1–0.5× real time on GPU and 1–2× on CPU). Tell the user if the video is long.

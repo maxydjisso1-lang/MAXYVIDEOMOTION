@@ -22,18 +22,16 @@ audio → transcription (word timestamps) → remap to edited timeline → segme
 `subtitles/captions.json` (schema: `schemas/captions.schema.json`) in timeline time. Optional `exports/*.srt` / `*.vtt` sidecars.
 
 ## Tools
-- `bve captions build [--max-words 5 --max-lines 2] [--emphasis auto|off]`:
-  - remaps words through the cuts, dropping removed words
-  - segments at punctuation, pauses (> 0.3 s) and syntactic breaks, and never splits a group like "une marque" across cues
-  - auto-emphasizes words using heuristics: numbers, brand and product names, words also in `onScreenText`/`cta`, and stressed words (energy peaks)
-- `bve captions emphasize --cue <id> --word <index> --level key|strong|none` for manual emphasis.
-- `bve captions fix --cue <id> --text "..."` fixes a transcription error while keeping the timings.
-- `bve captions preview --target <id> --at <sec>` renders a still.
-- `bve captions export --format srt|vtt`.
+- `bve captions build` — remaps word timings through the edit, segments with the brand's caption rhythm (words per line, lines, cue length from energy), never spans a source-jumping cut, never ends a line on an article, auto-emphasises numbers/keywords (at most one key word per cue).
+- Fix a word, emphasis or line break: `bve doc get captions`, edit, `bve doc set captions <file>` (validated, versioned).
+- Sidecars: `bve export --target <id> --sidecars srt,vtt`.
+- Check: `bve render --target <id> --draft` + `bve frames`; QC measures overlap, reading speed and safe zones.
+- Planned (not yet available): dedicated `captions fix|emphasize|resync` commands, translation.
+- `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 
 ## Workflow
 1. Run `bve captions build`.
-2. **Proofread.** Run `bve captions list --json`, then fix brand names, proper nouns and technical terms that Whisper often misspells. The brand name must be spelled exactly as in `brand.json`.
+2. **Proofread.** Run `bve doc get captions`, then fix brand names, proper nouns and technical terms that Whisper often misspells. The brand name must be spelled exactly as in `brand.json`.
 3. **Refine emphasis semantically.** Heuristics are a starting point. Choose 1 key word per cue at most and 1 in 3 cues or fewer for `key`. Pick the words that carry the message ("COMMENT", "CRÉER", "UNE MARQUE").
 4. Preview at the hook, a dense cue and the CTA for each target. Check the following:
    - nothing is cut or off-screen
@@ -55,5 +53,5 @@ Transcript "Aujourd'hui je vais vous montrer comment créer une marque", brand c
 
 ## Failure handling
 - Low-confidence words (p < 0.5) are listed by `build`. Review them first.
-- A word drifts after cuts (a caption appears before the voice): run `bve captions resync --cue <id>`, which realigns to speech onsets from the analysis.
+- A word drifts after cuts (a caption appears before the voice): adjust the word's `start`/`end` against the speech ranges in the analysis, then `bve doc set captions <file>`.
 - Text overflows in the 9:16 layout: the engine auto-reduces words per line. If it still overflows, lower `sizeScale` in the overrides and report it.

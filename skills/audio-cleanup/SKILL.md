@@ -17,10 +17,11 @@ Produce clear, natural and correctly loud dialogue. Processing is described as e
 The `dialogue[]` and `master` sections of `audio/audio.json` (schema: `schemas/audio.schema.json`), with before/after metrics.
 
 ## Tools
-- `bve audio clean [--preset gentle|standard|aggressive] [--source <id>]` builds the chain from the measured problems.
-- `bve audio set --source <id> --processor deess --params '{"intensity":0.4}'` / `--disable <type>` for manual changes.
-- `bve audio preview --source <id> --range 10-20 --ab` exports short before/after WAV snippets plus metrics.
-- `bve audio measure` re-measures after processing.
+- `bve audio clean [--preset gentle|standard|aggressive|off] [--target <id>]` — builds each source's chain from the measured problems; the master loudness target comes from the target preset.
+- Manual adjustment: `bve doc get audio`, edit a processor's `params` or set `"enabled": false`, `bve doc set audio <file>`.
+- Verification: `bve qc --target <id>` measures the delivered loudness / true peak / A/V drift.
+- Planned (not yet available): A/B preview snippets, dereverb (DeepFilterNet), automatic hum detection (a `humHz` you set in the analysis is honoured).
+- `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 
 ### Processor map (FFmpeg)
 | Problem | Processor | FFmpeg |
@@ -39,7 +40,7 @@ The `dialogue[]` and `master` sections of `audio/audio.json` (schema: `schemas/a
 ## Workflow
 1. Read the analysis audio section. Name the problems in plain words.
 2. Run `bve audio clean` with the preset from the plan (default `standard`). The engine only adds the processors whose problems were detected.
-3. Run `bve audio preview --ab` on a representative 10 s range with speech over noise. Check the metrics:
+3. Render a draft (`bve render --target <id> --draft`) and run `bve qc --target <id> --draft` for loudness, true peak and drift. Check the following:
    - speech-to-noise improved
    - the noise floor went down
    - no artifacts were flagged (the spectral-flatness heuristic)

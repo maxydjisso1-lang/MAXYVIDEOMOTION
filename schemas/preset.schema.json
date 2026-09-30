@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/preset.schema.json",
+  "title": "Target preset",
+  "description": "Delivery format for one platform: geometry, encoding, loudness and UI safe zones.",
+  "type": "object",
+  "required": ["id", "label", "width", "height", "fps", "aspectRatio", "video", "audio", "loudness", "safeZone"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$" },
+    "label": { "type": "string" },
+    "width": { "type": "integer", "minimum": 16 },
+    "height": { "type": "integer", "minimum": 16 },
+    "fps": { "type": "number", "exclusiveMinimum": 0 },
+    "aspectRatio": { "$ref": "common.schema.json#/$defs/aspectRatio" },
+    "maxDurationSec": { "type": "number", "exclusiveMinimum": 0 },
+    "maxFileSizeMb": { "type": "number", "exclusiveMinimum": 0 },
+    "video": {
+      "type": "object",
+      "required": ["codec", "pixFmt"],
+      "additionalProperties": false,
+      "properties": {
+        "codec": { "enum": ["h264", "prores"] },
+        "profile": { "type": "string" },
+        "crf": { "type": "integer", "minimum": 0, "maximum": 51 },
+        "maxBitrateKbps": { "type": "integer", "minimum": 100 },
+        "pixFmt": { "enum": ["yuv420p", "yuv422p10le"] }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "required": ["codec", "sampleRate"],
+      "additionalProperties": false,
+      "properties": {
+        "codec": { "enum": ["aac", "pcm_s24le"] },
+        "bitrateKbps": { "type": "integer" },
+        "sampleRate": { "enum": [44100, 48000] }
+      }
+    },
+    "loudness": {
+      "type": "object",
+      "required": ["integratedLufs", "truePeakDb", "toleranceLu"],
+      "additionalProperties": false,
+      "properties": {
+        "integratedLufs": { "type": "number" },
+        "truePeakDb": { "type": "number" },
+        "toleranceLu": { "type": "number", "minimum": 0 }
+      }
+    },
+    "safeZone": {
+      "type": "object",
+      "description": "Insets (fraction of width/height) where platform UI may cover the picture. Text and logos must stay inside.",
+      "required": ["top", "bottom", "left", "right"],
+      "additionalProperties": false,
+      "properties": {
+        "top": { "type": "number", "minimum": 0, "maximum": 0.5 },
+        "bottom": { "type": "number", "minimum": 0, "maximum": 0.5 },
+        "left": { "type": "number", "minimum": 0, "maximum": 0.5 },
+        "right": { "type": "number", "minimum": 0, "maximum": 0.5 }
+      }
+    }
+  }
+}

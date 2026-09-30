@@ -19,7 +19,9 @@ Turn raw footage, a brand kit and a brief into finished, QC-passed deliverables.
 - A short plain-language summary: what was done, the key choices and their reasons, and what is worth reviewing.
 
 ## Tools
-`bve` CLI (always with `--json`). Sub-skills: video-analysis, brand-intelligence, creative-director (plus storytelling), video-editing, color-grading, audio-cleanup, music, subtitles, motion-brand, quality-control and export.
+`bve` CLI (always with `--json`). Commands used directly: `doctor`, `init`, `ingest`, `target add|list`, `render --draft`, `frames --target <id> --at <s1,s2,...>` (seconds; take them from `bve timeline show` markers), `version list|undo|checkout`.
+Sub-skills: video-analysis, brand-intelligence, creative-director (+ storytelling), video-editing, color-grading, audio-cleanup, music, subtitles, motion-brand, quality-control, export.
+- `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 
 ## Workflow
 1. **Preflight.** Run `bve doctor --json`. If FFmpeg, Python or a model is missing, stop and give the exact install command.
@@ -35,7 +37,7 @@ Turn raw footage, a brand kit and a brief into finished, QC-passed deliverables.
    4. music (if any)
    5. subtitles (if enabled)
    6. motion-brand
-8. **Review.** Run `bve render --target <id> --draft`, then `bve frames --target <id> --at hook,mid,cta,end`. Look at the frames yourself. Fix anything off-brand or broken through the relevant skill.
+8. **Review.** Run `bve render --target <id> --draft`, then `bve frames --target <id> --at <seconds>` at the hook, the middle, the CTA and the end card (times from `bve timeline show` and `bve motion list`). Look at the frames yourself. Fix anything off-brand or broken through the relevant skill.
 9. **QC and export.** Run the **quality-control** skill, then the **export** skill. **Approval point 2:** report the results and links to the files.
 10. Offer the obvious next steps, such as other formats, a shorter cutdown or alternative hooks.
 

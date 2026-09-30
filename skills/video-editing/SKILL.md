@@ -17,17 +17,14 @@ Create a frame-accurate edit without touching the sources. It is usually compile
 `timeline/timeline.json` (schema: `schemas/timeline.schema.json`). Every clip has a `reason`.
 
 ## Tools
-- `bve plan compile --json` compiles the plan into the timeline:
-  - resolves refs
-  - cuts silences (`minSilenceSec`, `keepPaddingSec`) and fillers (when `removeFillers` is set)
-  - snaps cut points to word gaps
-  - adds punch-ins on jump cuts
-  - adds brand transitions between sections
-- `bve edit trim|split|move|delete|insert --clip <id> ...` for surgical edits.
-- `bve edit silence-cut [--min 0.45 --pad 0.12]` / `bve edit remove-fillers` apply the same operations to an existing timeline.
-- `bve reframe --target <id> --mode center|fit-blur|face|subject|manual` builds a crop path per target (`face` arrives in Phase 2).
-- `bve timeline show --json` returns a readable EDL with timecodes and the transcript text per clip.
-- `bve render --target <id> --draft --range a-b` renders a quick preview of a range.
+- `bve plan compile` — plan → timeline: resolves refs, cuts silences (`pacing.removeSilences`) and fillers (`pacing.removeFillers`) only between words, keeps `keepPaddingSec` of air, frame-snaps every clip, adds punch-ins on jump cuts, section markers and a default `center` reframe per target.
+- `bve timeline show` — readable EDL (clips, source ranges, sections, reasons, markers).
+- `bve edit delete --clip <id>` / `bve edit trim --clip <id> [--in <s>] [--out <s>]` — ripple edits.
+- `bve reframe --target <id> --mode center|fit-blur` — per-target crop strategy.
+- `bve render --target <id> --draft` then `bve frames --target <id> --at <seconds>` to check.
+- To change structure or pacing, edit the plan and recompile (preferred), or use `bve doc get/set timeline` for manual changes.
+- Planned (not yet available): `face`/`subject` reframing (MediaPipe), split/move/insert commands, beat snapping.
+- `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 
 ## Workflow
 1. Run `bve plan compile`. Check the output duration against the plan target (`bve timeline show`).
@@ -47,8 +44,8 @@ Create a frame-accurate edit without touching the sources. It is usually compile
 - Every modification goes through the CLI, which creates a version. Do not hand-edit JSON unless you then run `bve timeline validate`.
 
 ## Examples
-- "Supprime les blancs et les euh" → `bve edit silence-cut` + `bve edit remove-fillers`, then report "−14.2 s of silence, 23 hesitations removed; new duration 1:12".
-- "Mets la phrase sur le prix au début" → Find the segment, then run `bve edit move --clip clip_018 --to 0`. Check that the hook still reads naturally.
+- "Supprime les blancs et les euh" → set `pacing.removeSilences.enabled` and `pacing.removeFillers` in the plan, run `bve plan set` and `bve plan compile`, then report "−14.2 s of silence, 23 hesitations removed; new duration 1:12".
+- "Mets la phrase sur le prix au début" → Find the segment (`bve transcript show`), make it the plan's `hook.sourceRefs`, then run `bve plan set` and `bve plan compile`. Check that the hook still reads naturally.
 - "Fais une version 9:16" → `bve target add tiktok --preset tiktok/vertical` + `bve reframe --target tiktok --mode center`. Check the frames.
 
 ## Failure handling

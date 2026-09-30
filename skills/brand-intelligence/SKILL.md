@@ -24,15 +24,16 @@ Any subset of the following:
 - `brand/preview.png`: a sample frame showing the palette, typography, caption style and a motion keyframe strip.
 
 ## Tools
-- `bve brand extract --assets <files...> --json` returns **facts**: palette clusters with pixel share, logo background/transparency, embedded font names (PDF/SVG), and dominant colors of reference media.
-- `bve brand init --from-extract` writes a draft `brand.json` with `source: "extracted"` fields and schema defaults.
-- `bve brand validate` / `bve brand tokens --fps 30` validate the file and show the compiled `BrandTokens` (exact frames, easing and distances).
-- `bve brand preview [--target <id>]` renders the preview frame.
-- The Read tool on the brand book, images and preview lets you view them.
+- Read tool on the brand book (PDF), logo and reference images — **you** extract colors, fonts and the visual language (automatic palette extraction, `bve brand extract`, is planned for Phase 2).
+- `bve brand set <brand-kit-dir | brand.json>` — validates, imports the kit's `assets/` (logo, fonts, LUT), compiles `brand/style-tokens.json`, creates a version. Returns the tokens and non-blocking issues (contrast, missing font files).
+- `bve brand validate` — schema + WCAG contrast + referenced files.
+- `bve brand tokens` — recompile and show the style tokens (exact frames, easing/spring, distances).
+- Preview: after a draft render, `bve frames --target <id> --at <seconds>` and look at the frames.
+- A brand kit folder = `brand.json` + `assets/` (see `examples/brands/maison-lune`).
 
 ## Workflow
-1. Run `bve brand extract` on everything provided.
-2. **Read the brand book or look at the images yourself.** Extraction gives numbers. You provide meaning:
+1. Look at every asset yourself with the Read tool: the logo, the brand book pages, product images and campaign stills. Note the exact hex values that are printed or measurable, the font names and the recurring layouts.
+2. **Turn what you see into decisions:**
    - **Colors:** decide which colors are primary, secondary and accent, and their usage rules ("accent only for CTA").
    - **Fonts:** assign the display, body and caption roles. If a font file is missing, pick the closest Google Font as `fallback`.
    - **Visual language:** set contrast, radius, shadows, composition, shapes and density.
@@ -43,7 +44,7 @@ Any subset of the following:
    - `user` when the user gave the value
    - `extracted` when it was measured
    - `inferred` when you judged it, with `evidence` and `confidence`
-4. Run `bve brand validate`, then `bve brand preview`. Look at the preview and adjust anything that feels off-brand.
+4. Put `brand.json` and its `assets/` in a kit folder, then run `bve brand set <kit>` and `bve brand validate`. After the first draft render, check the frames (`bve frames`) and adjust anything that feels off-brand.
 5. Show the user a short summary with the preview. **Explicitly ask them to confirm inferred fields with confidence < 0.6** (usually the motion personality).
 
 ### Brand character → motion
