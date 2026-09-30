@@ -38,9 +38,19 @@
         ],
         "source": {
           "kind": "file",
-          "path": "assets/fonts/Canela-Light.woff2"
+          "path": "brand/fonts/Canela-Light.woff2"
         },
-        "fallback": "Cormorant Garamond"
+        "fallback": "Cormorant Garamond",
+        "fallbackSource": {
+          "kind": "file",
+          "files": [
+            {
+              "weight": 400,
+              "path": "brand/fonts/CormorantGaramond-400.ttf"
+            }
+          ]
+        },
+        "license": "commercial (licensed to the brand; file not distributed)"
       },
       {
         "role": "body",
@@ -50,8 +60,19 @@
           600
         ],
         "source": {
-          "kind": "google"
-        }
+          "kind": "file",
+          "files": [
+            {
+              "weight": 600,
+              "path": "brand/fonts/Inter-600.ttf"
+            },
+            {
+              "weight": 400,
+              "path": "brand/fonts/Inter-400.ttf"
+            }
+          ]
+        },
+        "license": "OFL-1.1 or Apache-2.0 (Google Fonts)"
       },
       {
         "role": "caption",
@@ -60,8 +81,19 @@
           600
         ],
         "source": {
-          "kind": "google"
-        }
+          "kind": "file",
+          "files": [
+            {
+              "weight": 600,
+              "path": "brand/fonts/Inter-600.ttf"
+            },
+            {
+              "weight": 400,
+              "path": "brand/fonts/Inter-400.ttf"
+            }
+          ]
+        },
+        "license": "OFL-1.1 or Apache-2.0 (Google Fonts)"
       }
     ],
     "logo": {

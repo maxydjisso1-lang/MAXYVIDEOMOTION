@@ -39,12 +39,22 @@ function font(brand: Brand, roleOrFamily: string, fallbackRole: "display" | "bod
   const fonts = brand.identity.fonts;
   const f = fonts.find((x) => x.role === roleOrFamily) ?? fonts.find((x) => x.family === roleOrFamily) ?? fonts.find((x) => x.role === fallbackRole) ?? fonts[0]!;
   const weight = Math.max(...(f.weights?.length ? f.weights : [fallbackRole === "body" ? 400 : 700]));
+  const files = fontFiles(f.source, weight);
+  const fallbackFiles = fontFiles(f.fallbackSource, weight);
   return {
     family: f.family,
     weight,
     ...(f.fallback ? { fallback: f.fallback } : {}),
-    ...(f.source?.kind === "file" && f.source.path ? { file: f.source.path } : {}),
+    ...(files.length ? { files } : {}),
+    ...(fallbackFiles.length ? { fallbackFiles } : {}),
   };
+}
+
+/** Declared font files as {weight, path}; a single `path` (variable font) serves the requested weight. */
+export function fontFiles(source: Brand["identity"]["fonts"][number]["source"], weight: number): { weight: number; path: string }[] {
+  if (!source || source.kind !== "file") return [];
+  if (source.files?.length) return source.files.map((x) => ({ weight: x.weight, path: x.path }));
+  return source.path ? [{ weight, path: source.path }] : [];
 }
 
 export function compileStyleTokens(brand: Brand, fps: number): StyleTokens {

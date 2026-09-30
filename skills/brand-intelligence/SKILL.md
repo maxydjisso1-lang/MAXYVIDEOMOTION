@@ -29,7 +29,8 @@ Any subset of the following:
 - `bve brand validate` — schema + WCAG contrast + referenced files.
 - `bve brand tokens` — recompile and show the style tokens (exact frames, easing/spring, distances).
 - Preview: after a draft render, `bve frames --target <id> --at <seconds>` and look at the frames.
-- A brand kit folder = `brand.json` + `assets/` (see `examples/brands/maison-lune`).
+- A brand kit folder = `brand.json` + `assets/` (logo, LUT) + `fonts/` (see `examples/brands/maison-lune`). Kit fonts are imported to the project's `brand/fonts/`.
+- `bve brand fonts fetch` — downloads, ONCE, the brand's Google fonts (and the declared fallback of commercial fonts whose files are absent) into `brand/fonts/` and points brand.json at the files.
 
 ## Workflow
 1. Look at every asset yourself with the Read tool: the logo, the brand book pages, product images and campaign stills. Note the exact hex values that are printed or measurable, the font names and the recurring layouts.
@@ -59,6 +60,7 @@ Any subset of the following:
 "Premium **and** dynamic" means: speed `fast`, easing `decelerate` or `emphasized` (no bounce), amplitude `moderate`, and energy around 0.6. Only the pace increases. The premium restraint in easing and amplitude stays.
 
 ## Constraints
+- **Fonts are files.** Every font role must resolve to a file: the brand font (`source.files`) or its declared fallback (`fallbackSource.files`). Never rely on fonts installed on the machine. `bve brand set` reports each role as FOUND / FALLBACK / MISSING; fix MISSING before rendering (fetch, or ask the user for the licensed files).
 - Never invent hex values that you cannot see or measure. If no colors are given, derive them from the logo, or ask.
 - Keep primary colors to 4 or fewer. Every text/background pair used in captions and CTAs must reach WCAG AA contrast (4.5:1). `bve brand validate` checks this.
 - Record the font license if it is known. Unlicensed commercial fonts must get a fallback.

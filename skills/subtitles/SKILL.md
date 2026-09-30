@@ -31,7 +31,7 @@ audio → transcription (word timestamps) → remap to edited timeline → segme
 
 ## Workflow
 1. Run `bve captions build`.
-2. **Proofread.** Run `bve doc get captions`, then fix brand names, proper nouns and technical terms that Whisper often misspells. The brand name must be spelled exactly as in `brand.json`.
+2. **Proofread.** Whisper `small` misspells names and rare words (e.g. "Ozira Mobunu" for Osiéra Mebounou). Sub-word tokens ("j 'exerce") and orphan words are fixed automatically. Run `bve doc get captions`, then fix brand names, proper nouns and technical terms that Whisper often misspells. The brand name must be spelled exactly as in `brand.json`.
 3. **Refine emphasis semantically.** Heuristics are a starting point. Choose 1 key word per cue at most and 1 in 3 cues or fewer for `key`. Pick the words that carry the message ("COMMENT", "CRÉER", "UNE MARQUE").
 4. Preview at the hook, a dense cue and the CTA for each target. Check the following:
    - nothing is cut or off-screen

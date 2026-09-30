@@ -7,7 +7,7 @@ import { SCHEMAS_DIR } from "./locations.js";
 
 export type SchemaName =
   | "analysis" | "audio" | "brand" | "captions" | "color" | "creative-plan" | "motion"
-  | "preset" | "project" | "qc-report" | "style-tokens" | "timeline" | "transcript";
+  | "preset" | "project" | "qc-report" | "qc-waivers" | "render-record" | "style-tokens" | "timeline" | "transcript";
 
 // ajv-formats ships CJS; normalize the default export across loaders.
 const addFormats = ((addFormatsModule as unknown as { default?: unknown }).default ?? addFormatsModule) as (ajv: Ajv2020) => void;

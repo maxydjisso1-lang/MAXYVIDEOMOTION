@@ -2,7 +2,7 @@
  * Color = correction (technical, per shot, measured) + grade (creative, from style tokens).
  * Both stay parameters in color.json and are compiled to FFmpeg filters at render time.
  */
-import { round3, SCHEMA_VERSION, type Analysis, type ColorDoc, type StyleTokens, type Timeline } from "../../core/src/index.js";
+import { round3, SCHEMA_VERSION, type Analysis, type ColorDoc, type Project, type StyleTokens, type Timeline } from "../../core/src/index.js";
 import { hasFilter } from "../../ffmpeg/src/index.js";
 
 type ShotEntry = ColorDoc["shots"][number];
@@ -87,7 +87,14 @@ function correctionFilters(c: Correction | undefined): string[] {
   const [gr, gg, gb] = c.whiteBalance?.mode && c.whiteBalance.mode !== "as-shot" && c.whiteBalance.gains ? c.whiteBalance.gains : [1, 1, 1];
   if (Math.abs(ev - 1) > 1e-3 || gr !== 1 || gg !== 1 || gb !== 1) {
     // Exposure and white balance are both per-channel gains: one pass.
-    out.push(`colorchannelmixer=rr=${round3(ev * gr)}:gg=${round3(ev * gg)}:bb=${round3(ev * gb)}`);
+    const gains = [ev * gr, ev * gg, ev * gb];
+    if (gains.every((x) => x <= 2)) {
+      out.push(`colorchannelmixer=rr=${round3(gains[0]!)}:gg=${round3(gains[1]!)}:bb=${round3(gains[2]!)}`);
+    } else {
+      // colorchannelmixer caps at ×2 (FFmpeg rejects more). A gain g is the same as mapping
+      // input white to 1/g — colorlevels accepts that for any brightening gain.
+      out.push(`colorlevels=rimax=${round3(1 / gains[0]!)}:gimax=${round3(1 / gains[1]!)}:bimax=${round3(1 / gains[2]!)}`);
+    }
   }
   const eq: string[] = [];
   if (c.contrast) eq.push(`contrast=${round3(1 + c.contrast)}`);
@@ -147,4 +154,11 @@ export function clipColorFilters(color: ColorDoc | undefined, sourceId: string, 
   const filters = [...correctionFilters(entry?.correction), ...lookFilters(grade, tokens)];
   if (lutPath) filters.push(`lut3d=file=${lutPath}`);
   return filters;
+}
+
+/** Project operation: measured correction + brand grade for every shot the timeline uses. */
+export async function colorAutoProject(project: Project, intent: "correct-only" | "brand-look" = "brand-look"): Promise<ColorDoc> {
+  const doc = autoColor(await project.readDoc("analysis"), await project.readDoc("timeline"), await project.readDoc("styleTokens"), { intent, previous: await project.readDocOptional("color") });
+  await project.writeDoc("color", doc, { command: "color auto", message: `Color: ${doc.shots.length} shot(s) corrected, look ${doc.globalGrade?.look}` });
+  return doc;
 }

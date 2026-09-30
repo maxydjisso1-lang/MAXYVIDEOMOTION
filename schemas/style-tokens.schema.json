@@ -474,8 +474,43 @@
         "fallback": {
           "type": "string"
         },
-        "file": {
-          "$ref": "common.schema.json#/$defs/relPath"
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "weight",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "weight": {
+                "type": "integer"
+              },
+              "path": {
+                "$ref": "common.schema.json#/$defs/relPath"
+              }
+            }
+          }
+        },
+        "fallbackFiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "weight",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "weight": {
+                "type": "integer"
+              },
+              "path": {
+                "$ref": "common.schema.json#/$defs/relPath"
+              }
+            }
+          }
         }
       }
     }

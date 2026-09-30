@@ -7,8 +7,15 @@ import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { existsSync, withTempDir, type Captions, type MotionDoc, type Preset, type Project, type StyleTokens } from "../../core/src/index.js";
 import { ffmpeg } from "../../ffmpeg/src/index.js";
-import { ctaLayout, cueLayout, DISPLAY_PX, FULLSCREEN_COMPONENTS, lowerThirdBox, titleLayout, unit, watermarkBox, type Anchor, type Frame } from "../../motion/src/layout.js";
-import { applyCase } from "../../captions/src/index.js";
+import { applyCase, avoidObstacles, ctaLayout, cueLayout, motionObstacles, DISPLAY_PX, FULLSCREEN_COMPONENTS, lowerThirdBox, titleLayout, unit, watermarkBox, type Anchor, type Frame } from "../../motion/src/layout.js";
+import { legacyFaceFor, resolveFonts, type FontRole } from "../../brand/src/index.js";
+
+export interface AssFontReport {
+  /** libass' own log: requested family -> PostScript name it actually used. */
+  fontSelection: Record<string, string>;
+  /** Per role: the family/bold we asked for and the PostScript name of the file we expect. */
+  expected: Partial<Record<FontRole, { fontname: string; bold: boolean; postscript: string }>>;
+}
 import type { Geometry } from "./basePlate.js";
 
 /** ASS colour: &HAABBGGRR (alpha 00 = opaque). */
@@ -33,7 +40,12 @@ function rect(w: number, h: number) {
   return `m 0 0 l ${Math.round(w)} 0 ${Math.round(w)} ${Math.round(h)} 0 ${Math.round(h)}`;
 }
 
-export function buildAss(tokens: StyleTokens, frame: Frame, motion: MotionDoc | undefined, captions: Captions | undefined): string {
+export type AssFaces = Partial<Record<FontRole, { fontname: string; bold: boolean }>>;
+
+/** `faces` = the exact font file each role renders with, addressed the way libass matches it. */
+export function buildAss(tokens: StyleTokens, frame: Frame, motion: MotionDoc | undefined, captions: Captions | undefined, faces: AssFaces = {}): string {
+  const fam = (role: FontRole) => faces[role]?.fontname ?? (role === "caption" ? tokens.caption.family : tokens.type[role].family);
+  const boldOf = (role: FontRole, weight: number) => (faces[role] ? (faces[role]!.bold ? -1 : 0) : weight);
   const t = tokens;
   const u = unit(frame);
   const ms = (frames: number) => Math.round((frames / t.fps) * 1000);
@@ -44,15 +56,16 @@ export function buildAss(tokens: StyleTokens, frame: Frame, motion: MotionDoc | 
   const borderStyle = t.caption.background === "box" ? 3 : 1;
   const boxed = t.shape.style === "block" || t.shape.style === "pill";
   const styles = [
-    `Style: Caption,${t.caption.family},${Math.round(t.caption.sizePx * u)},${assColor(t.caption.textColor)},${assColor(t.caption.highlightColor)},&H00000000,&H80000000,${t.caption.weight >= 600 ? -1 : 0},0,0,0,100,100,0,0,${borderStyle},${outline.toFixed(1)},${shadow.toFixed(1)},8,0,0,0,1`,
-    `Style: Title,${t.type.display.family},${Math.round(DISPLAY_PX * u)},${assColor(boxed ? t.color.onAccent : "#FFFFFF")},${assColor(t.color.accent)},${assColor(t.color.accent)},${assColor(t.color.accent)},-1,0,0,0,100,100,0,0,${boxed ? 3 : 1},${boxed ? (24 * u).toFixed(1) : "0"},${boxed ? 0 : (3 * u).toFixed(1)},8,0,0,0,1`,
-    `Style: Body,${t.type.body.family},${Math.round(56 * u)},${assColor(boxed ? t.color.onAccent : "#FFFFFF")},${assColor(t.color.accent)},${assColor(t.color.accent)},${assColor(t.color.accent)},-1,0,0,0,100,100,0,0,${boxed ? 3 : 1},${boxed ? (22 * u).toFixed(1) : (2 * u).toFixed(1)},0,8,0,0,0,1`,
+    `Style: Caption,${fam("caption")},${Math.round(t.caption.sizePx * u)},${assColor(t.caption.textColor)},${assColor(t.caption.highlightColor)},&H00000000,&H80000000,${boldOf("caption", t.caption.weight)},0,0,0,100,100,0,0,${borderStyle},${outline.toFixed(1)},${shadow.toFixed(1)},8,0,0,0,1`,
+    `Style: Title,${fam("display")},${Math.round(DISPLAY_PX * u)},${assColor(boxed ? t.color.onAccent : "#FFFFFF")},${assColor(t.color.accent)},${assColor(t.color.accent)},${assColor(t.color.accent)},${boldOf("display", t.type.display.weight)},0,0,0,100,100,0,0,${boxed ? 3 : 1},${boxed ? (24 * u).toFixed(1) : "0"},${boxed ? 0 : (3 * u).toFixed(1)},8,0,0,0,1`,
+    `Style: Body,${fam("body")},${Math.round(56 * u)},${assColor(boxed ? t.color.onAccent : "#FFFFFF")},${assColor(t.color.accent)},${assColor(t.color.accent)},${assColor(t.color.accent)},${boldOf("body", t.type.body.weight)},0,0,0,100,100,0,0,${boxed ? 3 : 1},${boxed ? (22 * u).toFixed(1) : (2 * u).toFixed(1)},0,8,0,0,0,1`,
     `Style: Shape,Arial,20,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1`,
   ];
   const events: string[] = [];
   const add = (layer: number, start: number, end: number, style: string, text: string) => events.push(`Dialogue: ${layer},${ts(start)},${ts(end)},${style},,0,0,0,,${text}`);
   const instances = motion?.instances ?? [];
   const fullscreen = instances.filter((i) => FULLSCREEN_COMPONENTS.has(i.component));
+  const obstacles = motionObstacles(frame, t, instances);
 
   for (const i of instances) {
     const s = i.start;
@@ -113,7 +126,7 @@ export function buildAss(tokens: StyleTokens, frame: Frame, motion: MotionDoc | 
     if (cue.hidden || fullscreen.some((f) => cue.start >= f.start && cue.start < f.start + f.durationSec)) continue;
     const words = cue.words.map((w, k) => applyCase(w.text, t.caption.case, k === 0));
     // libass does not wrap like the browser: break exactly where the shared layout breaks.
-    const layout = cueLayout(frame, t, cue.words.map((w, k) => ({ text: words[k]!, lineBreakAfter: w.lineBreakAfter })));
+    const layout = avoidObstacles(frame, t, cueLayout(frame, t, cue.words.map((w, k) => ({ text: words[k]!, lineBreakAfter: w.lineBreakAfter }))), cue, obstacles);
     const breaks = layout.breaks;
     const parts = cue.words.map((w, k) => {
       const txt = esc(words[k]!);
@@ -140,16 +153,22 @@ export async function renderGraphicsAss(
   project: Project,
   args: { basePlate: string; tokens: StyleTokens; motion?: MotionDoc; captions?: Captions; preset: Preset; geometry: Geometry; durationSec: number; draft: boolean },
   out: string,
-): Promise<void> {
+): Promise<AssFontReport> {
   const frame: Frame = { width: args.geometry.width, height: args.geometry.height, safeZone: args.preset.safeZone };
   const t = args.tokens;
   const u = unit(frame);
-  await withTempDir(async (dir) => {
-    await writeFile(join(dir, "graphics.ass"), buildAss(t, frame, args.motion, args.captions), "utf8");
+  const fonts = resolveFonts(project, t);
+  const expected: AssFontReport["expected"] = {};
+  for (const r of fonts) {
+    const face = r.status === "missing" ? undefined : legacyFaceFor(project, r);
+    if (face) expected[r.role] = face;
+  }
+  return withTempDir(async (dir) => {
+    await writeFile(join(dir, "graphics.ass"), buildAss(t, frame, args.motion, args.captions, expected), "utf8");
     await mkdir(join(dir, "fonts"), { recursive: true });
-    for (const role of ["display", "body", "caption"] as const) {
-      const f = t.type[role].file;
-      if (f && existsSync(project.abs(f))) await copyFile(project.abs(f), join(dir, "fonts", `${role}${f.slice(f.lastIndexOf("."))}`));
+    // Only project font files: libass must not silently pick a machine font (checked below).
+    for (const [i, face] of fonts.flatMap((f) => f.faces).entries()) {
+      await copyFile(project.abs(face.path), join(dir, "fonts", `f${i}${face.path.slice(face.path.lastIndexOf("."))}`));
     }
     const inputs = ["-i", args.basePlate];
     let graph = `[0:v]ass=graphics.ass:fontsdir=fonts[g0]`;
@@ -175,9 +194,13 @@ export async function renderGraphicsAss(
         last = "[g2]";
       } else graph += `;[l2]nullsink`;
     }
-    await ffmpeg(
-      [...inputs, "-filter_complex", graph, "-map", last, "-an", "-c:v", "libx264", "-preset", args.draft ? "veryfast" : "medium", "-crf", args.draft ? "22" : "15", "-pix_fmt", "yuv420p", "-t", args.durationSec.toFixed(3), out],
-      { log: project.log, cwd: dir },
+    const { stderr } = await ffmpeg(
+      ["-v", "verbose", ...inputs, "-filter_complex", graph, "-map", last, "-an", "-c:v", "libx264", "-preset", args.draft ? "veryfast" : "medium", "-crf", args.draft ? "22" : "15", "-pix_fmt", "yuv420p", "-t", args.durationSec.toFixed(3), out],
+      { log: project.log, cwd: dir, captureStderr: true },
     );
+    // libass reports every substitution: "fontselect: (Family, 700, 0) -> PostScriptName, 0, ..."
+    const fontSelection: Record<string, string> = {};
+    for (const m of stderr.matchAll(/fontselect: \(([^,]+), \d+, \d+\) -> ([^,\r\n]+)/g)) fontSelection[m[1]!.trim()] = m[2]!.trim();
+    return { fontSelection, expected };
   }, project.abs(".cache/tmp"));
 }

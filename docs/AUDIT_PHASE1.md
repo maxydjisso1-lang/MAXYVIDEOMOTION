@@ -165,12 +165,12 @@ Source (read-only; sha256 re-checked before every render; CFR mezzanine used if 
 
 ### 4.2 Cache keys
 
-`stageKey(stage, inputs) = sha256(stableStringify({ stage, engine: package.version, pipeline: PIPELINE_REVISION, inputs }))`, truncated to 20 hex characters. `stableStringify` sorts object keys, so equal data always gives an equal key.
+`stageKey(stage, inputs) = sha256(stableStringify({ stage, engine: package.version, code: engineCodeHash(), inputs }))`, truncated to 20 hex characters. `engineCodeHash()` fingerprints every engine source file (post-audit fix for [R2]). `stableStringify` sorts object keys, so equal data always gives an equal key.
 
 | Stage | Inputs hashed |
 |---|---|
-| base | `timeline.tracks.video`, `timeline.reframe[target]`, full color document, analysis shot ids and ranges, `tokens.grade`, geometry `{w,h,fps}`, draft flag, sha256 of every source |
-| graphics | base key, renderer name, full style tokens, motion document, captions document, preset safe zone, geometry, draft flag |
+| base | `timeline.tracks.video`, `timeline.reframe[target]`, full color document, analysis shot ids and ranges, `tokens.grade`, **sha256 of the LUT file**, geometry `{w,h,fps}`, draft flag, sha256 of every source |
+| graphics | base key, renderer name, full style tokens, motion document, captions document, preset safe zone, geometry, draft flag, **sha256 of the logo and of every font file** (post-audit fix for [R1]) |
 | mix | `timeline.tracks.video`, full audio document, preset loudness, sample rate, sha256 of every source |
 | Remotion bundle | sha256 of every `.ts/.tsx` file in `engine/remotion/src` and `engine/motion/src` → `engine/remotion/.bundle/<16 hex>/` |
 
@@ -242,3 +242,64 @@ Cached files are written as `<name>.partial.<ext>` and renamed on success, so an
   - Remotion: `document.fonts.check()`, reported per role.
   - libass: parse the font-selection warnings.
 - **QC reports per role:** `FONT FOUND` (embedded file used) / `FONT FALLBACK` (declared fallback used: warning) / `FONT MISSING` (neither: blocker unless waived).
+
+## 8. Resolution status (pre-Phase-2 work)
+
+| Finding | Status | How |
+|---|---|---|
+| [C1] QC report not validated | ✅ fixed | `core/artifacts.ts`: `writeQcReport` / `readQcReport` validate against `qc-report.schema.json` |
+| [C2] waivers without schema | ✅ fixed | new `qc-waivers.schema.json`; `addWaiver` / `readWaivers` validate |
+| [C3] render record without schema | ✅ fixed | new `render-record.schema.json` (now includes verified fonts); written and read only through `core` |
+| [R1] asset contents not in cache keys | ✅ fixed | the base and graphics keys include the sha256 of the logo, LUT and every font file |
+| [R2] manual pipeline revision | ✅ fixed | the `engineCodeHash()` of the engine sources is part of every stage key |
+| [R6] no concurrency guard | ✅ fixed | unique `.partial` suffix per render |
+| [R7] audio-only sources | ✅ fixed | the render refuses early with `UNSUPPORTED` and a hint (covered by the robustness matrix) |
+| [A1] brand → vision | ✅ fixed | `addAsset` and `importFile` moved to `core/assets.ts` |
+| [A2] two `applyCase` | ✅ fixed | a single implementation in `motion/layout.ts` |
+| [A3] render record in rendering | ✅ fixed | the record, QC report and waivers live in `core/artifacts.ts` |
+| [A4] logic in the CLI | ✅ fixed | every command calls one engine/core function (`addTarget`, `annotateAnalysis`, `setPlan`, `compileProjectPlan`, `colorAutoProject`, `cleanProjectAudio`, `buildProjectCaptions`, `motionFromProjectPlan`, `extractRenderFrames`, `Project.clean`, …) |
+| [E1] `bve qc` ok:true + exit 5 | ✅ fixed | a failed QC now returns `ok:false`, `code: QC_BLOCKED`, with the report in `details` |
+| Fonts | ✅ fixed | see §9 |
+| [R3] chain state resets at cuts | ⏭ Phase 2 (audio) | measured: not audible on the fixtures |
+| [R4] sample-peak limiter | ⏭ Phase 2 | QC measures true peak; all real renders passed |
+| [R5] broadcast preset never rendered | ⏭ Phase 2 | — |
+| [V1] [V2] manifest/analysis not versioned | ⏭ Phase 2 | annotations document |
+| [C5] missing props schemas | ⏭ Phase 2 (motion components) | — |
+
+### Bugs found by the robustness matrix and the real footage (all fixed)
+
+| Case | Symptom | Fix |
+|---|---|---|
+| Video without audio | loudnorm crashed on −∞ LUFS | silent programmes are not normalised; QC reports `audio.loudness: skip` with the reason |
+| HEVC 10-bit | analysis rejected by its schema (luma > 1) | stats are always measured on 8-bit 4:2:0 |
+| MJPEG in AVI | treated as audio-only | only `attached_pic` streams (cover art) are ignored, not a codec |
+| Continuous speech / street ambience | noise floor reported as −90 dBFS ("clean") | the floor is the 10th percentile of 100 ms RMS windows when there is no real silence; "noisy" = floor > −62 dBFS AND SNR < 30 dB |
+| Relative input paths | analyzers failed when run with a temp working dir | inputs resolved to absolute paths |
+| Whisper tokens | "j 'exerce" in captions | apostrophe and punctuation tokens are merged into the previous word |
+| Orphan words | a 1-word cue ("mon") | a lone word joins its neighbour within the same take |
+| CTA over captions | collision (QC warning) | captions give way to motion shown at the same time (shared `avoidObstacles`, used by both renderers and QC) |
+| Watermark over title | overlap (not detected before) | top titles reserve the brand watermark corner; new QC check `motion.overlap` |
+| libass weight selection | Inter 600 rendered with the Regular file | libass is addressed by the file's own legacy family name; its `fontselect` log is verified against the expected PostScript name |
+| faster-whisper + PyAV 19 | crash while decoding | the engine decodes with its own FFmpeg to 16 kHz WAV; Python only reads samples |
+| Underexposed real interview (+1.5 EV) | render crashed: `colorchannelmixer` rejects gains > 2 | gains above ×2 are applied with `colorlevels` (unit test runs the filter in FFmpeg) |
+
+## 9. Fonts (implemented)
+
+- `brand.json` fonts declare files per weight: `source: { kind: "file", files: [{ weight, path }] }`. The optional `fallbackSource` holds the files of the declared fallback. Kits ship them in `fonts/`, which is imported to the project's `brand/fonts/`.
+- `bve brand fonts fetch` downloads Google fonts (and fallbacks of absent commercial fonts) **once**, at setup, then points `brand.json` at the files.
+- **Remotion** registers each file with the FontFace API and blocks rendering (`delayRender`) until it has loaded. A font that fails to load fails the render.
+- **libass** receives the same files (`fontsdir`), addressed by their legacy family name. Its own `fontselect` log is compared with the expected PostScript name.
+- The render record stores, per role, the requested font, the font used and a status. QC reports **FONT FOUND** (pass), **FONT FALLBACK** (warning) or **FONT MISSING** (blocker, export refused).
+
+## 10. Real-world measurements that shape Phase 2
+
+| Measurement | Result | Consequence |
+|---|---|---|
+| faster-whisper `small`, int8, CPU, clear French speech (71 s) | ≈45 s; language p=1.00; 17 segments, word timestamps; minor lexical errors ("sigale") | `small` is the default. Proofreading stays a skill step. Offer `medium`/`large-v3` for final deliverables. |
+| Whisper segments on real talk | segments end mid-sentence ("… j'exerce dans le" \| "domaine …") | Phase 2: a sentence-level view, so plans never cut mid-sentence |
+| Whisper on speech at ≈0 dB SNR (street) | 0 segments, with or without VAD | extreme case is out of scope for transcription without enhancement |
+| Whisper on speech at ≈5 dB SNR | transcribed, more errors ("cigare", "fourmille") | Phase 2: denoise **before** transcription |
+| Phase 1 cleanup (`afftdn`) on real noise | floor −0.4 to −1.1 dB, SNR unchanged | **not sufficient** for real footage |
+| RNNoise (`arnndn`, BSD model) | talking head: SNR 15.9 → 24.1 dB with voice level preserved; street 5 dB: SNR 5 → 17 dB but voice −10 LU; street 0 dB: voice destroyed | Phase 2: neural denoise with **strength driven by measured SNR**, voice-preservation check (loudness delta), DeepFilterNet evaluation for low SNR |
+| Remotion render, 21 s real footage, 1080×1920 | ≈3 min on this machine (whole render; on the 10 s synthetic fixture: Remotion ≈45 s vs ASS ≈20 s) | Phase 2: profile the PNG sequence stage (JPEG + separate alpha, or fewer graphics-only frames) |
+| Music vs noise | spectral flatness does not separate them on these files | Phase 2: tonal/temporal music detection before any denoise |

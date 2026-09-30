@@ -121,6 +121,16 @@ describe("Phase 1 vertical slice: same video, two brands", () => {
     expect(A.qc.categories.motion?.status).toBe("pass");
   });
 
+  it("renders with the brand's own font files and reports FOUND / FALLBACK per role", () => {
+    const byRole = (p: Built) => Object.fromEntries((p.render.fonts ?? []).map((f) => [f.role, f.status]));
+    expect(byRole(A)).toEqual({ display: "fallback", body: "found", caption: "found" }); // Canela (commercial) absent → Cormorant Garamond
+    expect(byRole(B)).toEqual({ display: "found", body: "found", caption: "found" });
+    const fontsCheck = (p: Built) => Object.values(p.qc.categories).flatMap((c) => c.checks).find((c) => c.id === "brand.fonts")!;
+    expect(fontsCheck(A).status).toBe("warn");
+    expect(fontsCheck(A).message).toContain("FONT FALLBACK");
+    expect(fontsCheck(B).status).toBe("pass");
+  });
+
   it("never modifies the source media", async () => {
     const original = await sha256File(media.video);
     for (const p of [A, B]) {
@@ -146,6 +156,10 @@ describe("Phase 1 vertical slice: same video, two brands", () => {
     const C = await buildProject("e2e-c-volt-ass", "examples/brands/volt-street", "ass", media);
     expect(C.render.renderer).toBe("ass");
     expect(C.qc.status).not.toBe("fail");
+    // libass' own font choice is verified against the expected files (e.g. Montserrat-ExtraBold).
+    const caption = C.render.fonts?.find((f) => f.role === "caption");
+    expect(caption?.status).toBe("found");
+    expect(caption?.used).toBe("Montserrat-ExtraBold");
     const tokC = read<StyleTokens>(C.dir, "brand/style-tokens.json");
     const c = await sampleColor(C.exportFile, C.render.durationSec - 0.3, { x: 40, y: 60, w: 80, h: 80 });
     expect(deltaE(c, tokC.color.background)).toBeLessThan(8);

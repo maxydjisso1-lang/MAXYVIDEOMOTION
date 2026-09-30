@@ -48,6 +48,8 @@ The `dialogue[]` and `master` sections of `audio/audio.json` (schema: `schemas/a
 5. Report the result: "Noise floor −52 → −68 dBFS, hum 50 Hz removed, loudness normalized to −14 LUFS / −1 dBTP."
 
 ## Constraints
+- **Be honest about limits.** On real footage the Phase 1 FFT denoiser lowers a street/room floor by only ~1 dB. Tell the user when noise will remain audible. Neural denoising (RNNoise/DeepFilterNet), driven by the measured SNR, arrives in Phase 2.
+- If the "noise" may be background music (promo videos, vlogs), do not denoise without checking with the user.
 - Naturalness beats silence. Leave a little room tone and never gate speech hard.
 - Denoise before compression. Compression raises the noise floor.
 - Loudness normalization happens once, on the master mix, after music. Not per clip.

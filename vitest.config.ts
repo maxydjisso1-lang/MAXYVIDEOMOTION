@@ -20,6 +20,16 @@ export default defineConfig({
           fileParallelism: false,
         },
       },
+      {
+        test: {
+          name: "real",
+          include: ["tests/real/**/*.test.ts"],
+          // Opt-in: real footage + Whisper (npm run fixtures:real && npm run test:real).
+          testTimeout: 30 * 60_000,
+          hookTimeout: 30 * 60_000,
+          fileParallelism: false,
+        },
+      },
     ],
   },
 });

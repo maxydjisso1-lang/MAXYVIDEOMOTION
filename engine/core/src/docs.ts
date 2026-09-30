@@ -38,3 +38,7 @@ export const DOC_SPECS: Record<DocKey, DocSpec> = {
 };
 
 export const VERSIONED_DOCS = (Object.keys(DOC_SPECS) as DocKey[]).filter((k) => DOC_SPECS[k].versioned);
+
+export function isDocKey(key: string): key is DocKey {
+  return key in DOC_SPECS;
+}

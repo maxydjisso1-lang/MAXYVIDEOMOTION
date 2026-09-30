@@ -24,6 +24,8 @@ const TYPE_NAMES: Record<string, string> = {
   "timeline.schema.json": "Timeline",
   "transcript.schema.json": "Transcript",
   "preset.schema.json": "Preset",
+  "render-record.schema.json": "RenderRecord",
+  "qc-waivers.schema.json": "QcWaivers",
 };
 
 const schemas = new Map<string, JSONSchema>();

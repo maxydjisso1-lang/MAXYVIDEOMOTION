@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { cpus } from "node:os";
 import { BveError, existsSync, REMOTION_ENTRY, REPO_ROOT, withTempDir, type Captions, type MotionDoc, type Preset, type Project, type StyleTokens } from "../../core/src/index.js";
 import { ffmpeg } from "../../ffmpeg/src/index.js";
+import { resolveFonts } from "../../brand/src/index.js";
 import type { BrandVideoProps } from "../../remotion/src/props.js";
 import { linkOrCopy } from "./cache.js";
 import type { Geometry } from "./basePlate.js";
@@ -87,14 +88,16 @@ export async function renderGraphicsRemotion(
     await linkOrCopy(project.abs(logo), join(pub, name));
     logoSrc = `${args.key}/${name}`;
   }
+  // Only project font FILES are loaded (brand font, else its declared fallback). The composition
+  // blocks rendering until each FontFace has loaded, and fails loudly if one cannot.
   const fontFaces: BrandVideoProps["fontFaces"] = [];
-  for (const role of ["display", "body", "caption"] as const) {
-    const f = args.tokens.type[role];
-    if (f.file && existsSync(project.abs(f.file))) {
-      const name = `font-${role}${f.file.slice(f.file.lastIndexOf("."))}`;
-      await linkOrCopy(project.abs(f.file), join(pub, name));
-      fontFaces.push({ family: f.family, src: `${args.key}/${name}`, weight: f.weight });
-    }
+  const seen = new Set<string>();
+  for (const face of resolveFonts(project, args.tokens).flatMap((r) => r.faces)) {
+    if (seen.has(`${face.family}|${face.weight}|${face.path}`)) continue;
+    seen.add(`${face.family}|${face.weight}|${face.path}`);
+    const name = `font-${fontFaces.length}${face.path.slice(face.path.lastIndexOf("."))}`;
+    await linkOrCopy(project.abs(face.path), join(pub, name));
+    fontFaces.push({ family: face.family, src: `${args.key}/${name}`, weight: face.weight });
   }
   const fps = args.geometry.fps;
   const durationInFrames = Math.max(1, Math.round(args.durationSec * fps));

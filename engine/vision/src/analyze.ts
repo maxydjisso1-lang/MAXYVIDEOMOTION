@@ -1,9 +1,9 @@
 import { mkdir } from "node:fs/promises";
 import {
-  invertRanges, round3, SCHEMA_VERSION, toProjectRel, type Analysis, type Project, type Range, type Shot, type Source,
+  BveError, invertRanges, round3, SCHEMA_VERSION, toProjectRel, type Analysis, type Project, type Range, type Shot, type Source,
 } from "../../core/src/index.js";
 import {
-  capabilities, detectBlack, detectSceneCuts, detectSilences, extractFrame, ffmpeg, frameStats, measureLoudness, rmsLevel,
+  capabilities, detectBlack, detectSceneCuts, detectSilences, estimateNoiseFloor, extractFrame, ffmpeg, frameStats, measureLoudness, rmsLevel,
   type FrameStats,
 } from "../../ffmpeg/src/index.js";
 
@@ -61,11 +61,15 @@ async function analyzeAudio(project: Project, input: string, duration: number): 
     measureLoudness(input, { log: project.log }),
   ]);
   const silences = silencesRaw.map((s) => ({ start: round3(s.start), end: round3(Math.min(s.end, duration)) }));
+  // A real silence gives the exact floor; without one (continuous speech, street ambience) the
+  // 10th percentile of 100 ms RMS windows does. "No silence" must never read as "clean".
   const longest = [...silences].sort((a, b) => b.end - b.start - (a.end - a.start))[0];
-  const noiseFloorDb = longest && longest.end - longest.start > 0.25
+  const noiseFloorDb = longest && longest.end - longest.start > 0.5
     ? await rmsLevel(input, { start: longest.start + 0.05, end: longest.end - 0.05 }, { log: project.log })
-    : -90;
-  const noiseProfile: NonNullable<AudioAnalysis["noiseProfile"]> = noiseFloorDb > -62 ? ["broadband"] : [];
+    : (await estimateNoiseFloor(input, { log: project.log })).noiseFloorDb;
+  // Noisy = an audible floor AND a poor speech-to-noise ratio (a quiet room tone under loud speech is fine).
+  const snr = loud.integratedLufs - noiseFloorDb;
+  const noiseProfile: NonNullable<AudioAnalysis["noiseProfile"]> = noiseFloorDb > -62 && snr < 30 ? ["broadband"] : [];
   const speech = invertRanges(silences, duration).map((r) => ({ start: round3(r.start), end: round3(r.end) }));
   return {
     integratedLufs: round3(loud.integratedLufs),
@@ -76,7 +80,7 @@ async function analyzeAudio(project: Project, input: string, duration: number): 
     silences,
     speech,
     noiseProfile,
-    qualityScore: round3(clamp01((-noiseFloorDb - 35) / 40)),
+    qualityScore: round3(clamp01((snr - 10) / 40)),
   };
 }
 
@@ -91,7 +95,7 @@ export async function analyzeSource(project: Project, source: Source): Promise<S
       frameStats(input, { fps: 4, log: project.log }),
       detectBlack(input, { log: project.log }),
     ]);
-    const bitDepth = source.probe.bitDepth && source.probe.bitDepth > 8 ? source.probe.bitDepth : 8;
+    const bitDepth = 8; // frameStats converts to 8-bit before measuring, whatever the source depth
     const kfDir = `analysis/keyframes/${source.id}`;
     await mkdir(project.abs(kfDir), { recursive: true });
     const shots = buildShots(cuts, duration);
@@ -174,4 +178,26 @@ export function summarizeAnalysis(analysis: Analysis) {
     audio: { lufs: s.audio.integratedLufs, truePeak: s.audio.truePeakDb, noiseFloorDb: s.audio.noiseFloorDb, silences: s.audio.silences?.length, speechSec: round3((s.audio.speech ?? []).reduce((a, r) => a + r.end - r.start, 0)) },
     contactSheets: s.contactSheets,
   }));
+}
+
+export interface ShotAnnotation {
+  sourceId: string;
+  shotId: string;
+  labels?: { label: string; confidence?: number }[];
+  notes?: string;
+  qualityScore?: number;
+}
+
+/** Merge Claude's semantic labels (from contact sheets) into the analysis. */
+export async function annotateAnalysis(project: Project, notes: ShotAnnotation[]): Promise<{ annotated: number }> {
+  const analysis = await project.readDoc("analysis");
+  for (const n of notes) {
+    const shot = analysis.sources.find((s) => s.sourceId === n.sourceId)?.shots.find((s) => s.id === n.shotId);
+    if (!shot) throw new BveError("NOT_FOUND", `Unknown shot ${n.sourceId}/${n.shotId}`, { hint: "See `bve analysis summary`." });
+    if (n.labels) shot.labels = n.labels.map((l) => ({ ...l, source: "claude" as const }));
+    if (n.notes) shot.notes = n.notes;
+    if (n.qualityScore !== undefined) shot.qualityScore = n.qualityScore;
+  }
+  await project.writeDoc("analysis", analysis, { command: "analysis annotate", message: `Annotated ${notes.length} shot(s)` });
+  return { annotated: notes.length };
 }

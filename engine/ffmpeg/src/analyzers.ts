@@ -3,7 +3,7 @@
  * interpretation (what counts as "underexposed", "noisy"…) lives in the callers.
  */
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { withTempDir, type Range } from "../../core/src/index.js";
 import { ffmpeg, type RunOptions } from "./run.js";
 
@@ -54,6 +54,28 @@ export async function rmsLevel(input: string, range: Range, opts: RunOptions = {
   return v === undefined || v === "-inf" ? -90 : Number(v);
 }
 
+/**
+ * Noise floor that works WITHOUT silences: RMS over 100 ms windows, 10th percentile. Continuous
+ * speech still has micro-pauses between words, and those windows sit on the background noise.
+ */
+export async function estimateNoiseFloor(input: string, opts: RunOptions = {}): Promise<{ noiseFloorDb: number; windows: number }> {
+  return withTempDir(async (dir) => {
+    await ffmpeg(
+      ["-i", resolve(input), "-vn", "-af", "aresample=48000,asetnsamples=n=4800:p=0,astats=metadata=1:reset=1,ametadata=mode=print:key=lavfi.astats.Overall.RMS_level:file=rms.txt", "-f", "null", "-"],
+      { ...opts, cwd: dir },
+    );
+    const values = (await readFile(join(dir, "rms.txt"), "utf8"))
+      .split(/\r?\n/)
+      .map((l) => /RMS_level=(-?[\d.]+)/.exec(l)?.[1])
+      .filter((v): v is string => v !== undefined)
+      .map(Number)
+      .filter((v) => Number.isFinite(v) && v > -120)
+      .sort((a, b) => a - b);
+    if (!values.length) return { noiseFloorDb: -120, windows: 0 };
+    return { noiseFloorDb: values[Math.floor(values.length * 0.1)]!, windows: values.length };
+  });
+}
+
 export async function detectSceneCuts(input: string, opts: { threshold?: number } & RunOptions = {}): Promise<{ time: number; score: number }[]> {
   const { stderr } = await ffmpeg(
     ["-i", input, "-an", "-vf", `scale=320:-2,scdet=threshold=${opts.threshold ?? 10}`, "-f", "null", "-"],
@@ -91,7 +113,7 @@ export async function frameStats(input: string, opts: { fps?: number; start?: nu
     const dur = opts.duration !== undefined ? ["-t", String(opts.duration)] : [];
     // metadata=print writes to a file relative to cwd: avoids escaping Windows paths in the graph.
     await ffmpeg(
-      [...seek, ...dur, "-i", input, "-an", "-vf", `fps=${opts.fps ?? 2},scale=320:-2,signalstats,metadata=mode=print:file=stats.txt`, "-f", "null", "-"],
+      [...seek, ...dur, "-i", resolve(input), "-an", "-vf", `fps=${opts.fps ?? 2},scale=320:-2,format=yuv420p,signalstats,metadata=mode=print:file=stats.txt`, "-f", "null", "-"],
       { ...opts, cwd: dir },
     );
     const text = await readFile(join(dir, "stats.txt"), "utf8");

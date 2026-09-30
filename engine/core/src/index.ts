@@ -8,4 +8,6 @@ export * from "./docs.js";
 export * from "./versions.js";
 export * from "./project.js";
 export * from "./time.js";
+export * from "./artifacts.js";
+export * from "./assets.js";
 export type * from "./types.generated.js";

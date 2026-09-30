@@ -18,6 +18,7 @@ interface FfStream {
   duration?: string;
   side_data_list?: { rotation?: number }[];
   tags?: { rotate?: string };
+  disposition?: { attached_pic?: number };
 }
 
 const rate = (r?: string) => {
@@ -39,7 +40,8 @@ export async function probe(path: string): Promise<ProbeResult> {
   } catch (err) {
     throw new BveError("MISSING_INPUT", `Unreadable media file: ${path}`, { cause: err, hint: "Check the file is a valid video/audio file." });
   }
-  const v = json.streams?.find((s) => s.codec_type === "video" && s.codec_name !== "mjpeg" && s.codec_name !== "png");
+  // Cover art (album pictures) is a "video" stream with attached_pic=1: not the picture track.
+  const v = json.streams?.find((s) => s.codec_type === "video" && s.disposition?.attached_pic !== 1);
   const a = json.streams?.find((s) => s.codec_type === "audio");
   const duration = Number(json.format?.duration ?? v?.duration ?? a?.duration ?? 0);
   const out: ProbeResult = { durationSec: duration, hasVideo: !!v, hasAudio: !!a };

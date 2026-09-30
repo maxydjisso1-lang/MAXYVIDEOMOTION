@@ -5,6 +5,7 @@ description = "Python sidecar of brand-video-engine: ML models without solid JS 
 requires-python = ">=3.10,<3.13"
 dependencies = [
   "faster-whisper>=1.1,<2",
+  "truststore>=0.10",
 ]
 
 [tool.uv]

@@ -39,9 +39,3 @@ export function shadowCss(t: StyleTokens, u: number): string | undefined {
     default: return undefined;
   }
 }
-
-export function applyCase(text: string, rule: StyleTokens["caption"]["case"]): string {
-  if (rule === "upper") return text.toLocaleUpperCase();
-  if (rule === "sentence") return text.charAt(0).toLocaleUpperCase() + text.slice(1);
-  return text;
-}

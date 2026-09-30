@@ -4,36 +4,26 @@
  * checked is what was drawn.
  */
 import { open, readFile, stat } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import {
-  BveError, existsSync, readJson, round3, SCHEMA_VERSION, sha256File, sha256Json, withTempDir, writeJsonAtomic,
-  type Preset, type Project, type QcReport,
+  addWaiver, BveError, existsSync, readRenderRecord, readWaivers, round3, SCHEMA_VERSION, sha256File, sha256Json, withTempDir, writeQcReport,
+  type Preset, type Project, type QcReport, type QcWaivers,
 } from "../../core/src/index.js";
 import { deltaE, rgbToHex } from "../../brand/src/index.js";
-import { applyCase } from "../../captions/src/index.js";
 import { detectBlack, ffmpeg, measureLoudness, probe } from "../../ffmpeg/src/index.js";
 import {
-  ctaLayout, cueLayout, estimateTextWidth, FULLSCREEN_COMPONENTS, inside, lowerThirdBox, safeRect, titleLayout, watermarkBox, type Anchor, type Box, type Frame,
+  applyCase, avoidObstacles, cueLayout, estimateTextWidth, FULLSCREEN_COMPONENTS, inside, instanceBox, motionObstacles, safeRect, type Box, type Frame,
 } from "../../motion/src/layout.js";
-import { renderRecordPath, type RenderRecord } from "../../rendering/src/index.js";
 
 type Category = keyof QcReport["categories"];
 type Check = QcReport["categories"]["technical"] extends infer C ? (C extends { checks: (infer X)[] } ? X : never) : never;
-
-export interface Waiver {
-  checkId: string;
-  reason: string;
-  at: string;
-}
-
-const WAIVERS = "exports/qc-waivers.json";
 const intersects = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
 /** Average color of a region of one frame (for "did the brand color survive rendering?"). */
 export async function sampleColor(file: string, atSec: number, box: Box): Promise<string> {
   return withTempDir(async (dir) => {
     await ffmpeg(
-      ["-ss", atSec.toFixed(3), "-i", file, "-frames:v", "1", "-vf", `crop=${Math.round(box.w)}:${Math.round(box.h)}:${Math.round(box.x)}:${Math.round(box.y)},scale=1:1:flags=area,format=rgb24`, "px.ppm"],
+      ["-ss", atSec.toFixed(3), "-i", resolve(file), "-frames:v", "1", "-vf", `crop=${Math.round(box.w)}:${Math.round(box.h)}:${Math.round(box.x)}:${Math.round(box.y)},scale=1:1:flags=area,format=rgb24`, "px.ppm"],
       { cwd: dir },
     );
     const buf = await readFile(join(dir, "px.ppm"));
@@ -65,17 +55,13 @@ async function moovBeforeMdat(file: string): Promise<boolean | undefined> {
 }
 
 export async function runQc(project: Project, targetId: string, opts: { draft?: boolean } = {}): Promise<{ report: QcReport; reportPath: string }> {
-  const recPath = join(project.root, renderRecordPath(targetId, project.head, !!opts.draft));
-  if (!existsSync(recPath)) {
-    throw new BveError("MISSING_INPUT", `No render of "${targetId}" at the current version ${project.head}`, { hint: `Run \`bve render --target ${targetId}\` first.` });
-  }
-  const rec = await readJson<RenderRecord>(recPath);
+  const rec = await readRenderRecord(project, targetId, { draft: !!opts.draft });
   const file = project.abs(rec.path);
   const preset: Preset = await project.preset(targetId);
   const [tokens, brand, plan, captions, motion] = await Promise.all([
     project.readDoc("styleTokens"), project.readDoc("brand"), project.readDocOptional("plan"), project.readDocOptional("captions"), project.readDocOptional("motion"),
   ]);
-  const waivers: Waiver[] = existsSync(project.abs(WAIVERS)) ? await readJson<Waiver[]>(project.abs(WAIVERS)) : [];
+  const waivers = await readWaivers(project);
   const results: Record<Category, Check[]> = { technical: [], audio: [], captions: [], color: [], brand: [], motion: [], export: [] };
   const add = (cat: Category, c: Check) => {
     const waived = c.status === "fail" && waivers.find((w) => w.checkId === c.id);
@@ -87,6 +73,10 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   const fps = preset.fps;
   const frameSec = 1 / fps;
   const fullscreen = (motion?.instances ?? []).filter((i) => FULLSCREEN_COMPONENTS.has(i.component));
+  // Exactly what the renderers draw: cue layout, then avoidance of motion shown at the same time.
+  const obstacles = motionObstacles(frame, tokens, motion?.instances ?? []);
+  const placedCue = (c: NonNullable<typeof captions>["cues"][number]) =>
+    avoidObstacles(frame, tokens, cueLayout(frame, tokens, c.words.map((w, k) => ({ text: applyCase(w.text, tokens.caption.case, k === 0), lineBreakAfter: w.lineBreakAfter }))), c, obstacles);
 
   // ---- technical
   add("technical", { id: "technical.draft", status: rec.draft ? "fail" : "pass", severity: "blocker", message: rec.draft ? "This is a draft render (half resolution, fast encode)" : "Final-quality render", fix: `bve render --target ${targetId}` });
@@ -112,7 +102,14 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   if (info.hasAudio) {
     const loud = await measureLoudness(file);
     const off = Math.abs(loud.integratedLufs - preset.loudness.integratedLufs);
-    add("audio", { id: "audio.loudness", status: off <= preset.loudness.toleranceLu ? "pass" : "fail", severity: "blocker", message: `${loud.integratedLufs} LUFS`, expected: `${preset.loudness.integratedLufs} ±${preset.loudness.toleranceLu}`, measured: loud.integratedLufs, fix: "bve audio clean (master stage)" });
+    // Footage shot without sound is delivered with a silent track: nothing to normalise.
+    const timeline = await project.readDocOptional("timeline");
+    const programmeHasAudio = (timeline?.tracks.video ?? []).flatMap((t) => t.clips).some((c) => project.source(c.sourceId).probe.hasAudio) || !!(await project.readDocOptional("audio"))?.music?.length;
+    if (!programmeHasAudio) {
+      add("audio", { id: "audio.loudness", status: "skip", severity: "blocker", message: "No source audio in the edit: silent track delivered (add music or voice-over to change this)" });
+    } else {
+      add("audio", { id: "audio.loudness", status: off <= preset.loudness.toleranceLu ? "pass" : "fail", severity: "blocker", message: `${loud.integratedLufs} LUFS`, expected: `${preset.loudness.integratedLufs} ±${preset.loudness.toleranceLu}`, measured: loud.integratedLufs, fix: "bve audio clean (master stage)" });
+    }
     const tp = loud.truePeakDb - preset.loudness.truePeakDb;
     add("audio", { id: "audio.true-peak", status: tp <= 0 ? "pass" : tp <= 1 ? "warn" : "fail", severity: "blocker", message: `${loud.truePeakDb} dBTP (max ${preset.loudness.truePeakDb})`, measured: loud.truePeakDb });
     const drift = Math.abs((info.videoDurationSec ?? info.durationSec) - (info.audioDurationSec ?? info.durationSec));
@@ -133,7 +130,7 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
     add("captions", { id: "captions.min-duration", status: short.length ? "warn" : "pass", severity: "minor", message: short.length ? `${short.length} cue(s) shorter than 0.7 s` : "All cues >= 0.7 s" });
     const safe = safeRect(frame);
     const out = cues.filter((c) => {
-      const l = cueLayout(frame, tokens, c.words.map((w, k) => ({ text: applyCase(w.text, tokens.caption.case, k === 0), lineBreakAfter: w.lineBreakAfter })));
+      const l = placedCue(c);
       const widest = Math.max(...l.lines.map((line) => estimateTextWidth(line, l.fontPx, tokens.caption.case === "upper", tokens.caption.weight)));
       return !inside(l.box, safe) || widest > l.box.w + 1 || l.lines.length > tokens.caption.maxLines;
     });
@@ -152,13 +149,24 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   const logoOk = existsSync(project.abs(tokens.logo?.primary ?? brand.identity.logo.primary));
   const logoNeeded = (motion?.instances ?? []).some((i) => i.component === "Watermark" || FULLSCREEN_COMPONENTS.has(i.component));
   add("brand", { id: "brand.logo", status: logoOk || !logoNeeded ? "pass" : "fail", severity: "blocker", message: logoOk ? "Logo file present" : "Logo file missing" });
-  const fontIssues = (["display", "body", "caption"] as const).flatMap((role) => {
-    const f = tokens.type[role];
-    if (f.file && !existsSync(project.abs(f.file))) return [`${role}: ${f.family} file missing → fallback "${f.fallback ?? "generic"}"`];
-    if (!f.file) return [`${role}: ${f.family} not embedded → depends on installed fonts${f.fallback ? ` (fallback ${f.fallback})` : ""}`];
-    return [];
-  });
-  add("brand", { id: "brand.fonts", status: fontIssues.length ? "warn" : "pass", severity: "minor", message: fontIssues.length ? fontIssues.join("; ") : "All brand fonts embedded" });
+  // Fonts as verified by the renderer: FOUND (brand file) / FALLBACK (declared fallback file) /
+  // MISSING (a machine font would be used: never silently accepted).
+  const fonts = rec.fonts ?? [];
+  if (fonts.length) {
+    const line = (f: (typeof fonts)[number]) => `${f.role}: FONT ${f.status.toUpperCase()} — ${f.requested} → ${f.used ?? "?"} (${f.detail ?? ""})`;
+    const missing = fonts.filter((f) => f.status === "missing" || f.status === "unverified");
+    const fallback = fonts.filter((f) => f.status === "fallback");
+    add("brand", {
+      id: "brand.fonts",
+      status: missing.length ? "fail" : fallback.length ? "warn" : "pass",
+      severity: missing.length ? "blocker" : "minor",
+      message: fonts.map(line).join("; "),
+      measured: fonts,
+      ...(missing.length ? { fix: "bve brand fonts fetch (Google fonts) or put the licensed files in brand/fonts/ and reference them in brand.json" } : {}),
+    });
+  } else {
+    add("brand", { id: "brand.fonts", status: "skip", severity: "minor", message: "No text rendered" });
+  }
   const outro = fullscreen[0];
   if (outro && rec.renderer !== "none") {
     const t = outro.start + outro.durationSec * 0.7;
@@ -172,21 +180,16 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   const motionOut: string[] = [];
   const overrides: string[] = [];
   const collisions: string[] = [];
+  const placed: { id: string; start: number; end: number; box: Box }[] = [];
   for (const i of motion?.instances ?? []) {
     if (i.tokenOverrides) overrides.push(i.id);
-    const p = i.props as Record<string, string | undefined>;
-    const up = (s: string) => (tokens.caption.case === "upper" ? s.toLocaleUpperCase() : s);
-    let box: Box | undefined;
-    if (i.component === "Title" || i.component === "Subtitle") box = titleLayout(frame, tokens, up(p.text ?? ""), (i.anchor ?? "auto") as Anchor).box;
-    else if (i.component === "CTA") box = ctaLayout(frame, tokens, up(p.text ?? ""), (i.anchor ?? "auto") as Anchor, !!p.subtext).box;
-    else if (i.component === "LowerThird") box = lowerThirdBox(frame, tokens);
-    else if (i.component === "Watermark") box = watermarkBox(frame, tokens, (i.anchor ?? "top-right") as Anchor);
+    const box = instanceBox(frame, tokens, i);
     if (!box) continue;
     if (!inside(box, safe)) motionOut.push(i.id);
+    placed.push({ id: i.id, start: i.start, end: i.start + i.durationSec, box });
     for (const c of cues) {
       if (c.start >= i.start + i.durationSec || i.start >= c.end) continue;
-      const cl = cueLayout(frame, tokens, c.words.map((w, k) => ({ text: applyCase(w.text, tokens.caption.case, k === 0), lineBreakAfter: w.lineBreakAfter })));
-      if (intersects(box, cl.box)) {
+      if (intersects(box, placedCue(c).box)) {
         collisions.push(`${i.id}×${c.id}`);
         break;
       }
@@ -194,6 +197,8 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   }
   add("motion", { id: "motion.safe-zone", status: motionOut.length ? "fail" : "pass", severity: "blocker", message: motionOut.length ? `Outside safe zone: ${motionOut.join(", ")}` : "All motion elements inside the safe zone" });
   add("motion", { id: "motion.caption-collision", status: collisions.length ? "warn" : "pass", severity: "major", message: collisions.length ? `Overlaps captions: ${collisions.join(", ")}` : "No collision with captions" });
+  const overlaps = placed.flatMap((a, k) => placed.slice(k + 1).filter((b) => a.start < b.end && b.start < a.end && intersects(a.box, b.box)).map((b) => `${a.id}×${b.id}`));
+  add("motion", { id: "motion.overlap", status: overlaps.length ? "warn" : "pass", severity: "major", message: overlaps.length ? `Motion elements overlap on screen: ${overlaps.join(", ")}` : "No overlapping motion elements" });
   add("motion", { id: "motion.token-overrides", status: overrides.length ? "warn" : "pass", severity: "info", message: overrides.length ? `Local deviations from Brand DNA: ${overrides.join(", ")}` : "No deviation from Brand DNA tokens" });
   add("motion", { id: "motion.renderer", status: rec.renderer === "ass" ? "warn" : "pass", severity: "info", message: rec.rendererNote ?? `Rendered with ${rec.renderer}` });
 
@@ -217,8 +222,7 @@ export async function runQc(project: Project, targetId: string, opts: { draft?: 
   const all = Object.values(results).flat();
   const status: QcReport["status"] = all.some((c) => c.status === "fail" && c.severity === "blocker") ? "fail" : all.some((c) => c.status !== "pass" && c.status !== "skip") ? "warn" : "pass";
   const report: QcReport = { schemaVersion: SCHEMA_VERSION, targetId, version: project.head, createdAt: new Date().toISOString(), renderPath: rec.path, status, categories };
-  const reportPath = rec.path.replace(/\.(mp4|mov)$/, ".qc.json");
-  await writeJsonAtomic(project.writable(reportPath), report);
+  const reportPath = await writeQcReport(project, report);
   return { report, reportPath };
 }
 
@@ -235,12 +239,9 @@ export function formatQc(report: QcReport): string {
   return lines.join("\n");
 }
 
-export async function waive(project: Project, checkId: string, reason: string): Promise<Waiver[]> {
+/** USER decision only: accept a blocking check. The waiver is validated and recorded. */
+export async function waive(project: Project, checkId: string, reason: string): Promise<QcWaivers> {
   if (!reason.trim()) throw new BveError("VALIDATION", "A waiver needs a reason");
-  const path = project.abs(WAIVERS);
-  const list: Waiver[] = existsSync(path) ? await readJson<Waiver[]>(path) : [];
-  list.push({ checkId, reason, at: new Date().toISOString() });
-  await writeJsonAtomic(project.writable(WAIVERS), list);
-  return list;
+  return addWaiver(project, checkId, reason);
 }
 

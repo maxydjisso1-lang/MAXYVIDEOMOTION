@@ -18,7 +18,7 @@ Produce `analysis/analysis.json` and `analysis/transcript.json`. These are **mea
 - `analysis/keyframes/*.jpg`, `analysis/contact-sheets/*.jpg`
 
 ## Tools
-- `bve analyze [--source <ids>] [--transcribe] [--language fr|en|auto] [--model large-v3]` — technical analysis (FFmpeg: scdet, signalstats, blackdetect, silencedetect, ebur128, astats) + transcription (faster-whisper, needs `uv sync --project engine/python`).
+- `bve analyze [--source <ids>] [--transcribe] [--language fr|en|auto] [--model small|medium|large-v3]` (default `small`; the model is downloaded once into ./models) — technical analysis (FFmpeg: scdet, signalstats, blackdetect, silencedetect, ebur128, astats) + transcription (faster-whisper, needs `uv sync --project engine/python`).
 - `bve transcript import <file>` — use an existing word-level transcript instead (schemas/transcript.schema.json).
 - `bve transcript show` — numbered segments with timecodes and filler counts.
 - `bve analysis summary --json` — compact view that fits in context; prefer it over reading the whole file for long videos.
@@ -40,6 +40,8 @@ Produce `analysis/analysis.json` and `analysis/transcript.json`. These are **mea
 5. Report the essentials to the user in 3–6 bullets, especially problems: underexposed shots, noisy audio, hum, clipping, very long silences.
 
 ## Constraints
+- The noise floor comes from a real silence when there is one, else from the quietest 100 ms windows (10th percentile). "Broadband" means an audible floor AND speech less than 30 dB above it. It cannot yet tell background music from noise: check the contact sheet/brief before letting audio-cleanup denoise a music bed.
+- Whisper segments are not sentences: they can end mid-sentence. When a plan must not cut mid-sentence, reference exact word-aligned `{sourceId, start, end}` ranges.
 - Never put decisions (keep/cut) in analysis. Only facts and labels belong here.
 - Label only what you can see. Mark uncertain labels with `confidence` < 0.6.
 - Do not re-run transcription if `transcript.json` exists and the sources' sha256 values are unchanged. The engine caches it, so don't pass `--force` without a reason.

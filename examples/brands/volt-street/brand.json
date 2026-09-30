@@ -39,8 +39,15 @@
           400
         ],
         "source": {
-          "kind": "google"
-        }
+          "kind": "file",
+          "files": [
+            {
+              "weight": 400,
+              "path": "brand/fonts/Anton-400.ttf"
+            }
+          ]
+        },
+        "license": "OFL-1.1 or Apache-2.0 (Google Fonts)"
       },
       {
         "role": "body",
@@ -50,8 +57,19 @@
           700
         ],
         "source": {
-          "kind": "google"
-        }
+          "kind": "file",
+          "files": [
+            {
+              "weight": 700,
+              "path": "brand/fonts/SpaceGrotesk-700.ttf"
+            },
+            {
+              "weight": 500,
+              "path": "brand/fonts/SpaceGrotesk-500.ttf"
+            }
+          ]
+        },
+        "license": "OFL-1.1 or Apache-2.0 (Google Fonts)"
       },
       {
         "role": "caption",
@@ -60,8 +78,15 @@
           800
         ],
         "source": {
-          "kind": "google"
-        }
+          "kind": "file",
+          "files": [
+            {
+              "weight": 800,
+              "path": "brand/fonts/Montserrat-800.ttf"
+            }
+          ]
+        },
+        "license": "OFL-1.1 or Apache-2.0 (Google Fonts)"
       }
     ],
     "logo": {

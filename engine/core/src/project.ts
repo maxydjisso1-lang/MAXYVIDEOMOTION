@@ -1,4 +1,4 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { BveError } from "./errors.js";
 import { existsSync, readJson, sha256File, writeJsonAtomic } from "./fsutil.js";
@@ -184,6 +184,32 @@ export class Project {
     const t = this.target(targetId);
     const base = await loadPreset(t.preset);
     return validate<Preset>("preset", { ...base, ...(t.overrides ?? {}) }, `preset ${t.preset}`);
+  }
+
+  /** Add or replace a delivery target (validated against the preset catalogue). */
+  async addTarget(id: string, presetId: string): Promise<Target[]> {
+    await loadPreset(presetId);
+    this.manifest.targets = [...this.manifest.targets.filter((t) => t.id !== id), { id, preset: presetId }];
+    await this.saveManifest();
+    return this.manifest.targets;
+  }
+
+  /** Frame rate the documents are authored for: the first target's, else 30. */
+  async deliveryFps(): Promise<number> {
+    const first = this.manifest.targets[0];
+    return first ? (await this.preset(first.id)).fps : 30;
+  }
+
+  /** Delete disposable artifacts. Sources, documents, versions and exports are never touched. */
+  async clean(): Promise<string[]> {
+    const removed: string[] = [];
+    for (const rel of [".cache", "renders/cache", "renders/frames"]) {
+      if (existsSync(this.abs(rel))) {
+        await rm(this.abs(rel), { recursive: true, force: true });
+        removed.push(rel);
+      }
+    }
+    return removed;
   }
 
   /** Re-hash every source: any change after ingest breaks reproducibility and must stop the pipeline. */

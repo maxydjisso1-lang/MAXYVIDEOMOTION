@@ -1,0 +1,99 @@
+{
+  "description": "Real-world test media. Nothing here is committed: `npm run fixtures:real` downloads only the listed segments into this folder. Every source is public domain or Creative Commons; the pinned sha1 is Commons/Archive.org's hash of the source file, checked before downloading.",
+  "fixtures": [
+    {
+      "id": "talking-head",
+      "output": "talking-head.mp4",
+      "use": "French speaker to camera, brand context (perfume founder)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Osiéra MEBOUNOU Promotrice de la marque de parfum made in Cameroun.webm",
+        "variant": "original",
+        "sha1": "733809387e000675842a4749aa18488eb46c5bbd"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Simbanematick, via Wikimedia Commons"
+    },
+    {
+      "id": "interview",
+      "output": "interview.mp4",
+      "use": "Two-person French interview (interviewer + guest)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Bernard Mabille - Interview par Marc Delomez.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "362d30e77bbd676cb8baaef58108f890ae5ca2a3"
+      },
+      "segment": {
+        "start": 45,
+        "duration": 30
+      },
+      "license": "CC BY-SA 3.0",
+      "attribution": "Gary Sfez (Director), via Wikimedia Commons"
+    },
+    {
+      "id": "product",
+      "output": "product.mp4",
+      "use": "Object on a turntable, no speech (product reveal / B-roll)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Moon Essentials- Turntable (SVS5319).webm",
+        "variant": "1080p.vp9.webm",
+        "sha1": "77f97bd689fafc5038980b6cca990339903de8d5"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 15
+      },
+      "license": "Public domain",
+      "attribution": "NASA's Scientific Visualization Studio"
+    },
+    {
+      "id": "speech-fr",
+      "output": "speech-fr.mp3",
+      "use": "Clear French read speech (Whisper validation)",
+      "source": {
+        "kind": "url",
+        "url": "https://archive.org/download/fables_lafontaine_01_librivox/fables_01_01_lafontaine_64kb.mp3",
+        "sha1": "b6625a88da968a3d4f7583538297457a7b079177"
+      },
+      "license": "Public domain (LibriVox)",
+      "attribution": "LibriVox — Fables de La Fontaine, livre 01"
+    },
+    {
+      "id": "street-noise",
+      "output": "street-noise.mp4",
+      "use": "Loud urban ambience (noise floor for the noisy-audio fixture)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Noise pollution in a residential area, Liverpool.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "96639071e44e6537313c4e4523ee039b40c437bf"
+      },
+      "segment": {
+        "start": 20,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Own work (Commons uploader), via Wikimedia Commons"
+    },
+    {
+      "id": "noisy-audio",
+      "output": "noisy-audio.mp4",
+      "use": "Speech over real street noise: clean reference known, so cleanup is measurable",
+      "derive": {
+        "video": "street-noise",
+        "speech": "speech-fr",
+        "speechStart": 20,
+        "speechGainDb": 0,
+        "noiseGainDb": -16
+      },
+      "license": "CC BY-SA 4.0 (derived from street-noise) + public domain speech",
+      "attribution": "Derived from the street-noise and speech-fr fixtures"
+    }
+  ]
+}

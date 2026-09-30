@@ -1,7 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import { BveError, existsSync, readJson, sha256File, toProjectRel, type Captions, type Project, type QcReport } from "../../core/src/index.js";
-import { linkOrCopy, renderRecordPath, type RenderRecord } from "../../rendering/src/index.js";
+import { BveError, importFile, qcReportPath, readQcReport, readRenderRecord, sha256File, toProjectRel, type Captions, type Project } from "../../core/src/index.js";
 
 function stamp(sec: number, sep: "," | "."): string {
   const ms = Math.round(sec * 1000);
@@ -21,12 +19,10 @@ export function toVtt(c: Captions): string {
 
 /** Deliver a render. Refuses unless QC ran on this exact file at this version and has no blocker. */
 export async function exportTarget(project: Project, targetId: string, opts: { sidecars?: ("srt" | "vtt")[] } = {}) {
-  const recPath = join(project.root, renderRecordPath(targetId, project.head, false));
-  if (!existsSync(recPath)) throw new BveError("MISSING_INPUT", `No final render of "${targetId}" at ${project.head}`, { hint: `bve render --target ${targetId}` });
-  const rec = await readJson<RenderRecord>(recPath);
-  const qcRel = rec.path.replace(/\.(mp4|mov)$/, ".qc.json");
-  if (!existsSync(project.abs(qcRel))) throw new BveError("QC_BLOCKED", "Quality control has not been run on this render", { hint: `bve qc --target ${targetId}` });
-  const qc = await readJson<QcReport>(project.abs(qcRel));
+  const rec = await readRenderRecord(project, targetId);
+  const qcRel = qcReportPath(rec.path);
+  const qc = await readQcReport(project, rec.path);
+  if (!qc) throw new BveError("QC_BLOCKED", "Quality control has not been run on this render", { hint: `bve qc --target ${targetId}` });
   if (qc.status === "fail") {
     const blockers = Object.values(qc.categories).flatMap((c) => c.checks).filter((c) => c.status === "fail" && c.severity === "blocker");
     throw new BveError("QC_BLOCKED", `Export refused: ${blockers.length} blocking QC issue(s): ${blockers.map((b) => b.id).join(", ")}`, { details: blockers, hint: "Fix them through the owning skill, re-render and re-run QC." });
@@ -37,7 +33,7 @@ export async function exportTarget(project: Project, targetId: string, opts: { s
   }
   const ext = rec.path.slice(rec.path.lastIndexOf("."));
   const outRel = `exports/${project.manifest.id.replace(/^p_/, "")}-${targetId}-${project.head}${ext}`;
-  await linkOrCopy(project.abs(rec.path), project.writable(outRel));
+  await importFile(project.abs(rec.path), project.writable(outRel));
   const files = [outRel];
   const captions = await project.readDocOptional("captions");
   for (const kind of opts.sidecars ?? []) {

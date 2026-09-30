@@ -2,7 +2,7 @@
  * Dialogue cleanup chains (built from MEASURED problems) and the master loudness stage.
  * Chains are data in audio.json; they compile to FFmpeg filters only at render time.
  */
-import { BveError, round3, SCHEMA_VERSION, type Analysis, type AudioDoc, type Preset } from "../../core/src/index.js";
+import { BveError, round3, SCHEMA_VERSION, type Analysis, type AudioDoc, type Preset, type Project } from "../../core/src/index.js";
 import { ffmpeg, hasFilter, type RunOptions } from "../../ffmpeg/src/index.js";
 
 type Processor = AudioDoc["dialogue"][number]["chain"][number];
@@ -101,8 +101,28 @@ export async function normalizeLoudness(input: string, output: string, master: A
   const jsonEnd = stderr.lastIndexOf("}");
   if (jsonStart < 0) throw new BveError("FFMPEG_FAILED", "loudnorm did not report measurements");
   const m = JSON.parse(stderr.slice(jsonStart, jsonEnd + 1)) as Record<string, string>;
+  // A silent programme (e.g. footage without audio) cannot be normalised: keep it silent.
+  const inputI = Number(m.input_i);
+  if (!Number.isFinite(inputI) || inputI < -70) {
+    await ffmpeg(["-i", input, "-af", `aresample=${sampleRate}`, "-ar", String(sampleRate), "-c:a", "pcm_s24le", output], opts);
+    return { measured: { ...m, silent: "true" } };
+  }
   const second = `loudnorm=${target}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true`;
   const limiter = master.limiter !== false ? `,alimiter=limit=${round3(10 ** ((master.truePeakDb - 0.3) / 20))}:level=disabled` : "";
   await ffmpeg(["-i", input, "-af", `${second}${limiter},aresample=${sampleRate}`, "-ar", String(sampleRate), "-c:a", "pcm_s24le", output], opts);
   return { measured: m };
+}
+
+/**
+ * Project operation: cleanup level = explicit > creative plan > "standard"; loudness target from
+ * the given target's preset (else the first target).
+ */
+export async function cleanProjectAudio(project: Project, opts: { preset?: CleanupPreset; targetId?: string } = {}): Promise<AudioDoc> {
+  const plan = await project.readDocOptional("plan");
+  const level = opts.preset ?? (plan?.audio?.cleanup as CleanupPreset | undefined) ?? "standard";
+  const targetId = opts.targetId ?? project.manifest.targets[0]?.id;
+  if (!targetId) throw new BveError("MISSING_INPUT", "No target: the loudness target comes from a delivery preset", { hint: "bve target add ig_reels --preset instagram/reels" });
+  const doc = buildAudioDoc(await project.readDoc("analysis"), await project.preset(targetId), level, await project.readDocOptional("audio"));
+  await project.writeDoc("audio", doc, { command: "audio clean", message: `Audio cleanup (${level}), master ${doc.master.loudnessLufs} LUFS` });
+  return doc;
 }

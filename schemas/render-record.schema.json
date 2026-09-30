@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/render-record.schema.json",
+  "title": "Render record",
+  "description": "Written by the renderer next to every render; the contract between rendering, QC and export.",
+  "type": "object",
+  "required": ["targetId", "version", "draft", "renderer", "path", "sha256", "durationSec", "stages", "cacheHits", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "targetId": { "$ref": "common.schema.json#/$defs/id" },
+    "version": { "type": "string", "pattern": "^v[0-9]{4}$" },
+    "draft": { "type": "boolean" },
+    "renderer": { "enum": ["remotion", "ass", "none"] },
+    "rendererNote": { "type": "string" },
+    "path": { "$ref": "common.schema.json#/$defs/relPath" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "durationSec": { "type": "number", "exclusiveMinimum": 0 },
+    "stages": {
+      "type": "object",
+      "required": ["base", "mix"],
+      "additionalProperties": false,
+      "properties": {
+        "base": { "$ref": "common.schema.json#/$defs/relPath" },
+        "graphics": { "$ref": "common.schema.json#/$defs/relPath" },
+        "mix": { "$ref": "common.schema.json#/$defs/relPath" }
+      }
+    },
+    "cacheHits": { "type": "array", "items": { "enum": ["base", "graphics", "mix"] } },
+    "fonts": {
+      "type": "array",
+      "description": "Font actually used per role, as verified by the renderer.",
+      "items": {
+        "type": "object",
+        "required": ["role", "requested", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "role": { "enum": ["display", "body", "caption"] },
+          "requested": { "type": "string" },
+          "used": { "type": "string" },
+          "status": { "enum": ["found", "fallback", "missing", "unverified"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

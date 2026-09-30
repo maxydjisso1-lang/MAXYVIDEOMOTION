@@ -1,18 +1,18 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
 import type { Captions as CaptionsDoc, StyleTokens } from "../../core/src/types.generated.js";
-import { cueLayout, type Frame, unit } from "../../motion/src/layout.js";
-import { applyCase, clamp01, enter, fontStack } from "./runtime.js";
+import { applyCase, avoidObstacles, cueLayout, type Frame, type Obstacle, unit } from "../../motion/src/layout.js";
+import { clamp01, enter, fontStack } from "./runtime.js";
 
 type Cue = CaptionsDoc["cues"][number];
 
 /** Brand-styled captions. Emphasis, case, animation and background all come from tokens. */
-export function CaptionCue({ cue, tokens: t, frame, fps }: { cue: Cue; tokens: StyleTokens; frame: Frame; fps: number }) {
+export function CaptionCue({ cue, tokens: t, frame, fps, obstacles }: { cue: Cue; tokens: StyleTokens; frame: Frame; fps: number; obstacles: Obstacle[] }) {
   const f = useCurrentFrame(); // relative to the cue's <Sequence>
   const now = cue.start + f / fps;
   const u = unit(frame);
-  const display = cue.words.map((w, i) => applyCase(w.text, t.caption.case === "sentence" && i > 0 ? "as-spoken" : t.caption.case));
-  const layout = cueLayout(frame, t, cue.words.map((w, i) => ({ text: display[i]!, lineBreakAfter: w.lineBreakAfter })));
+  const display = cue.words.map((w, i) => applyCase(w.text, t.caption.case, i === 0));
+  const layout = avoidObstacles(frame, t, cueLayout(frame, t, cue.words.map((w, i) => ({ text: display[i]!, lineBreakAfter: w.lineBreakAfter }))), cue, obstacles);
   const cueIn = clamp01(f / Math.max(1, t.motion.enterFrames * 0.5));
 
   const lines: { text: string; emphasis?: string; start: number; idx: number }[][] = [[]];

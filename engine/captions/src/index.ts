@@ -2,7 +2,7 @@
  * Captions pipeline: transcript (source time) -> remap through the edit -> segmentation driven
  * by style tokens -> emphasis -> captions.json (timeline time). Styling happens at render time.
  */
-import { round3, SCHEMA_VERSION, type Captions, type CreativePlan, type StyleTokens, type Timeline, type Transcript } from "../../core/src/index.js";
+import { round3, SCHEMA_VERSION, type Captions, type CreativePlan, type Project, type StyleTokens, type Timeline, type Transcript } from "../../core/src/index.js";
 
 type Cue = Captions["cues"][number];
 type CueWord = Cue["words"][number];
@@ -93,6 +93,20 @@ export function segment(words: TimedWord[], opts: SegmentOptions): TimedWord[][]
     cur.push(w);
   }
   flush();
+  // No orphans: a lone word joins its neighbour when both come from the same continuous take.
+  for (let i = 0; i < cues.length; i++) {
+    const cue = cues[i]!;
+    if (cue.length !== 1 || cues.length === 1) continue;
+    const prev = cues[i - 1];
+    const next = cues[i + 1];
+    if (prev && !cue[0]!.cutBefore && prev.length < maxWords) {
+      prev.push(cue[0]!);
+      cues.splice(i--, 1);
+    } else if (next && !next[0]!.cutBefore && next.length < maxWords) {
+      next.unshift(cue[0]!);
+      cues.splice(i--, 1);
+    }
+  }
   return cues;
 }
 
@@ -156,9 +170,9 @@ export function buildCaptions(transcript: Transcript, timeline: Timeline, tokens
   return { schemaVersion: SCHEMA_VERSION, language: transcript.language, renderer: "remotion", cues };
 }
 
-/** Display text for a word after the brand's case rule. */
-export function applyCase(text: string, rule: StyleTokens["caption"]["case"], isFirstOfCue: boolean): string {
-  if (rule === "upper") return text.toLocaleUpperCase();
-  if (rule === "sentence" && isFirstOfCue) return text.charAt(0).toLocaleUpperCase() + text.slice(1);
-  return text;
+/** Project operation: build captions from the transcript, the edit and the brand tokens. */
+export async function buildProjectCaptions(project: Project): Promise<Captions> {
+  const doc = buildCaptions(await project.readDoc("transcript"), await project.readDoc("timeline"), await project.readDoc("styleTokens"), await project.readDocOptional("plan"));
+  await project.writeDoc("captions", doc, { command: "captions build", message: `Captions: ${doc.cues.length} cues` });
+  return doc;
 }

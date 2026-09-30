@@ -28,7 +28,7 @@ Sub-skills: video-analysis, brand-intelligence, creative-director (+ storytellin
 2. **Project.** Run `bve init <dir> --name "<name>"`, then `bve ingest <videos...> [--assets <files...>]`. Put the project next to the user's files unless they say otherwise. Never move or modify their originals.
 3. **Targets.** Run `bve target add <id> --preset <platform/name>` for each requested format (see `presets/`).
 4. **Understand the footage.** Run the **video-analysis** skill.
-5. **Understand the brand.** Run the **brand-intelligence** skill. If no brand kit is given, build a neutral Brand DNA from the brief and say so.
+5. **Understand the brand.** Run the **brand-intelligence** skill. If no brand kit is given, build a neutral Brand DNA from the brief and say so. Make sure every font role is FOUND or FALLBACK (`bve brand fonts fetch`): a MISSING font blocks export.
 6. **Plan.** Run the **creative-director** skill. **Approval point 1:** present the plan in 5–10 lines (structure, hook, duration, style, CTA). Continue without waiting only if the user said to proceed autonomously.
 7. **Build**, in this order, because each step depends on the previous one:
    1. video-editing

@@ -1,46 +1,20 @@
-import { copyFile, link, mkdir, stat } from "node:fs/promises";
+import { mkdir, stat } from "node:fs/promises";
 import { basename, extname, resolve } from "node:path";
-import { BveError, existsSync, sha256File, slugId, toProjectRel, type Asset, type Project, type Source } from "../../core/src/index.js";
+import { BveError, existsSync, importFile, sha256File, slugId, uniqueId, type Project, type Source } from "../../core/src/index.js";
 import { ffmpeg, probe } from "../../ffmpeg/src/index.js";
 
-const MEDIA_EXT = new Set([".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".mxf", ".wav", ".mp3", ".m4a", ".aac", ".flac"]);
-const ASSET_EXT: Record<string, Set<string>> = {
-  logo: new Set([".png", ".svg", ".webp"]),
-  image: new Set([".png", ".jpg", ".jpeg", ".webp"]),
-  font: new Set([".ttf", ".otf", ".woff", ".woff2"]),
-  music: new Set([".wav", ".mp3", ".m4a", ".aac", ".flac"]),
-  sfx: new Set([".wav", ".mp3", ".m4a"]),
-  lut: new Set([".cube"]),
-  video: MEDIA_EXT,
-  brandbook: new Set([".pdf"]),
-  reference: new Set([".png", ".jpg", ".jpeg", ".pdf", ".mp4", ".mov"]),
-};
-
-/** Hard link when possible (same volume: instant, no extra space), else copy. Originals are never touched. */
-async function importFile(src: string, dest: string): Promise<void> {
-  await mkdir(resolve(dest, ".."), { recursive: true });
-  try {
-    await link(src, dest);
-  } catch {
-    await copyFile(src, dest);
-  }
-}
-
-function uniqueId(base: string, taken: Set<string>): string {
-  let id = base;
-  for (let i = 2; taken.has(id); i++) id = `${base}_${i}`;
-  return id;
-}
+export const MEDIA_EXT = new Set([".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".mxf", ".wav", ".mp3", ".m4a", ".aac", ".flac"]);
 
 export async function ingestSource(project: Project, file: string, role: Source["role"] = "a-roll"): Promise<Source> {
   const abs = resolve(file);
-  if (!existsSync(abs)) throw new BveError("MISSING_INPUT", `File not found: ${file}`);
+  if (!existsSync(abs)) throw new BveError("MISSING_INPUT", `File not found: ${file}`, { hint: "Check the path; wrap paths containing spaces in quotes." });
   const ext = extname(abs).toLowerCase();
   if (!MEDIA_EXT.has(ext)) {
     throw new BveError("UNSUPPORTED", `Unsupported media type "${ext}"`, { hint: `Supported: ${[...MEDIA_EXT].join(" ")}` });
   }
   const info = await probe(abs);
-  if (!info.hasVideo && !info.hasAudio) throw new BveError("UNSUPPORTED", `${file} has no audio or video stream`);
+  if (!info.hasVideo && !info.hasAudio) throw new BveError("UNSUPPORTED", `${basename(abs)} has no audio or video stream`);
+  if (info.durationSec <= 0) throw new BveError("UNSUPPORTED", `${basename(abs)} has no measurable duration`);
 
   const id = uniqueId(slugId(basename(abs), "src_"), new Set(project.manifest.sources.map((s) => s.id)));
   const destRel = `source/${id}${ext}`;
@@ -74,25 +48,3 @@ export async function ingestSource(project: Project, file: string, role: Source[
   await project.saveManifest();
   return source;
 }
-
-export async function addAsset(project: Project, file: string, kind: keyof typeof ASSET_EXT, opts: { as?: string; license?: string } = {}) {
-  const abs = resolve(file);
-  if (!existsSync(abs)) throw new BveError("MISSING_INPUT", `File not found: ${file}`);
-  const ext = extname(abs).toLowerCase();
-  if (!ASSET_EXT[kind]?.has(ext)) throw new BveError("UNSUPPORTED", `"${ext}" is not a valid ${kind} file`);
-  const destRel = opts.as ?? `assets/${kind}s/${basename(abs)}`;
-  const dest = project.writable(destRel);
-  if (resolve(dest) !== abs) {
-    if (!existsSync(dest)) await importFile(abs, dest);
-  }
-  const rel = toProjectRel(project.root, dest);
-  const assets = (project.manifest.assets ??= []);
-  const existing = assets.find((a) => a.path === rel);
-  const asset: Asset = existing ?? { id: uniqueId(slugId(basename(abs), `${kind}_`), new Set(assets.map((a) => a.id))), kind: kind as Asset["kind"], path: rel };
-  asset.sha256 = await sha256File(dest);
-  if (opts.license) asset.license = opts.license;
-  if (!existing) assets.push(asset);
-  await project.saveManifest();
-  return asset;
-}
-

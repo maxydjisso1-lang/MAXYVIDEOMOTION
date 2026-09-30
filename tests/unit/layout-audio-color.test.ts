@@ -77,3 +77,15 @@ describe("ASS fallback renderer", () => {
     expect(ass).toContain("GO");
   });
 });
+
+describe("color filter compilation", () => {
+  it("brightening beyond ×2 uses colorlevels (colorchannelmixer rejects gains > 2) and FFmpeg accepts it", async () => {
+    const { clipColorFilters } = await import("../../engine/color/src/index.js");
+    const { ffmpeg } = await import("../../engine/ffmpeg/src/index.js");
+    const doc = { schemaVersion: "1.0", globalGrade: { look: "none" as const, intensity: 0 }, shots: [{ sourceId: "s", shotId: "a", correction: { exposure: 1.5, whiteBalance: { mode: "auto-gray-world" as const, gains: [1.1, 1, 0.95] as [number, number, number] } } }] };
+    const analysis = { schemaVersion: "1.0", generatedAt: "2026-01-01T00:00:00Z", sources: [{ sourceId: "s", shots: [{ id: "a", start: 0, end: 10 }], audio: {} }] };
+    const filters = clipColorFilters(doc, "s", 1, analysis);
+    expect(filters[0]).toMatch(/^colorlevels=/);
+    await ffmpeg(["-f", "lavfi", "-i", "testsrc2=s=160x90:d=0.2", "-vf", filters.join(","), "-f", "null", "-"]);
+  });
+});

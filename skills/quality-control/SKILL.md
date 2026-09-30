@@ -23,7 +23,7 @@ Color: PASS        Brand: PASS    Motion: PASS    Export: PASS
 ```
 
 ## Tools
-- `bve qc --target <id> [--json]` — runs every check on the exact rendered file, writes `renders/<target>-<version>.qc.json`, exits 5 on blockers.
+- `bve qc --target <id> [--json]` — runs every check on the exact rendered file and writes `renders/<target>-<version>.qc.json`. With blockers it returns `ok:false`, `code: QC_BLOCKED`, exit 5, and the report text + blocking checks in `details`.
 - Read the report JSON for details (`expected`, `measured`, `at`, `fix`).
 - `bve frames --target <id> --at <sec,...>` — visually inspect flagged moments.
 - `bve qc waive <checkId> --reason "..."` — **user decision only**.
@@ -42,8 +42,8 @@ Color: PASS        Brand: PASS    Motion: PASS    Export: PASS
 | captions | safe zones (measured text boxes) | any glyph box outside the safe zone |
 | captions | sync (cue onset vs. speech onset) | median offset > 120 ms |
 | color | illegal levels, crushed or clipped extent | warn (blocker for advertising/broadcast) |
-| brand | motion colors ∈ brand palette (ΔE < 3), fonts ∈ brand fonts, logo rules | a non-brand font without fallback provenance = warn; logo rule violation = blocker |
-| motion | overrides listed, collisions with captions, safe zones | out of the safe zone = blocker |
+| brand | tokens fresh, logo present, rendered end-card color (ΔE), **fonts as verified by the renderer** | FONT MISSING (no brand or fallback file, or libass substituted it) = blocker; FONT FALLBACK = warn; stale tokens or missing logo = blocker |
+| motion | safe zones, overlaps between motion elements, collisions with captions (after captions gave way), overrides | out of the safe zone = blocker |
 | export | container, faststart, metadata, file size vs. platform limit | platform limit exceeded |
 
 ## Workflow

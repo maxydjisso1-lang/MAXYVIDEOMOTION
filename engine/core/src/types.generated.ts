@@ -410,14 +410,48 @@ export interface Font {
   source?: {
     kind: "file" | "google" | "system";
     /**
-     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     * Single file (a variable font covers every weight).
      */
     path?: string;
+    /**
+     * One file per weight (static fonts). Project-relative, usually brand/fonts/.
+     */
+    files?: {
+      weight: number;
+      /**
+       * Path relative to the project root. Absolute paths and parent traversal are rejected.
+       */
+      path: string;
+    }[];
   };
   /**
-   * Google Font used if the brand font is unavailable or unlicensed.
+   * Font used when the brand font is unavailable. Fetch its files with `bve brand fonts fetch` so rendering never depends on installed fonts.
    */
   fallback?: string;
+  /**
+   * Files of the fallback font, used when the brand font files are missing or unlicensed.
+   */
+  fallbackSource?: {
+    kind: "file" | "google" | "system";
+    /**
+     * Single file (a variable font covers every weight).
+     */
+    path?: string;
+    /**
+     * One file per weight (static fonts). Project-relative, usually brand/fonts/.
+     */
+    files?: {
+      weight: number;
+      /**
+       * Path relative to the project root. Absolute paths and parent traversal are rejected.
+       */
+      path: string;
+    }[];
+  };
+  /**
+   * e.g. OFL-1.1, commercial (licensed to the brand).
+   */
+  license?: string;
 }
 export interface Logo {
   /**
@@ -1286,10 +1320,20 @@ export interface TokenFont {
   family: string;
   weight: number;
   fallback?: string;
-  /**
-   * Path relative to the project root. Absolute paths and parent traversal are rejected.
-   */
-  file?: string;
+  files?: {
+    weight: number;
+    /**
+     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     */
+    path: string;
+  }[];
+  fallbackFiles?: {
+    weight: number;
+    /**
+     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     */
+    path: string;
+  }[];
 }
 
 /**
@@ -1526,4 +1570,59 @@ export interface Preset {
     right: number;
   };
 }
+
+/**
+ * Written by the renderer next to every render; the contract between rendering, QC and export.
+ */
+export interface RenderRecord {
+  /**
+   * Stable, human-readable identifier (e.g. 'src_interview', 'clip_012').
+   */
+  targetId: string;
+  version: string;
+  draft: boolean;
+  renderer: "remotion" | "ass" | "none";
+  rendererNote?: string;
+  /**
+   * Path relative to the project root. Absolute paths and parent traversal are rejected.
+   */
+  path: string;
+  sha256: string;
+  durationSec: number;
+  stages: {
+    /**
+     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     */
+    base: string;
+    /**
+     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     */
+    graphics?: string;
+    /**
+     * Path relative to the project root. Absolute paths and parent traversal are rejected.
+     */
+    mix: string;
+  };
+  cacheHits: ("base" | "graphics" | "mix")[];
+  /**
+   * Font actually used per role, as verified by the renderer.
+   */
+  fonts?: {
+    role: "display" | "body" | "caption";
+    requested: string;
+    used?: string;
+    status: "found" | "fallback" | "missing" | "unverified";
+    detail?: string;
+  }[];
+  createdAt: string;
+}
+
+/**
+ * User decisions to accept a blocking QC check. Written only by `bve qc waive`.
+ */
+export type QcWaivers = {
+  checkId: string;
+  reason: string;
+  at: string;
+}[];
 

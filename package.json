@@ -18,9 +18,11 @@
     "gen:types": "tsx scripts/gen-types.ts",
     "fixtures": "tsx scripts/gen-fixtures.ts",
     "doctor": "tsx engine/cli/src/bin.ts doctor",
-    "test": "vitest run",
+    "test": "vitest run --project unit --project e2e",
     "test:unit": "vitest run --project unit",
-    "test:e2e": "vitest run --project e2e"
+    "test:e2e": "vitest run --project e2e",
+    "fixtures:real": "tsx scripts/fetch-real-fixtures.ts",
+    "test:real": "vitest run --project real"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.530",

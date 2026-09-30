@@ -4,6 +4,7 @@ import { join } from "node:path";
 import {
   BveError, existsSync, readJson, REPO_ROOT, SCHEMA_VERSION, validate, withTempDir, type Project, type Transcript,
 } from "../../core/src/index.js";
+import { ffmpeg } from "../../ffmpeg/src/index.js";
 
 type TranscriptSource = Transcript["sources"][number];
 
@@ -56,12 +57,16 @@ export const fasterWhisper: TranscriptionProvider = {
       });
     }
     const input = project.sourceMediaPath(sourceId);
-    const model = opts.model ?? "large-v3";
+    const model = opts.model ?? "small";
     return withTempDir(async (dir) => {
       const out = join(dir, "transcript.json");
-      const args = ["-m", "bve_py.transcribe", "--input", input, "--output", out, "--model", model];
+      // The engine's FFmpeg is the only decoder: every codec it reads can be transcribed.
+      const wav = join(dir, "audio16k.wav");
+      await ffmpeg(["-i", input, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav], { log: project.log });
+      const args = ["-m", "bve_py.transcribe", "--input", wav, "--output", out, "--model", model];
       if (opts.language && opts.language !== "auto") args.push("--language", opts.language);
-      if (process.env.WHISPER_MODEL_DIR) args.push("--model-dir", process.env.WHISPER_MODEL_DIR);
+      // Models are downloaded once into ./models (gitignored) and loaded offline afterwards.
+      args.push("--model-dir", process.env.WHISPER_MODEL_DIR ?? join(REPO_ROOT, "models"));
       await new Promise<void>((resolvePromise, reject) => {
         const child = spawn(pythonBin(), args, { cwd: join(REPO_ROOT, "engine/python"), windowsHide: true });
         let err = "";
@@ -80,7 +85,7 @@ export const fasterWhisper: TranscriptionProvider = {
           start: s.start,
           end: s.end,
           text: s.text.trim(),
-          words: s.words.map((w) => ({ w: w.word.trim(), start: w.start, end: w.end, p: Math.round(w.probability * 1000) / 1000 })).filter((w) => w.w),
+          words: joinSubwordTokens(s.words.map((w) => ({ w: w.word.trim(), start: w.start, end: w.end, p: Math.round(w.probability * 1000) / 1000 })).filter((w) => w.w)),
         })),
       };
       return { language: raw.language, model: `faster-whisper/${model}`, source: markFillers(source, raw.language) };
@@ -94,6 +99,7 @@ export const fasterWhisper: TranscriptionProvider = {
 export async function importTranscript(project: Project, file: string): Promise<Transcript> {
   const data = validate<Transcript>("transcript", await readJson(file), file);
   for (const s of data.sources) {
+    for (const seg of s.segments) seg.words = joinSubwordTokens(seg.words);
     project.source(s.sourceId);
     markFillers(s, data.language);
   }
@@ -127,4 +133,28 @@ async function mergeAndSave(project: Project, incoming: Transcript, message: str
     await project.writeDoc("analysis", analysis, { command: "transcript", message: "Linked transcript" });
   }
   return doc;
+}
+
+/** Numbered segments with timecodes: what the creative director references in a plan. */
+export async function listSegments(project: Project) {
+  const t = await project.readDoc("transcript");
+  return t.sources.flatMap((s) => s.segments.map((seg) => ({ sourceId: s.sourceId, id: seg.id, range: `${seg.start.toFixed(2)}-${seg.end.toFixed(2)}`, text: seg.text, fillers: seg.words.filter((w) => w.filler).length })));
+}
+
+/**
+ * Whisper sometimes splits one written word into tokens ("j" + "'exerce", "aujourd" + "'hui",
+ * "2026" + "."). Merge tokens that start with an apostrophe or are pure punctuation into the
+ * previous word, keeping the combined timing, so captions never show "j 'exerce".
+ */
+export function joinSubwordTokens<W extends { w: string; start: number; end: number; p?: number }>(words: W[]): W[] {
+  const out: W[] = [];
+  for (const w of words) {
+    const prev = out.at(-1);
+    if (prev && (/^['’]/.test(w.w) || /^[.,!?;:…»)]+$/.test(w.w))) {
+      prev.w += w.w;
+      prev.end = w.end;
+      if (prev.p !== undefined && w.p !== undefined) prev.p = Math.min(prev.p, w.p);
+    } else out.push({ ...w });
+  }
+  return out;
 }

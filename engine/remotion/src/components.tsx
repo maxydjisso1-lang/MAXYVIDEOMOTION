@@ -6,8 +6,8 @@
 import React from "react";
 import { AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { StyleTokens } from "../../core/src/types.generated.js";
-import { anchorBox, ctaLayout, lowerThirdBox, titleLayout, unit, watermarkBox, type Anchor, type Frame } from "../../motion/src/layout.js";
-import { applyCase, clamp01, enter, exit, fontStack, shadowCss } from "./runtime.js";
+import { applyCase, ctaLayout, lowerThirdBox, titleLayout, unit, watermarkBox, type Anchor, type Frame } from "../../motion/src/layout.js";
+import { clamp01, enter, exit, fontStack, shadowCss } from "./runtime.js";
 
 export interface ComponentProps {
   tokens: StyleTokens;

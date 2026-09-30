@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bve://schemas/qc-waivers.schema.json",
+  "title": "QC waivers",
+  "description": "User decisions to accept a blocking QC check. Written only by `bve qc waive`.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["checkId", "reason", "at"],
+    "additionalProperties": false,
+    "properties": {
+      "checkId": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9-]+$" },
+      "reason": { "type": "string", "minLength": 3 },
+      "at": { "type": "string", "format": "date-time" }
+    }
+  }
+}

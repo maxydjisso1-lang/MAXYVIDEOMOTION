@@ -4,3 +4,4 @@ export * from "./audioMix.js";
 export * from "./ass.js";
 export * from "./remotion.js";
 export * from "./renderTarget.js";
+export * from "./frames.js";

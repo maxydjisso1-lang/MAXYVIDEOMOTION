@@ -1,8 +1,8 @@
 import { cp, stat } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { BveError, existsSync, readJson, validate, type Brand, type Project, type StyleTokens } from "../../core/src/index.js";
-import { addAsset } from "../../vision/src/index.js";
+import { addAsset, BveError, existsSync, readJson, validate, type Brand, type Project, type StyleTokens } from "../../core/src/index.js";
 import { contrastRatio } from "./color.js";
+import { resolveFonts, type RoleFont } from "./fonts.js";
 import { compileStyleTokens } from "./tokens.js";
 
 export interface BrandIssue {
@@ -28,17 +28,12 @@ export function checkBrand(brand: Brand, project?: Project): BrandIssue[] {
     const refs: [string, string | undefined][] = [
       ["/identity/logo/primary", brand.identity.logo.primary],
       ["/grade/lut", brand.grade?.lut],
-      ...brand.identity.fonts.map((f, i) => [`/identity/fonts/${i}`, f.source?.kind === "file" ? f.source.path : undefined] as [string, string | undefined]),
     ];
+    // Fonts are reported per role by resolveFonts (found / fallback / missing), not as file errors.
     for (const [field, rel] of refs) {
       if (!rel) continue;
       if (!existsSync(project.abs(rel))) {
-        const isFont = field.startsWith("/identity/fonts");
-        issues.push({
-          level: field === "/identity/logo/primary" ? "error" : "warning",
-          field,
-          message: isFont ? `Font file ${rel} not found: the fallback font will be used` : `Referenced file ${rel} not found in the project`,
-        });
+        issues.push({ level: field === "/identity/logo/primary" ? "error" : "warning", field, message: `Referenced file ${rel} not found in the project` });
       }
     }
   }
@@ -47,17 +42,20 @@ export function checkBrand(brand: Brand, project?: Project): BrandIssue[] {
 
 /**
  * Install a Brand DNA into the project. Accepts a brand.json file or a brand-kit folder
- * (brand.json + assets/). Kit assets are imported under the project's assets/.
+ * (brand.json + assets/ + fonts/). Kit assets are imported under assets/, kit fonts under brand/fonts/.
  * Writes brand.json AND the compiled style tokens in one version.
  */
-export async function setBrand(project: Project, input: string, fps?: number): Promise<{ brand: Brand; tokens: StyleTokens; issues: BrandIssue[] }> {
+export async function setBrand(project: Project, input: string, fps?: number): Promise<{ brand: Brand; tokens: StyleTokens; issues: BrandIssue[]; fonts: RoleFont[] }> {
   const abs = resolve(input);
   const isDir = existsSync(abs) && (await stat(abs)).isDirectory();
   const file = isDir ? join(abs, "brand.json") : abs;
   if (!existsSync(file)) throw new BveError("MISSING_INPUT", `No brand.json at ${input}`);
   const brand = validate<Brand>("brand", await readJson(file), file);
 
-  const kitAssets = join(isDir ? abs : dirname(abs), "assets");
+  const kitDir = isDir ? abs : dirname(abs);
+  const kitFonts = join(kitDir, "fonts");
+  if (existsSync(kitFonts)) await cp(kitFonts, project.abs("brand/fonts"), { recursive: true, force: false, errorOnExist: false });
+  const kitAssets = join(kitDir, "assets");
   if (existsSync(kitAssets)) {
     await cp(kitAssets, project.abs("assets"), { recursive: true, force: false, errorOnExist: false });
     if (existsSync(project.abs(brand.identity.logo.primary))) await addAsset(project, project.abs(brand.identity.logo.primary), "logo", { as: brand.identity.logo.primary });
@@ -69,7 +67,9 @@ export async function setBrand(project: Project, input: string, fps?: number): P
   }
   const tokens = compileStyleTokens(brand, fps ?? (await projectFps(project)));
   await project.writeDocs({ brand, styleTokens: tokens }, { command: "brand set", message: `Brand DNA "${brand.name}" installed; style tokens compiled` });
-  return { brand, tokens, issues };
+  const fonts = resolveFonts(project, tokens);
+  for (const f of fonts) if (f.status !== "found") issues.push({ level: "warning", field: `/identity/fonts (${f.role})`, message: `FONT ${f.status.toUpperCase()}: ${f.detail}` });
+  return { brand, tokens, issues, fonts };
 }
 
 export async function recompileTokens(project: Project, fps?: number): Promise<StyleTokens> {

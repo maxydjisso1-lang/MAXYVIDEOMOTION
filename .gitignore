@@ -33,3 +33,7 @@ desktop.ini
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# real-world fixtures are downloaded, never committed (see tests/fixtures/real/manifest.json)
+tests/fixtures/real/*
+!tests/fixtures/real/manifest.json

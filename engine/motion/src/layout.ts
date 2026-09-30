@@ -165,7 +165,13 @@ export function titleLayout(f: Frame, t: StyleTokens, displayText: string, ancho
   const padPx = t.shape.style === "line" || t.shape.style === "none" ? 0 : 28 * u;
   const fit = fitFont(displayText, c.w - padPx * 2.8, DISPLAY_PX * u, 2, upper, t.type.display.weight);
   const h = fit.lines.length * fit.fontPx * 1.1 + padPx * 1.4 + (t.shape.style === "line" ? 24 * u : 0);
-  return { box: anchorBox(f, t, anchor, h), fontPx: fit.fontPx, lines: fit.lines, padPx };
+  const box = anchorBox(f, t, anchor, h);
+  // A brand watermark owns its top corner: top-anchored titles start below it.
+  if (t.logo?.watermark && anchor.startsWith("top")) {
+    const wm = watermarkBox(f, t, (t.logo.watermark.anchor ?? "top-right") as Anchor);
+    if (wm.y < box.y + box.h && box.y < wm.y + wm.h) box.y = wm.y + wm.h + 16 * u;
+  }
+  return { box, fontPx: fit.fontPx, lines: fit.lines, padPx };
 }
 
 export function ctaLayout(f: Frame, t: StyleTokens, displayText: string, anchor: Anchor, hasSubtext: boolean): TextBlockLayout {
@@ -191,4 +197,76 @@ export const FULLSCREEN_COMPONENTS = new Set(["BrandIntro", "BrandOutro", "LogoR
 
 export function inside(inner: Box, outer: Box, tolerancePx = 1): boolean {
   return inner.x >= outer.x - tolerancePx && inner.y >= outer.y - tolerancePx && inner.x + inner.w <= outer.x + outer.w + tolerancePx && inner.y + inner.h <= outer.y + outer.h + tolerancePx;
+}
+
+/** The brand's case rule, applied identically by every renderer and by QC. */
+export function applyCase(text: string, rule: StyleTokens["caption"]["case"], capitalizeFirst = true): string {
+  if (rule === "upper") return text.toLocaleUpperCase();
+  if (rule === "sentence" && capitalizeFirst) return text.charAt(0).toLocaleUpperCase() + text.slice(1);
+  return text;
+}
+
+export interface MotionInstanceLike {
+  id: string;
+  component: string;
+  start: number;
+  durationSec: number;
+  anchor?: string;
+  props: Record<string, unknown>;
+}
+
+/** On-screen box of a motion instance (undefined for full-frame cards and transitions). */
+export function instanceBox(f: Frame, t: StyleTokens, i: MotionInstanceLike): Box | undefined {
+  const p = i.props as Record<string, string | undefined>;
+  const up = (s: string) => (t.caption.case === "upper" ? s.toLocaleUpperCase() : s);
+  const anchor = (i.anchor ?? "auto") as Anchor;
+  switch (i.component) {
+    case "Title":
+    case "Subtitle":
+      return titleLayout(f, t, up(p.text ?? ""), anchor).box;
+    case "CTA":
+      return ctaLayout(f, t, up(p.text ?? ""), anchor, !!p.subtext).box;
+    case "LowerThird":
+      return lowerThirdBox(f, t);
+    case "Watermark":
+      return watermarkBox(f, t, (i.anchor ?? "top-right") as Anchor);
+    default:
+      return undefined;
+  }
+}
+
+export interface Obstacle {
+  id: string;
+  start: number;
+  end: number;
+  box: Box;
+}
+
+export function motionObstacles(f: Frame, t: StyleTokens, instances: MotionInstanceLike[]): Obstacle[] {
+  return instances.flatMap((i) => {
+    const box = i.component === "Watermark" ? undefined : instanceBox(f, t, i);
+    return box ? [{ id: i.id, start: i.start, end: i.start + i.durationSec, box }] : [];
+  });
+}
+
+const hit = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+/**
+ * Captions give way to motion graphics shown at the same time: the block moves just above the
+ * obstacle (or below it when there is no room above), staying inside the safe area.
+ */
+export function avoidObstacles<L extends CaptionLayout>(f: Frame, t: StyleTokens, layout: L, cue: { start: number; end: number }, obstacles: Obstacle[]): L {
+  const c = contentRect(f, t);
+  const gap = 16 * unit(f);
+  const box = { ...layout.box };
+  for (let pass = 0; pass < 3; pass++) {
+    const blocking = obstacles.filter((o) => o.start < cue.end && cue.start < o.end && hit(box, o.box));
+    if (!blocking.length) break;
+    const top = Math.min(...blocking.map((o) => o.box.y));
+    const bottom = Math.max(...blocking.map((o) => o.box.y + o.box.h));
+    if (top - gap - box.h >= c.y) box.y = top - gap - box.h;
+    else if (bottom + gap + box.h <= c.y + c.h) box.y = bottom + gap;
+    else break;
+  }
+  return { ...layout, box };
 }

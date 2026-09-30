@@ -38,11 +38,42 @@ Status legend: ✅ implemented and tested · 🟡 implemented, not yet exercised
 - a Linux/macOS CI matrix
 - `npm run build` packaging checks
 
-### Phase 2 — Advanced editing and motion
-Face-tracking smart reframe (MediaPipe), all 14 motion components, beat detection (librosa) with beat-synced cuts and animations, cross-camera color matching, skin-tone qualifier, multi-version generation (15 s, 30 s, 60 s cutdowns from one plan), B-roll placement, dereverb.
+### Pre-Phase-2 hardening (done)
 
-### Phase 3 — Ecosystem
-Brand DNA from website URL and PDF brand book, MCP server adapter, OpenTimelineIO export (Premiere/Resolve round-trip), a web preview UI, a music library connector, and translation of captions.
+All P0/P1 audit findings are fixed, and the result is covered by tests. See [AUDIT_PHASE1.md §8–10](AUDIT_PHASE1.md#8-resolution-status-pre-phase-2-work).
+- **Contracts.** The render record, QC report and waivers are validated through `core`.
+- **Cache.** Keys now include the content of the assets and a hash of the engine code.
+- **CLI.** It only parses arguments; every command calls one engine or core function.
+- **Fonts.** Font files per weight, `bve brand fonts fetch`, and the font actually used is verified by each renderer. QC reports FOUND / FALLBACK / MISSING.
+- **Whisper.** Validated on real French speech. The model is cached once in `./models`, decoding goes through the engine's FFmpeg, and `truststore` handles TLS-inspecting networks.
+- **Real fixtures.** Five CC or public-domain files, downloaded under control and pinned by sha1: a talking head, an interview, product footage, French speech, and street noise mixed with speech. The opt-in `test:real` suite covers them.
+- **Robustness matrix.** 20 cases. It found and fixed silent-audio loudnorm, HEVC 10-bit stats, MJPEG detection, relative paths and ×2 gain limits.
+
+### Phase 2 — Real-world post-production (proposal, ordered by the measurements)
+
+1. **Real transcription.**
+   - A sentence-level view, so plans never cut mid-sentence.
+   - `medium`/`large-v3` for final deliverables.
+   - A glossary (brand names) passed to Whisper as `initial_prompt`.
+   - Denoising before transcription on noisy sources.
+2. **Real audio cleanup.** Neural denoise:
+   - RNNoise now (the FFmpeg filter is already available); evaluate DeepFilterNet for SNR < 10 dB.
+   - Strength driven by the measured SNR.
+   - A voice-preservation guard (loudness delta, speech/noise ratio before vs after).
+   - Music-versus-noise detection before any denoise.
+   - Continuous per-source processing, instead of processing per clip.
+3. **Real color.** Cross-camera shot matching, a skin-tone qualifier, before/after stills for Claude, and per-shot confidence.
+4. **Scene detection.** Semantic labels from contact sheets as a versioned annotations document, plus best-take selection.
+5. **Smart reframing.** Face and subject tracking (MediaPipe, in the Python sidecar), smoothed crop paths, and avoidance of burned-in text (the real talking-head source has a burned-in banner).
+6. **Advanced captions.** Proofreading helpers, speaker labels, and translation.
+7. **Richer motion.** Quote, Statistic, ProductReveal, FeatureCard and Callout, with props schemas for every component.
+8. **Music and ducking.** A music asset workflow, ducking tuned on real speech, and fitting the music to the video length.
+9. **Beat synchronisation.** Beats, downbeats and drops (librosa); snapping cuts and motion accents to them.
+10. **Stronger QC.** Perceptual color checks, speech intelligibility, caption-to-speech offset measured on the audio, and rendering the broadcast preset.
+
+Every item follows **Schema → Core → Engine → CLI → Skill → Tests** and extends the real-footage suite.
+
+Performance to address in Phase 2: a Remotion render of 21 s at 1080×1920 takes ≈3 min on this machine. Profile the PNG sequence stage.
 
 ## Dependencies
 
