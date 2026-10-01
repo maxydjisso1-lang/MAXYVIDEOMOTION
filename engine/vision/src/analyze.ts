@@ -3,7 +3,7 @@ import {
   BveError, invertRanges, round3, SCHEMA_VERSION, toProjectRel, type Analysis, type Project, type Range, type Shot, type Source,
 } from "../../core/src/index.js";
 import {
-  capabilities, detectBlack, detectSceneCuts, detectSilences, estimateNoiseFloor, extractFrame, ffmpeg, frameStats, measureLoudness, rmsLevel,
+  capabilities, detectBlack, lumaHistograms, detectSceneCuts, detectSilences, estimateNoiseFloor, extractFrame, ffmpeg, frameStats, measureLoudness, rmsLevel,
   type FrameStats,
 } from "../../ffmpeg/src/index.js";
 import { classifyWindows, contentFeatures, contentSegments, contentShares, decodePcm, sourceHasMusic, speechBackgroundUnknown } from "../../audio/src/index.js";
@@ -42,7 +42,7 @@ export function buildShots(cuts: { time: number; score: number }[], duration: nu
   return shots;
 }
 
-function shotStats(frames: FrameStats[], range: Range, bitDepth: number) {
+export function shotStats(frames: FrameStats[], range: Range, bitDepth: number, hists?: { t: number; hist: Uint32Array }[]) {
   const inShot = frames.filter((f) => f.t >= range.start && f.t < range.end);
   const sample = inShot.length ? inShot : frames.filter((f) => Math.abs(f.t - (range.start + range.end) / 2) < 1);
   const max = (1 << bitDepth) - 1;
@@ -50,8 +50,24 @@ function shotStats(frames: FrameStats[], range: Range, bitDepth: number) {
   // signalstats YLOW/YHIGH are the 10th/90th luma percentiles; we store them as the low/high anchors.
   const lo = mean(sample.map((f) => f.ylow)) / max;
   const hi = mean(sample.map((f) => f.yhigh)) / max;
+  // 98th percentile from the pooled histograms of the shot's frames (absent without histograms)
+  let p98: number | undefined;
+  const hs = hists?.filter((h) => h.t >= range.start && h.t < range.end) ?? [];
+  if (hs.length) {
+    const pooled = new Float64Array(256);
+    for (const h of hs) h.hist.forEach((c, v) => (pooled[v]! += c));
+    const total = pooled.reduce((a, b) => a + b, 0);
+    let acc = 0;
+    for (let v = 0; v < 256; v++) {
+      acc += pooled[v]!;
+      if (acc >= 0.98 * total) {
+        p98 = round3(v / 255);
+        break;
+      }
+    }
+  }
   return {
-    luma: { mean: round3(y / max), p05: round3(lo), p95: round3(hi) },
+    luma: { mean: round3(y / max), p05: round3(lo), p95: round3(hi), ...(p98 !== undefined ? { p98 } : {}) },
     saturationMean: round3(clamp01(mean(sample.map((f) => f.satavg)) / (max / 2))),
     rgbMean: yuvToRgb(y, mean(sample.map((f) => f.uavg)), mean(sample.map((f) => f.vavg)), max),
   };
@@ -116,10 +132,11 @@ export async function analyzeSource(project: Project, source: Source): Promise<S
   const out: SourceAnalysis = { sourceId: source.id, shots: [], audio: {} };
 
   if (source.probe.hasVideo) {
-    const [cuts, frames, black] = await Promise.all([
+    const [cuts, frames, black, hists] = await Promise.all([
       detectSceneCuts(input, { log: project.log }),
       frameStats(input, { fps: 4, log: project.log }),
       detectBlack(input, { log: project.log }),
+      lumaHistograms(input, { fps: 2, log: project.log }),
     ]);
     const bitDepth = 8; // frameStats converts to 8-bit before measuring, whatever the source depth
     const kfDir = `analysis/keyframes/${source.id}`;
@@ -127,7 +144,7 @@ export async function analyzeSource(project: Project, source: Source): Promise<S
     const shots = buildShots(cuts, duration);
     for (const [i, s] of shots.entries()) {
       const id = `s${String(i + 1).padStart(3, "0")}`;
-      const stats = shotStats(frames, s, bitDepth);
+      const stats = shotStats(frames, s, bitDepth, hists);
       const keyframe = `${kfDir}/${id}.jpg`;
       await extractFrame(input, (s.start + s.end) / 2, project.writable(keyframe), { width: 480, log: project.log });
       out.shots.push({

@@ -76,6 +76,10 @@ export interface Shot {
     mean?: number;
     p05?: number;
     p95?: number;
+    /**
+     * 98th percentile (code value / 255, like the others). Note: p05/p95 are signalstats' 10th/90th percentiles.
+     */
+    p98?: number;
   };
   exposure?: "under" | "ok" | "over" | "mixed";
   saturationMean?: number;
@@ -1175,6 +1179,10 @@ export interface Probe {
   videoCodec?: string;
   pixFmt?: string;
   colorSpace?: string;
+  /**
+   * Signalled YUV range (absent = unsignalled).
+   */
+  colorRange?: "tv" | "pc";
   colorTransfer?: string;
   bitDepth?: number;
   audioCodec?: string;

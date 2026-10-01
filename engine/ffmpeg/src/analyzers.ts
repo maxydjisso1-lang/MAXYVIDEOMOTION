@@ -3,6 +3,7 @@
  * interpretation (what counts as "underexposed", "noisy"…) lives in the callers.
  */
 import { readFile } from "node:fs/promises";
+import { probe } from "./probe.js";
 import { join, resolve } from "node:path";
 import { withTempDir, type Range } from "../../core/src/index.js";
 import { ffmpeg, type RunOptions } from "./run.js";
@@ -140,6 +141,31 @@ export async function frameStats(input: string, opts: { fps?: number; start?: nu
     }
     if (cur.t !== undefined) frames.push(cur as FrameStats);
     return frames;
+  });
+}
+
+/**
+ * Per-frame histograms of the luma code values (Y plane as stored, 8-bit), sampled at `fps` on a
+ * small copy. signalstats only gives the 10th/90th percentiles; colour correction needs the 98th
+ * (small bright elements: titles, lamps). Same scale as frameStats (code value / 255 once divided).
+ */
+export async function lumaHistograms(input: string, opts: { fps?: number; width?: number } & RunOptions = {}): Promise<{ t: number; hist: Uint32Array }[]> {
+  const fps = opts.fps ?? 2;
+  const width = opts.width ?? 160;
+  const p = await probe(input);
+  const height = Math.max(2, Math.round(((p.height ?? 90) * width) / (p.width ?? 160) / 2) * 2);
+  return withTempDir(async (dir) => {
+    const out = join(dir, "y.raw");
+    await ffmpeg(["-i", resolve(input), "-an", "-vf", `fps=${fps},scale=${width}:${height},format=yuv420p,extractplanes=y`, "-f", "rawvideo", out], opts);
+    const buf = await readFile(out);
+    const size = width * height;
+    const res: { t: number; hist: Uint32Array }[] = [];
+    for (let o = 0, i = 0; o + size <= buf.length; o += size, i++) {
+      const hist = new Uint32Array(256);
+      for (let k = o; k < o + size; k++) hist[buf[k]!]!++;
+      res.push({ t: i / fps, hist });
+    }
+    return res;
   });
 }
 

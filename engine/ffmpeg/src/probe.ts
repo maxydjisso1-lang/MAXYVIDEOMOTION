@@ -11,6 +11,7 @@ interface FfStream {
   avg_frame_rate?: string;
   pix_fmt?: string;
   color_space?: string;
+  color_range?: string;
   color_transfer?: string;
   bits_per_raw_sample?: string;
   sample_rate?: string;
@@ -59,6 +60,7 @@ export async function probe(path: string): Promise<ProbeResult> {
     out.videoCodec = v.codec_name;
     out.pixFmt = v.pix_fmt;
     if (v.color_space) out.colorSpace = v.color_space;
+    if (v.color_range === "tv" || v.color_range === "pc") out.colorRange = v.color_range;
     if (v.color_transfer) out.colorTransfer = v.color_transfer;
     if (v.bits_per_raw_sample) out.bitDepth = Number(v.bits_per_raw_sample);
     if (v.duration) out.videoDurationSec = Number(v.duration);

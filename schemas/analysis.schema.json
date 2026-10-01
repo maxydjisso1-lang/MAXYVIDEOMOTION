@@ -43,7 +43,8 @@
           "properties": {
             "mean": { "type": "number", "minimum": 0, "maximum": 1 },
             "p05": { "type": "number", "minimum": 0, "maximum": 1 },
-            "p95": { "type": "number", "minimum": 0, "maximum": 1 }
+            "p95": { "type": "number", "minimum": 0, "maximum": 1 },
+            "p98": { "type": "number", "minimum": 0, "maximum": 1, "description": "98th percentile (code value / 255, like the others). Note: p05/p95 are signalstats' 10th/90th percentiles." }
           }
         },
         "exposure": { "enum": ["under", "ok", "over", "mixed"] },

@@ -1,0 +1,3308 @@
+{
+ "date": "2026-10-01T18:40:53.136Z",
+ "script": "scripts/bench-color.ts (kit: scripts/lib/color-cases.ts)",
+ "frames": 6,
+ "matrix": [
+  { "source": "talking-head", "encoding": "bt709", "clipVsRef": 0.39, "renderVsRef": 0.67, "renderWithRgbFilterVsRef": 0.68, "renderNormalizedVsRef": 0.68 },
+  { "source": "talking-head", "encoding": "untagged709", "clipVsRef": 0.39, "renderVsRef": 2.16, "renderWithRgbFilterVsRef": 2.15, "renderNormalizedVsRef": 0.68 },
+  { "source": "talking-head", "encoding": "bt601", "clipVsRef": 0.33, "renderVsRef": 1.33, "renderWithRgbFilterVsRef": 1.35, "renderNormalizedVsRef": 0.66 },
+  { "source": "talking-head", "encoding": "bt709full", "clipVsRef": 0, "renderVsRef": 0.71, "renderWithRgbFilterVsRef": 1.04, "renderNormalizedVsRef": 0.93 },
+  { "source": "interview", "encoding": "bt709", "clipVsRef": 0.32, "renderVsRef": 0.51, "renderWithRgbFilterVsRef": 0.52, "renderNormalizedVsRef": 0.52 },
+  { "source": "interview", "encoding": "untagged709", "clipVsRef": 0.32, "renderVsRef": 1.92, "renderWithRgbFilterVsRef": 1.92, "renderNormalizedVsRef": 1.52 },
+  { "source": "interview", "encoding": "bt601", "clipVsRef": 0.3, "renderVsRef": 1.06, "renderWithRgbFilterVsRef": 1.06, "renderNormalizedVsRef": 0.53 },
+  { "source": "interview", "encoding": "bt709full", "clipVsRef": 0, "renderVsRef": 0.69, "renderWithRgbFilterVsRef": 0.81, "renderNormalizedVsRef": 0.67 },
+  { "source": "product", "encoding": "bt709", "clipVsRef": 0.2, "renderVsRef": 0.15, "renderWithRgbFilterVsRef": 0.15, "renderNormalizedVsRef": 0.15 },
+  { "source": "product", "encoding": "untagged709", "clipVsRef": 0.2, "renderVsRef": 0.57, "renderWithRgbFilterVsRef": 0.57, "renderNormalizedVsRef": 0.15 },
+  { "source": "product", "encoding": "bt601", "clipVsRef": 0.19, "renderVsRef": 0.49, "renderWithRgbFilterVsRef": 0.49, "renderNormalizedVsRef": 0.29 },
+  { "source": "product", "encoding": "bt709full", "clipVsRef": 0, "renderVsRef": 0.15, "renderWithRgbFilterVsRef": 0.62, "renderNormalizedVsRef": 0.4 }
+ ],
+ "correctionV1": [
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.094,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.959,
+      0.997,
+      1.058
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 0.67, "after": 4.01, "skinBefore": 0.71, "skinAfter": 4.12 },
+   "clipHigh": 0.03
+  },
+  {
+   "source": "talking-head",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 0.509,
+    "contrast": 0.209,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.959,
+      0.999,
+      1.055
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 15.25, "after": 9.24, "skinBefore": 18.59, "skinAfter": 9 },
+   "clipHigh": 0
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 0.778,
+    "contrast": 0.263,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.96,
+      1,
+      1.052
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 22.63, "after": 15.13, "skinBefore": 27.92, "skinAfter": 16.21 },
+   "clipHigh": 0
+  },
+  {
+   "source": "talking-head",
+   "case": "over+1",
+   "correction": {
+    "exposure": -0.156,
+    "contrast": 0,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.963,
+      0.995,
+      1.053
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 11.28, "after": 8.1, "skinBefore": 13.63, "skinAfter": 9.59 },
+   "clipHigh": 0
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.091,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.929,
+      0.998,
+      1.121
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 6.75, "after": 3.56, "skinBefore": 7.25, "skinAfter": 3.26 },
+   "clipHigh": 0.02
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.1,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.985,
+      0.995,
+      1.021
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 5.95, "after": 7.5, "skinBefore": 7.09, "skinAfter": 8.67 },
+   "clipHigh": 0.03
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.077,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.966,
+      0.982,
+      1.068
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 5.57, "after": 4.94, "skinBefore": 7.02, "skinAfter": 6.07 },
+   "clipHigh": 0.03
+  },
+  {
+   "source": "talking-head",
+   "case": "flat",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.242,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.978,
+      0.999,
+      1.026
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 9.76, "after": 8.29, "skinBefore": 8.62, "skinAfter": 8.45 },
+   "clipHigh": 0
+  },
+  {
+   "source": "talking-head",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.092,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.955,
+      0.999,
+      1.062
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 3.59, "after": 4.57, "skinBefore": 3.51, "skinAfter": 4.29 },
+   "clipHigh": 0.02
+  },
+  {
+   "source": "talking-head",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 0.624,
+    "contrast": 0.235,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.931,
+      1.001,
+      1.113
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 18.75, "after": 12.04, "skinBefore": 22.43, "skinAfter": 11.9 },
+   "clipHigh": 0
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "correction": {
+    "exposure": 0.713,
+    "contrast": 0.133,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.915,
+      1.033,
+      1.107
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 0.51, "after": 7.88, "skinBefore": 0.66, "skinAfter": 20.72 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "interview",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 1.066,
+    "contrast": 0.242,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.922,
+      1.034,
+      1.087
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 8.48, "after": 6.43, "skinBefore": 19.67, "skinAfter": 13.48 },
+   "clipHigh": 0.12
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 1.276,
+    "contrast": 0.292,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.929,
+      1.033,
+      1.071
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 12.6, "after": 7.02, "skinBefore": 30.41, "skinAfter": 9.26 },
+   "clipHigh": 0.09
+  },
+  {
+   "source": "interview",
+   "case": "over+1",
+   "correction": {
+    "exposure": 0.498,
+    "contrast": 0,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.92,
+      1.029,
+      1.1
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 6.37, "after": 12, "skinBefore": 14.44, "skinAfter": 24.72 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "interview",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0.691,
+    "contrast": 0.129,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.897,
+      1.037,
+      1.15
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.84, "after": 8.76, "skinBefore": 5.87, "skinAfter": 21.54 },
+   "clipHigh": 0.17
+  },
+  {
+   "source": "interview",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0.731,
+    "contrast": 0.138,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.934,
+      1.027,
+      1.067
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.76, "after": 7.5, "skinBefore": 6.59, "skinAfter": 20.74 },
+   "clipHigh": 0.15
+  },
+  {
+   "source": "interview",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0.67,
+    "contrast": 0.117,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.921,
+      1.017,
+      1.114
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.04, "after": 8.27, "skinBefore": 6.3, "skinAfter": 21.72 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "interview",
+   "case": "flat",
+   "correction": {
+    "exposure": 0.288,
+    "contrast": 0.263,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.963,
+      1.013,
+      1.031
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 13.64, "after": 14.19, "skinBefore": 10.19, "skinAfter": 12.13 },
+   "clipHigh": 0.01
+  },
+  {
+   "source": "interview",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0.709,
+    "contrast": 0.133,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.913,
+      1.036,
+      1.11
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 1.41, "after": 8.09, "skinBefore": 2.9, "skinAfter": 21.08 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "interview",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 1.152,
+    "contrast": 0.265,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.906,
+      1.042,
+      1.124
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 9.77, "after": 6.39, "skinBefore": 23.58, "skinAfter": 11.4 },
+   "clipHigh": 0.11
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "correction": {
+    "exposure": 0.851,
+    "contrast": 0.101,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 0.15, "after": 6.58 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "product",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 1.166,
+    "contrast": 0.223,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 5.57, "after": 4.19 },
+   "clipHigh": 0.09
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 1.349,
+    "contrast": 0.28,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.987,
+      1.022,
+      0.993
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 8.27, "after": 2.45 },
+   "clipHigh": 0.04
+  },
+  {
+   "source": "product",
+   "case": "over+1",
+   "correction": {
+    "exposure": 0.64,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 3.93, "after": 7.63 },
+   "clipHigh": 0.19
+  },
+  {
+   "source": "product",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0.841,
+    "contrast": 0.095,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.959,
+      1.012,
+      1.038
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.83, "after": 6.94 },
+   "clipHigh": 0.18
+  },
+  {
+   "source": "product",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0.862,
+    "contrast": 0.106,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      1.011,
+      1.014,
+      0.977
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.6, "after": 6.81 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "product",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0.811,
+    "contrast": 0.082,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 2.62, "after": 7.04 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "product",
+   "case": "flat",
+   "correction": {
+    "exposure": 0.335,
+    "contrast": 0.244,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 12.61, "after": 14.27 },
+   "clipHigh": 0
+  },
+  {
+   "source": "product",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0.851,
+    "contrast": 0.1,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 0.81, "after": 6.66 },
+   "clipHigh": 0.16
+  },
+  {
+   "source": "product",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 1.246,
+    "contrast": 0.25,
+    "whiteBalance": {
+     "mode": "auto-gray-world",
+     "gains": [
+      0.963,
+      1.019,
+      1.025
+     ]
+    },
+    "protectSkinTones": true
+   },
+   "deltaE": { "before": 7.03, "after": 4.22 },
+   "clipHigh": 0.08
+  }
+ ],
+ "correctionV2": [
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.959/0.997/1.058): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 0.67, "after": 0.67, "skinBefore": 0.71, "skinAfter": 0.71 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.41, "clipHigh": 0 },
+   "after": { "luma": 0.41, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1766, "basePassCorrected": 1733 }
+  },
+  {
+   "source": "talking-head",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 0.613,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 0.61 EV (no highlights: 98th percentile 0.54, mean 0.25); average colour off neutral (gray-world would apply 0.959/0.999/1.055): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 15.25, "after": 3.48, "skinBefore": 18.59, "skinAfter": 3.48 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.25, "clipHigh": 0 },
+   "after": { "luma": 0.38, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1655, "basePassCorrected": 2241 }
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 1.087,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 1.09 EV (no highlights: 98th percentile 0.39, mean 0.17); average colour off neutral (gray-world would apply 0.96/1/1.052): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 22.63, "after": 4.65, "skinBefore": 27.92, "skinAfter": 4.42 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.17, "clipHigh": 0 },
+   "after": { "luma": 0.36, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1560, "basePassCorrected": 1979 }
+  },
+  {
+   "source": "talking-head",
+   "case": "over+1",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.963/0.995/1.053): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 11.28, "after": 11.28, "skinBefore": 13.63, "skinAfter": 13.63 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.55, "clipHigh": 0.15 },
+   "after": { "luma": 0.55, "clipHigh": 0.15, "holes": 0 },
+   "ms": { "basePassPlain": 1695, "basePassCorrected": 1902 }
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.929/0.998/1.121): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 6.75, "after": 6.75, "skinBefore": 7.25, "skinAfter": 7.25 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.42, "clipHigh": 0.02 },
+   "after": { "luma": 0.42, "clipHigh": 0.02, "holes": 0 },
+   "ms": { "basePassPlain": 1931, "basePassCorrected": 1753 }
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.985/0.995/1.021): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 5.95, "after": 5.95, "skinBefore": 7.09, "skinAfter": 7.09 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.41, "clipHigh": 0.01 },
+   "after": { "luma": 0.41, "clipHigh": 0.01, "holes": 0 },
+   "ms": { "basePassPlain": 1876, "basePassCorrected": 1831 }
+  },
+  {
+   "source": "talking-head",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.966/0.982/1.068): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 5.57, "after": 5.57, "skinBefore": 7.02, "skinAfter": 7.02 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.44, "clipHigh": 0.01 },
+   "after": { "luma": 0.44, "clipHigh": 0.01, "holes": 0 },
+   "ms": { "basePassPlain": 1751, "basePassCorrected": 1749 }
+  },
+  {
+   "source": "talking-head",
+   "case": "flat",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.123,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "contrast +0.123 (flat: 10–90 % spread 0.35); average colour off neutral (gray-world would apply 0.978/0.999/1.026): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 9.76, "after": 8.61, "skinBefore": 8.62, "skinAfter": 7.95 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.45, "clipHigh": 0 },
+   "after": { "luma": 0.44, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 2589, "basePassCorrected": 2480 }
+  },
+  {
+   "source": "talking-head",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.955/0.999/1.062): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 3.59, "after": 3.59, "skinBefore": 3.51, "skinAfter": 3.51 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.41, "clipHigh": 0.01 },
+   "after": { "luma": 0.41, "clipHigh": 0.01, "holes": 0 },
+   "ms": { "basePassPlain": 1807, "basePassCorrected": 2841 }
+  },
+  {
+   "source": "talking-head",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 0.818,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 0.82 EV (no highlights: 98th percentile 0.47, mean 0.22); average colour off neutral (gray-world would apply 0.931/1.001/1.113): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 18.75, "after": 7.61, "skinBefore": 22.43, "skinAfter": 7.73 },
+   "ref": { "luma": 0.42, "clipHigh": 0.01 },
+   "before": { "luma": 0.21, "clipHigh": 0 },
+   "after": { "luma": 0.37, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1686, "basePassCorrected": 2238 }
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.88): low-key, left as shot; average colour off neutral (gray-world would apply 0.915/1.033/1.107): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 0.51, "after": 0.51, "skinBefore": 0.66, "skinAfter": 0.66 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.19, "clipHigh": 0 },
+   "after": { "luma": 0.19, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 881, "basePassCorrected": 1019 }
+  },
+  {
+   "source": "interview",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 0.736,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 0.74 EV (no highlights: 98th percentile 0.55, mean 0.11); average colour off neutral (gray-world would apply 0.922/1.034/1.087): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 8.48, "after": 1.95, "skinBefore": 19.67, "skinAfter": 2.51 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.11, "clipHigh": 0 },
+   "after": { "luma": 0.18, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 899, "basePassCorrected": 1043 }
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 1.194,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 1.19 EV (no highlights: 98th percentile 0.40, mean 0.08); average colour off neutral (gray-world would apply 0.929/1.033/1.071): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 12.6, "after": 2.86, "skinBefore": 30.41, "skinAfter": 3.11 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.07, "clipHigh": 0 },
+   "after": { "luma": 0.17, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 800, "basePassCorrected": 993 }
+  },
+  {
+   "source": "interview",
+   "case": "over+1",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 1.00): low-key, left as shot; average colour off neutral (gray-world would apply 0.92/1.029/1.1): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 6.37, "after": 6.37, "skinBefore": 14.44, "skinAfter": 14.44 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.25, "clipHigh": 0.06 },
+   "after": { "luma": 0.25, "clipHigh": 0.06, "holes": 0 },
+   "ms": { "basePassPlain": 854, "basePassCorrected": 908 }
+  },
+  {
+   "source": "interview",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.88): low-key, left as shot; average colour off neutral (gray-world would apply 0.897/1.037/1.15): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 2.84, "after": 2.84, "skinBefore": 5.87, "skinAfter": 5.87 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.19, "clipHigh": 0.04 },
+   "after": { "luma": 0.19, "clipHigh": 0.04, "holes": 0 },
+   "ms": { "basePassPlain": 747, "basePassCorrected": 764 }
+  },
+  {
+   "source": "interview",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.87): low-key, left as shot; average colour off neutral (gray-world would apply 0.934/1.027/1.067): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 2.76, "after": 2.76, "skinBefore": 6.59, "skinAfter": 6.59 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.18, "clipHigh": 0 },
+   "after": { "luma": 0.18, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 769, "basePassCorrected": 742 }
+  },
+  {
+   "source": "interview",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.94): low-key, left as shot; average colour off neutral (gray-world would apply 0.921/1.017/1.114): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 2.04, "after": 2.04, "skinBefore": 6.3, "skinAfter": 6.3 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.2, "clipHigh": 0 },
+   "after": { "luma": 0.2, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 780, "basePassCorrected": 782 }
+  },
+  {
+   "source": "interview",
+   "case": "flat",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.156,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "contrast +0.156 (flat: 10–90 % spread 0.31); average colour off neutral (gray-world would apply 0.963/1.013/1.031): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 13.64, "after": 10.96, "skinBefore": 10.19, "skinAfter": 9.18 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.33, "clipHigh": 0 },
+   "after": { "luma": 0.3, "clipHigh": 0, "holes": 0.01 },
+   "ms": { "basePassPlain": 716, "basePassCorrected": 739 }
+  },
+  {
+   "source": "interview",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.89): low-key, left as shot; average colour off neutral (gray-world would apply 0.913/1.036/1.11): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 1.41, "after": 1.41, "skinBefore": 2.9, "skinAfter": 2.9 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.19, "clipHigh": 0.02 },
+   "after": { "luma": 0.19, "clipHigh": 0.02, "holes": 0 },
+   "ms": { "basePassPlain": 777, "basePassCorrected": 760 }
+  },
+  {
+   "source": "interview",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 0.939,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 0.94 EV (no highlights: 98th percentile 0.48, mean 0.10); average colour off neutral (gray-world would apply 0.906/1.042/1.124): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 9.77, "after": 3.49, "skinBefore": 23.58, "skinAfter": 6.58 },
+   "ref": { "luma": 0.19, "clipHigh": 0 },
+   "before": { "luma": 0.09, "clipHigh": 0 },
+   "after": { "luma": 0.18, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 741, "basePassCorrected": 942 }
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.81): low-key, left as shot",
+   "deltaE": { "before": 0.15, "after": 0.15 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.16, "clipHigh": 0 },
+   "after": { "luma": 0.16, "clipHigh": 0, "holes": 0.07 },
+   "ms": { "basePassPlain": 1878, "basePassCorrected": 1977 }
+  },
+  {
+   "source": "product",
+   "case": "under-1.5",
+   "correction": {
+    "exposure": 0.86,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 0.86 EV (no highlights: 98th percentile 0.51, mean 0.10)",
+   "deltaE": { "before": 5.57, "after": 1.23 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.09, "clipHigh": 0 },
+   "after": { "luma": 0.17, "clipHigh": 0, "holes": 0.01 },
+   "ms": { "basePassPlain": 1967, "basePassCorrected": 2369 }
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "correction": {
+    "exposure": 1.335,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 1.33 EV (no highlights: 98th percentile 0.36, mean 0.07); average colour off neutral (gray-world would apply 0.987/1.022/0.993): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 8.27, "after": 1.17 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.07, "clipHigh": 0 },
+   "after": { "luma": 0.17, "clipHigh": 0, "holes": 0.01 },
+   "ms": { "basePassPlain": 1940, "basePassCorrected": 2708 }
+  },
+  {
+   "source": "product",
+   "case": "over+1",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 1.00): low-key, left as shot",
+   "deltaE": { "before": 3.93, "after": 3.93 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.21, "clipHigh": 0.05 },
+   "after": { "luma": 0.21, "clipHigh": 0.05, "holes": 0 },
+   "ms": { "basePassPlain": 2024, "basePassCorrected": 1907 }
+  },
+  {
+   "source": "product",
+   "case": "cast-warm",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.82): low-key, left as shot; average colour off neutral (gray-world would apply 0.959/1.012/1.038): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 2.83, "after": 2.83 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.16, "clipHigh": 0 },
+   "after": { "luma": 0.16, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 2076, "basePassCorrected": 1903 }
+  },
+  {
+   "source": "product",
+   "case": "cast-cool",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.80): low-key, left as shot; average colour off neutral (gray-world would apply 1.011/1.014/0.977): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 2.6, "after": 2.6 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.15, "clipHigh": 0 },
+   "after": { "luma": 0.15, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1832, "basePassCorrected": 1825 }
+  },
+  {
+   "source": "product",
+   "case": "cast-green",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.86): low-key, left as shot",
+   "deltaE": { "before": 2.62, "after": 2.62 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.17, "clipHigh": 0 },
+   "after": { "luma": 0.17, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 2219, "basePassCorrected": 1893 }
+  },
+  {
+   "source": "product",
+   "case": "flat",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.126,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "contrast +0.126 (flat: 10–90 % spread 0.34)",
+   "deltaE": { "before": 12.61, "after": 9.93 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.31, "clipHigh": 0 },
+   "after": { "luma": 0.28, "clipHigh": 0, "holes": 0.03 },
+   "ms": { "basePassPlain": 1751, "basePassCorrected": 2093 }
+  },
+  {
+   "source": "product",
+   "case": "mixed",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.81): low-key, left as shot",
+   "deltaE": { "before": 0.81, "after": 0.81 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.16, "clipHigh": 0 },
+   "after": { "luma": 0.16, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 1937, "basePassCorrected": 1891 }
+  },
+  {
+   "source": "product",
+   "case": "dark-warm",
+   "correction": {
+    "exposure": 1.07,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 1.07 EV (no highlights: 98th percentile 0.44, mean 0.08); average colour off neutral (gray-world would apply 0.963/1.019/1.025): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "deltaE": { "before": 7.03, "after": 3.3 },
+   "ref": { "luma": 0.16, "clipHigh": 0 },
+   "before": { "luma": 0.08, "clipHigh": 0 },
+   "after": { "luma": 0.17, "clipHigh": 0, "holes": 0 },
+   "ms": { "basePassPlain": 2243, "basePassCorrected": 2475 }
+  }
+ ],
+ "looks": [
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 2.86,
+   "luma": [
+    0.41,
+    0.41
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     1.8,
+     0.16
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     3.22,
+     13.65
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.01,
+    0
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 3.3,
+   "skinChroma": [
+    22,
+    22.9
+   ],
+   "msBasePass": [
+    2422,
+    4576
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 2.51,
+   "luma": [
+    0.41,
+    0.41
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     5.6,
+     3.93
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     5.69,
+     15.77
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.01
+   ],
+   "clipLow": [
+    0.01,
+    0.01
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 1.2,
+   "skinChroma": [
+    22,
+    25.4
+   ],
+   "msBasePass": [
+    2422,
+    3531
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 2.2,
+   "luma": [
+    0.41,
+    0.41
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     5.59,
+     3.56
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     4.45,
+     9.92
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.01,
+    0.01
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -4.3,
+   "skinChroma": [
+    22,
+    19.84
+   ],
+   "msBasePass": [
+    2422,
+    4391
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 3.29,
+   "luma": [
+    0.41,
+    0.4
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     6.35,
+     3.52
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     6.93,
+     16.66
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.03
+   ],
+   "clipLow": [
+    0.01,
+    0.11
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -1.8,
+   "skinChroma": [
+    22,
+    30.44
+   ],
+   "msBasePass": [
+    2422,
+    2236
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 3.31,
+   "luma": [
+    0.41,
+    0.39
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     2.6,
+     1.64
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     3.65,
+     13.69
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.04
+   ],
+   "clipLow": [
+    0.01,
+    0.06
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 2.8,
+   "skinChroma": [
+    22,
+    23.01
+   ],
+   "msBasePass": [
+    2422,
+    1569
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "ok",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 3.91,
+   "luma": [
+    0.41,
+    0.41
+   ],
+   "shadowAB": [
+    [
+     5.62,
+     3.68
+    ],
+    [
+     2.12,
+     4.57
+    ]
+   ],
+   "meanAB": [
+    [
+     4.56,
+     12.61
+    ],
+    [
+     1.25,
+     11.82
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.01,
+    0
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 9.2,
+   "skinChroma": [
+    22,
+    17.72
+   ],
+   "msBasePass": [
+    2422,
+    1660
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 2.81,
+   "luma": [
+    0.36,
+    0.36
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     0.68,
+     -1.12
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     3.43,
+     13.16
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.02,
+    0
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 2.6,
+   "skinChroma": [
+    23.11,
+    23.25
+   ],
+   "msBasePass": [
+    2168,
+    3859
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 2.15,
+   "luma": [
+    0.36,
+    0.36
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     2.83,
+     1.43
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     5.81,
+     15.67
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.02,
+    0.04
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 1.1,
+   "skinChroma": [
+    23.11,
+    26.55
+   ],
+   "msBasePass": [
+    2168,
+    3754
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 1.98,
+   "luma": [
+    0.36,
+    0.36
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     2.83,
+     1.42
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     4.76,
+     10.39
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.02,
+    0.01
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -4,
+   "skinChroma": [
+    23.11,
+    20.72
+   ],
+   "msBasePass": [
+    2168,
+    3784
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 3.42,
+   "luma": [
+    0.36,
+    0.35
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     2.31,
+     0.84
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     7.57,
+     16.51
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.01
+   ],
+   "clipLow": [
+    0.02,
+    0.2
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -3.2,
+   "skinChroma": [
+    23.11,
+    31.23
+   ],
+   "msBasePass": [
+    2168,
+    2355
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 3.47,
+   "luma": [
+    0.36,
+    0.34
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     3.81,
+     13.73
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.02,
+    0.17
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 2.2,
+   "skinChroma": [
+    23.11,
+    23.89
+   ],
+   "msBasePass": [
+    2168,
+    1916
+   ]
+  },
+  {
+   "source": "talking-head",
+   "case": "under-2.5",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 3.78,
+   "luma": [
+    0.36,
+    0.36
+   ],
+   "shadowAB": [
+    [
+     2.83,
+     1.43
+    ],
+    [
+     0.73,
+     2.26
+    ]
+   ],
+   "meanAB": [
+    [
+     4.82,
+     12.9
+    ],
+    [
+     1.51,
+     11.99
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.02,
+    0.01
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 9.2,
+   "skinChroma": [
+    23.11,
+    18.63
+   ],
+   "msBasePass": [
+    2168,
+    1877
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 3.07,
+   "luma": [
+    0.19,
+    0.2
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     -0.44,
+     -1.59
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     7.58,
+     9.15
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.36,
+    0
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 3.8,
+   "skinChroma": [
+    26.2,
+    26.17
+   ],
+   "msBasePass": [
+    790,
+    1679
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 0.75,
+   "luma": [
+    0.19,
+    0.19
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     0.77,
+     0.16
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     10.58,
+     12.22
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.36,
+    0.38
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 0.6,
+   "skinChroma": [
+    26.2,
+    29.45
+   ],
+   "msBasePass": [
+    790,
+    1605
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 0.76,
+   "luma": [
+    0.19,
+    0.19
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     0.77,
+     0.16
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     9.85,
+     9.86
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.36,
+    0.35
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -3.6,
+   "skinChroma": [
+    26.2,
+    24.1
+   ],
+   "msBasePass": [
+    790,
+    1642
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 2.8,
+   "luma": [
+    0.19,
+    0.18
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     0.18,
+     0.07
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     13.52,
+     14.18
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.04
+   ],
+   "clipLow": [
+    0.36,
+    0.68
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 0.2,
+   "skinChroma": [
+    26.2,
+    36.59
+   ],
+   "msBasePass": [
+    790,
+    1007
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 3.12,
+   "luma": [
+    0.19,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     9.39,
+     9.74
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.04
+   ],
+   "clipLow": [
+    0.36,
+    0.68
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 2.4,
+   "skinChroma": [
+    26.2,
+    26.95
+   ],
+   "msBasePass": [
+    790,
+    806
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "ok",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 3.25,
+   "luma": [
+    0.19,
+    0.19
+   ],
+   "shadowAB": [
+    [
+     0.78,
+     0.16
+    ],
+    [
+     -0.38,
+     0.96
+    ]
+   ],
+   "meanAB": [
+    [
+     10.02,
+     10.96
+    ],
+    [
+     6.16,
+     9.89
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.36,
+    0.33
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 7.2,
+   "skinChroma": [
+    26.2,
+    20.93
+   ],
+   "msBasePass": [
+    790,
+    758
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 3.01,
+   "luma": [
+    0.17,
+    0.19
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     -0.85,
+     -1.94
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     7.79,
+     8.4
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.42,
+    0
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 2.7,
+   "skinChroma": [
+    27.12,
+    26.9
+   ],
+   "msBasePass": [
+    953,
+    1717
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 0.61,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     0.35,
+     0.04
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     10.6,
+     11.45
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.42,
+    0.44
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 0.4,
+   "skinChroma": [
+    27.12,
+    30.43
+   ],
+   "msBasePass": [
+    953,
+    1655
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 0.59,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     0.35,
+     0.04
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     10.02,
+     9.46
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.42,
+    0.39
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -3,
+   "skinChroma": [
+    27.12,
+    24.9
+   ],
+   "msBasePass": [
+    953,
+    1690
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 2.32,
+   "luma": [
+    0.17,
+    0.16
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     13.47,
+     13.41
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0.01
+   ],
+   "clipLow": [
+    0.42,
+    0.74
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": -0.7,
+   "skinChroma": [
+    27.12,
+    38.05
+   ],
+   "msBasePass": [
+    953,
+    1024
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 2.75,
+   "luma": [
+    0.17,
+    0.16
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     8.89,
+     9.11
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.42,
+    0.73
+   ],
+   "holes": [
+    0,
+    0.01
+   ],
+   "skinHueShift": 1.7,
+   "skinChroma": [
+    27.12,
+    28.03
+   ],
+   "msBasePass": [
+    953,
+    921
+   ]
+  },
+  {
+   "source": "interview",
+   "case": "under-2.5",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 2.87,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0.35,
+     0.04
+    ],
+    [
+     -0.73,
+     0.72
+    ]
+   ],
+   "meanAB": [
+    [
+     10.11,
+     10.4
+    ],
+    [
+     6.53,
+     9.19
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.42,
+    0.35
+   ],
+   "holes": [
+    0,
+    0
+   ],
+   "skinHueShift": 7,
+   "skinChroma": [
+    27.12,
+    21.78
+   ],
+   "msBasePass": [
+    953,
+    1017
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 2.71,
+   "luma": [
+    0.16,
+    0.18
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     -1,
+     -2.11
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     -0.62,
+     0.18
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0
+   ],
+   "holes": [
+    0.07,
+    0
+   ],
+   "msBasePass": [
+    1910,
+    5221
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 0.72,
+   "luma": [
+    0.16,
+    0.16
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     0.51,
+     1.68
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0.67
+   ],
+   "holes": [
+    0.07,
+    0.04
+   ],
+   "msBasePass": [
+    1910,
+    4759
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 0.68,
+   "luma": [
+    0.16,
+    0.16
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     0.42,
+     0.26
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0.67
+   ],
+   "holes": [
+    0.07,
+    0
+   ],
+   "msBasePass": [
+    1910,
+    4931
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 0.51,
+   "luma": [
+    0.16,
+    0.15
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     0.34,
+     1.27
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0.71
+   ],
+   "holes": [
+    0.07,
+    0.02
+   ],
+   "msBasePass": [
+    1910,
+    2992
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 0.99,
+   "luma": [
+    0.16,
+    0.15
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     -0.19,
+     1.32
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0.72
+   ],
+   "holes": [
+    0.07,
+    0.03
+   ],
+   "msBasePass": [
+    1910,
+    1993
+   ]
+  },
+  {
+   "source": "product",
+   "case": "ok",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 2.11,
+   "luma": [
+    0.16,
+    0.16
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     -0.8,
+     0.57
+    ]
+   ],
+   "meanAB": [
+    [
+     0.27,
+     0.9
+    ],
+    [
+     -1.07,
+     1.74
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.67,
+    0.68
+   ],
+   "holes": [
+    0.07,
+    0
+   ],
+   "msBasePass": [
+    1910,
+    2078
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "filmic",
+   "filters": [
+    "curves=all='0/0.036 0.25/0.232 0.75/0.762 1/0.97'",
+    "colorbalance=bs=0.03:rs=-0.018:rh=0.024:bh=-0.024",
+    "eq=saturation=0.928"
+   ],
+   "deltaEvsNoLook": 2.6,
+   "luma": [
+    0.17,
+    0.19
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     -1,
+     -2.11
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     -0.53,
+     0.24
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0
+   ],
+   "holes": [
+    0.01,
+    0.01
+   ],
+   "msBasePass": [
+    2380,
+    6224
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "warm",
+   "filters": [
+    "colorbalance=rm=0.036:bm=-0.036:rh=0.024:bh=-0.024"
+   ],
+   "deltaEvsNoLook": 0.68,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     0.49,
+     1.85
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0.68
+   ],
+   "holes": [
+    0.01,
+    0.03
+   ],
+   "msBasePass": [
+    2380,
+    5070
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "cool",
+   "filters": [
+    "colorbalance=rm=-0.03:bm=0.036:bh=0.024"
+   ],
+   "deltaEvsNoLook": 0.69,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     0.43,
+     0.47
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0.68
+   ],
+   "holes": [
+    0.01,
+    0.02
+   ],
+   "msBasePass": [
+    2380,
+    4979
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "vibrant",
+   "filters": [
+    "vibrance=intensity=0.3",
+    "eq=contrast=1.048"
+   ],
+   "deltaEvsNoLook": 0.5,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     0.39,
+     1.44
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0.72
+   ],
+   "holes": [
+    0.01,
+    0.04
+   ],
+   "msBasePass": [
+    2380,
+    3262
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "high-contrast",
+   "filters": [
+    "eq=contrast=1.15:saturation=1.03"
+   ],
+   "deltaEvsNoLook": 0.91,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     -0.14,
+     1.45
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0.72
+   ],
+   "holes": [
+    0.01,
+    0.08
+   ],
+   "msBasePass": [
+    2380,
+    2293
+   ]
+  },
+  {
+   "source": "product",
+   "case": "under-2.5",
+   "look": "muted",
+   "filters": [
+    "eq=saturation=0.79:contrast=0.97"
+   ],
+   "deltaEvsNoLook": 1.97,
+   "luma": [
+    0.17,
+    0.17
+   ],
+   "shadowAB": [
+    [
+     0,
+     0
+    ],
+    [
+     -0.8,
+     0.57
+    ]
+   ],
+   "meanAB": [
+    [
+     0.28,
+     1.12
+    ],
+    [
+     -0.98,
+     1.83
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "clipLow": [
+    0.68,
+    0.68
+   ],
+   "holes": [
+    0.01,
+    0.03
+   ],
+   "msBasePass": [
+    2380,
+    2298
+   ]
+  }
+ ],
+ "realV1": [
+  {
+   "source": "talking-head",
+   "change": 3.54,
+   "skinChange": 3.67,
+   "clipHigh": [
+    0,
+    0.03
+   ],
+   "reason": "contrast +0.093 (flat image, range 0.54); white balance gains 0.959/0.997/1.058"
+  },
+  {
+   "source": "interview",
+   "change": 7.51,
+   "skinChange": 15.06,
+   "clipHigh": [
+    0,
+    0.14
+   ],
+   "reason": "brightened 0.46 EV (luma mean 0.29); contrast +0.094 (flat image, range 0.54); white balance gains 0.896/1.045/1.15"
+  },
+  {
+   "source": "product",
+   "change": 6.54,
+   "clipHigh": [
+    0,
+    0.16
+   ],
+   "reason": "brightened 0.85 EV (luma mean 0.20); contrast +0.095 (flat image, range 0.54)"
+  },
+  {
+   "source": "night-interview",
+   "change": 7.51,
+   "skinChange": 33.54,
+   "clipHigh": [
+    0,
+    0.01
+   ],
+   "reason": "brightened 1.10 EV (luma mean 0.15); contrast +0.3 (flat image, range 0.16); white balance gains 0.966/1.021/1.019"
+  },
+  {
+   "source": "candle-vigil",
+   "change": 6.68,
+   "skinChange": 16.55,
+   "clipHigh": [
+    0,
+    0.15
+   ],
+   "reason": "brightened 0.49 EV (luma mean 0.28); contrast +0.151 (flat image, range 0.45)"
+  },
+  {
+   "source": "sunset",
+   "change": 0,
+   "clipHigh": [
+    0,
+    0
+   ],
+   "reason": "within tolerance: no correction"
+  },
+  {
+   "source": "forest",
+   "change": 5.44,
+   "clipHigh": [
+    0,
+    0.04
+   ],
+   "reason": "brightened 0.26 EV (luma mean 0.36); contrast +0.145 (flat image, range 0.46); white balance gains 1.003/0.916/1.15"
+  },
+  {
+   "source": "indoor-interview",
+   "change": 4.55,
+   "skinChange": 5.56,
+   "clipHigh": [
+    0,
+    0.05
+   ],
+   "reason": "brightened 0.20 EV (luma mean 0.38); contrast +0.149 (flat image, range 0.45); white balance gains 0.964/0.994/1.053"
+  },
+  {
+   "source": "cooking-vlog",
+   "change": 7.44,
+   "skinChange": 9.86,
+   "clipHigh": [
+    0,
+    0.16
+   ],
+   "reason": "brightened 0.95 EV (luma mean 0.18); contrast +0.3 (flat image, range 0.17); white balance gains 0.959/1.001/1.051"
+  }
+ ],
+ "realV2": [
+  {
+   "source": "talking-head",
+   "expect": "well exposed, warm interior",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.959/0.997/1.058): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 0,
+   "skinChange": 0,
+   "luma": [
+    0.41,
+    0.41
+   ],
+   "meanAB": [
+    [
+     4.38,
+     12.8
+    ],
+    [
+     4.38,
+     12.8
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": 0
+  },
+  {
+   "source": "interview",
+   "expect": "low-key interview (dark background)",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.87): low-key, left as shot; average colour off neutral (gray-world would apply 0.896/1.045/1.15): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 0,
+   "skinChange": 0,
+   "luma": [
+    0.26,
+    0.26
+   ],
+   "meanAB": [
+    [
+     17.93,
+     18.81
+    ],
+    [
+     17.93,
+     18.81
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": 0
+  },
+  {
+   "source": "product",
+   "expect": "object on black: low key on purpose",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.81): low-key, left as shot",
+   "change": 0,
+   "luma": [
+    0.16,
+    0.16
+   ],
+   "meanAB": [
+    [
+     0.28,
+     0.89
+    ],
+    [
+     0.28,
+     0.89
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ]
+  },
+  {
+   "source": "night-interview",
+   "expect": "night interview, low light",
+   "correction": {
+    "exposure": 1.465,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "brightened 1.46 EV (no highlights: 98th percentile 0.33, mean 0.11); average colour off neutral (gray-world would apply 0.966/1.021/1.019): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 16.62,
+   "skinChange": 45.81,
+   "luma": [
+    0.1,
+    0.28
+   ],
+   "meanAB": [
+    [
+     2.77,
+     1.75
+    ],
+    [
+     7.35,
+     4.26
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": 6.4
+  },
+  {
+   "source": "candle-vigil",
+   "expect": "candle light: dark and warm on purpose",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.93): low-key, left as shot",
+   "change": 0,
+   "skinChange": 0,
+   "luma": [
+    0.25,
+    0.25
+   ],
+   "meanAB": [
+    [
+     2.79,
+     -1.88
+    ],
+    [
+     2.79,
+     -1.88
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": 0
+  },
+  {
+   "source": "sunset",
+   "expect": "warm dominant on purpose",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "within tolerance: no correction",
+   "change": 0,
+   "luma": [
+    0.39,
+    0.39
+   ],
+   "meanAB": [
+    [
+     -0.43,
+     3.3
+    ],
+    [
+     -0.43,
+     3.3
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ]
+  },
+  {
+   "source": "forest",
+   "expect": "green dominant on purpose",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 1.003/0.916/1.15): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 0,
+   "luma": [
+    0.34,
+    0.34
+   ],
+   "meanAB": [
+    [
+     -19.99,
+     26.06
+    ],
+    [
+     -19.99,
+     26.06
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ]
+  },
+  {
+   "source": "indoor-interview",
+   "expect": "indoor interview",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "average colour off neutral (gray-world would apply 0.964/0.994/1.053): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 0,
+   "skinChange": 0,
+   "luma": [
+    0.36,
+    0.36
+   ],
+   "meanAB": [
+    [
+     1.08,
+     11.2
+    ],
+    [
+     1.08,
+     11.2
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": 0
+  },
+  {
+   "source": "cooking-vlog",
+   "expect": "outdoor vlog, daylight",
+   "correction": {
+    "exposure": 0,
+    "contrast": 0.245,
+    "whiteBalance": { "mode": "as-shot" },
+    "protectSkinTones": true
+   },
+   "reason": "dark but with highlights (98th percentile 0.69): low-key, left as shot; contrast +0.245 (flat: 10–90 % spread 0.19); average colour off neutral (gray-world would apply 0.959/1.001/1.051): not applied, a scene's own colour cannot be told from a cast — set it by hand if it is a cast",
+   "change": 1.54,
+   "skinChange": 0.89,
+   "luma": [
+    0.14,
+    0.13
+   ],
+   "meanAB": [
+    [
+     1.32,
+     5.08
+    ],
+    [
+     1.31,
+     4.36
+    ]
+   ],
+   "clipHigh": [
+    0,
+    0
+   ],
+   "skinHueShift": -0.4
+  }
+ ]
+}

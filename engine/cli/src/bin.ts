@@ -174,8 +174,9 @@ program.command("reframe").requiredOption("--target <id>").addOption(new Option(
 // ------------------------------------------------------------------ color, audio, captions, motion
 
 program.command("color").command("auto").addOption(new Option("--intent <intent>").choices(["correct-only", "brand-look"]).default("brand-look"))
-  .action(action(async (p, o: { intent: "correct-only" | "brand-look" }) => {
-    const doc = await colorAutoProject(p, o.intent);
+  .addOption(new Option("--white-balance <mode>", "automatic white balance (off: measured cast reported, not applied)").choices(["off", "gray-world"]).default("off"))
+  .action(action(async (p, o: { intent: "correct-only" | "brand-look"; whiteBalance: "off" | "gray-world" }) => {
+    const doc = await colorAutoProject(p, o.intent, { whiteBalance: o.whiteBalance });
     return { look: doc.globalGrade, shots: doc.shots.map((s) => ({ shot: `${s.sourceId}/${s.shotId}`, reason: s.reason })) };
   }));
 

@@ -876,6 +876,108 @@
       },
       "license": "CC0",
       "attribution": "TheFrog001, via Wikimedia Commons"
+    },
+    {
+      "id": "color-night-interview",
+      "output": "color-night-interview.mp4",
+      "use": "Colour: night interview, low light, skin",
+      "source": {
+        "kind": "commons",
+        "title": "File:Interview with Anne Hall, US election night in Vilnius.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "ccb132c351987e797d827818cbf14a8937b0acdb"
+      },
+      "segment": {
+        "start": 60,
+        "duration": 15
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Wikimedia Commons uploader (election night in Vilnius), via Wikimedia Commons"
+    },
+    {
+      "id": "color-candle-vigil",
+      "output": "color-candle-vigil.mp4",
+      "use": "Colour: candle light, very warm and dark",
+      "source": {
+        "kind": "commons",
+        "title": "File:Candle Light Vigil 2015 (17025340274).webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "9d4c874ccb22e1201fdced16ecdb17fff0569f2e"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 15
+      },
+      "license": "Public domain",
+      "attribution": "US government work, via Wikimedia Commons"
+    },
+    {
+      "id": "color-sunset",
+      "output": "color-sunset.mp4",
+      "use": "Colour: legitimately warm dominant (must not be neutralised)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Sunset timelapse Lake Huron looking west from Port Albert.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "2ea69d6e8fe85eae0ca8cfaf96981a4a4d2971ec"
+      },
+      "segment": {
+        "start": 5,
+        "duration": 15
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Commons uploader (Port Albert), via Wikimedia Commons"
+    },
+    {
+      "id": "color-forest",
+      "output": "color-forest.mp4",
+      "use": "Colour: legitimately green dominant, vertical",
+      "source": {
+        "kind": "commons",
+        "title": "File:Wandering through the greenish forest, I follow an unknown path where every leaf hides a secret and every step feels like discovery.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "c875398989d26aef9b91f4f2aae9c7d3c9b7ccf2"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 15
+      },
+      "license": "CC BY 4.0",
+      "attribution": "Commons uploader, via Wikimedia Commons"
+    },
+    {
+      "id": "color-indoor-interview",
+      "output": "color-indoor-interview.mp4",
+      "use": "Colour: indoor interview, skin",
+      "source": {
+        "kind": "commons",
+        "title": "File:Interview with law researcher Jaan Ginter.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "e34da3392a86c0c154d8ecce7a4bf0bfa502a8db"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 15
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Commons uploader (Jaan Ginter interview), via Wikimedia Commons"
+    },
+    {
+      "id": "color-cooking-vlog",
+      "output": "color-cooking-vlog.mp4",
+      "use": "Colour: vlog, skin, mixed daylight",
+      "source": {
+        "kind": "commons",
+        "title": "File:Preparation-du-poulet-realisatrice-marcko-wiki-loves-africa-cote-divoire-fan-club.webm",
+        "variant": "480p.vp9.webm",
+        "sha1": "54fc49da22884fdaa3d4e2b6bdca13552899e763"
+      },
+      "segment": {
+        "start": 60,
+        "duration": 15
+      },
+      "license": "CC0",
+      "attribution": "Marcko, Wiki Loves Africa, via Wikimedia Commons"
     }
   ]
 }

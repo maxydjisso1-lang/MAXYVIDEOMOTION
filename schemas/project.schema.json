@@ -119,6 +119,7 @@
         "videoCodec": { "type": "string" },
         "pixFmt": { "type": "string" },
         "colorSpace": { "type": "string" },
+        "colorRange": { "enum": ["tv", "pc"], "description": "Signalled YUV range (absent = unsignalled)." },
         "colorTransfer": { "type": "string" },
         "bitDepth": { "type": "integer" },
         "audioCodec": { "type": "string" },

@@ -3,7 +3,7 @@
  * Each clip is its own seeked input, so long sources are never decoded from the start.
  */
 import { clipDurationSec, clipFrames, type Analysis, type ColorDoc, type Preset, type Project, type StyleTokens, type Timeline } from "../../core/src/index.js";
-import { clipColorFilters } from "../../color/src/index.js";
+import { clipColorFilters, normalizeColorimetryFilter } from "../../color/src/index.js";
 import { cropWindow, reframeFor } from "../../editing/src/index.js";
 import { ffmpeg } from "../../ffmpeg/src/index.js";
 
@@ -42,7 +42,9 @@ export async function renderBasePlate(
     inputs.push("-ss", c.sourceIn.toFixed(3), "-t", (dur + 0.1).toFixed(3), "-i", project.sourceMediaPath(c.sourceId));
     const sw = src.probe.width ?? g.width;
     const sh = src.probe.height ?? g.height;
-    const color = clipColorFilters(args.color, c.sourceId, (c.sourceIn + c.sourceOut) / 2, args.analysis, args.tokens, lut);
+    // Every source re-expressed as BT.709 limited range first (its tag, else HD=709 / SD=601): the final
+    // encode tags BT.709, and an untagged HD source was otherwise read as BT.601 (≈2 ΔE, docs/measurements/color.md).
+    const color = [normalizeColorimetryFilter(src.probe), ...clipColorFilters(args.color, c.sourceId, (c.sourceIn + c.sourceOut) / 2, args.analysis, args.tokens, lut)];
     const zoom = c.zoom?.[0]?.scale ?? 1;
     const kf = reframe.keyframes?.find((k) => k.clipId === c.id);
     const f = [`setpts=PTS-STARTPTS`, `fps=${g.fps}`, `trim=end_frame=${clipFrames(c, g.fps)}`, ...color];
