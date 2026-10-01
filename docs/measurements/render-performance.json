@@ -1,0 +1,382 @@
+{
+ "date": "2026-10-01T20:28:17.447Z",
+ "scenario": "tests/fixtures/real/reference/render-profile-scenario.json",
+ "script": "scripts/bench-render.ts (3 fresh renders each), scripts/bench-remotion.ts, scripts/compare-renders.ts",
+ "baseline": {
+  "label": "baseline",
+  "date": "2026-10-01T19:32:27.277Z",
+  "runs": [
+   {
+    "run": 1,
+    "wallMs": 182451,
+    "frames": 592,
+    "stagesMs": { "base": 52214, "graphics": 92664, "audio": 3021, "final-encode": 33003 },
+    "remotion": { "bundleMs": 12, "selectCompositionMs": 4356, "renderFramesMs": 44500, "overlayEncodeMs": 43558, "concurrency": 4 },
+    "bytes": 13015154,
+    "resources": {
+     "cpuMean": 84.1,
+     "peakMemMb": { "chrome": 2559, "ffmpeg": 894, "node": 429 }
+    }
+   },
+   {
+    "run": 2,
+    "wallMs": 207877,
+    "frames": 592,
+    "stagesMs": { "base": 79461, "graphics": 90416, "audio": 2671, "final-encode": 35051 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 4979, "renderFramesMs": 40332, "overlayEncodeMs": 44762, "concurrency": 4 },
+    "bytes": 12921966,
+    "resources": {
+     "cpuMean": 85.1,
+     "peakMemMb": { "chrome": 2814, "ffmpeg": 886, "node": 124 }
+    }
+   },
+   {
+    "run": 3,
+    "wallMs": 219045,
+    "frames": 592,
+    "stagesMs": { "base": 50482, "graphics": 122984, "audio": 4313, "final-encode": 40951 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 5067, "renderFramesMs": 40854, "overlayEncodeMs": 76496, "concurrency": 4 },
+    "bytes": 12977030,
+    "resources": {
+     "cpuMean": 85.3,
+     "peakMemMb": { "chrome": 2874, "ffmpeg": 836, "node": 116 }
+    }
+   }
+  ],
+  "median": {
+   "wallMs": 207877,
+   "stagesMs": { "base": 52214, "graphics": 92664, "audio": 3021, "final-encode": 35051 }
+  }
+ },
+ "losslessIntermediates": {
+  "label": "x264-lossless",
+  "date": "2026-10-01T19:44:01.760Z",
+  "runs": [
+   {
+    "run": 1,
+    "wallMs": 125625,
+    "frames": 592,
+    "stagesMs": { "base": 28035, "graphics": 58881, "audio": 2714, "final-encode": 33979 },
+    "remotion": { "bundleMs": 13, "selectCompositionMs": 5601, "renderFramesMs": 40301, "overlayEncodeMs": 12714, "concurrency": 4 },
+    "bytes": 11752372,
+    "resources": {
+     "cpuMean": 76.1,
+     "peakMemMb": { "chrome": 2632, "ffmpeg": 754, "node": 766 }
+    }
+   },
+   {
+    "run": 2,
+    "wallMs": 137890,
+    "frames": 592,
+    "stagesMs": { "base": 26923, "graphics": 67710, "audio": 3341, "final-encode": 39787 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 4625, "renderFramesMs": 46897, "overlayEncodeMs": 15974, "concurrency": 4 },
+    "bytes": 11751807,
+    "resources": {
+     "cpuMean": 81.4,
+     "peakMemMb": { "chrome": 2484, "ffmpeg": 741, "node": 136 }
+    }
+   },
+   {
+    "run": 3,
+    "wallMs": 146439,
+    "frames": 592,
+    "stagesMs": { "base": 28992, "graphics": 67224, "audio": 3401, "final-encode": 46578 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 6206, "renderFramesMs": 46241, "overlayEncodeMs": 14498, "concurrency": 4 },
+    "bytes": 11752354,
+    "resources": {
+     "cpuMean": 81.7,
+     "peakMemMb": { "chrome": 2201, "ffmpeg": 752, "node": 100 }
+    }
+   }
+  ],
+  "median": {
+   "wallMs": 137890,
+   "stagesMs": { "base": 28035, "graphics": 67224, "audio": 3341, "final-encode": 39787 }
+  }
+ },
+ "final": {
+  "label": "final",
+  "date": "2026-10-01T20:13:31.580Z",
+  "runs": [
+   {
+    "run": 1,
+    "wallMs": 104445,
+    "frames": 592,
+    "stagesMs": { "base": 12715, "graphics": 50289, "audio": 2944, "final-encode": 36938 },
+    "remotion": { "bundleMs": 13, "selectCompositionMs": 5522, "renderFramesMs": 32622, "overlayEncodeMs": 11938, "concurrency": 4 },
+    "bytes": 11751926,
+    "resources": {
+     "cpuMean": 70.9,
+     "peakMemMb": { "chrome": 2601, "ffmpeg": 740, "node": 250 }
+    }
+   },
+   {
+    "run": 2,
+    "wallMs": 101138,
+    "frames": 592,
+    "stagesMs": { "base": 13298, "graphics": 52133, "audio": 2743, "final-encode": 32869 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 5285, "renderFramesMs": 34693, "overlayEncodeMs": 11944, "concurrency": 4 },
+    "bytes": 11823530,
+    "resources": {
+     "cpuMean": 75.4,
+     "peakMemMb": { "chrome": 2470, "ffmpeg": 754, "node": 115 }
+    }
+   },
+   {
+    "run": 3,
+    "wallMs": 93196,
+    "frames": 592,
+    "stagesMs": { "base": 11798, "graphics": 44194, "audio": 2874, "final-encode": 34212 },
+    "remotion": { "bundleMs": 0, "selectCompositionMs": 956, "renderFramesMs": 31853, "overlayEncodeMs": 11185, "concurrency": 4 },
+    "bytes": 11751807,
+    "resources": {
+     "cpuMean": 73.4,
+     "peakMemMb": { "chrome": 2752, "ffmpeg": 753, "node": 118 }
+    }
+   }
+  ],
+  "median": {
+   "wallMs": 101138,
+   "stagesMs": { "base": 12715, "graphics": 50289, "audio": 2874, "final-encode": 34212 }
+  }
+ },
+ "basePlateEncoderReplay": [
+  { "variant": "medium crf14 (before)", "ms": 52779, "mb": 28 },
+  { "variant": "ultrafast qp0 (lossless, chosen)", "ms": 26615, "mb": 221 },
+  { "variant": "veryfast crf14", "ms": 31345, "mb": 26 },
+  { "variant": "ultrafast crf14", "ms": 31811, "mb": 55 }
+ ],
+ "finalEncodeReplay": {
+  "fromLossyGraphicsMs": [
+   34506,
+   31361
+  ],
+  "fromLosslessGraphicsMs": [
+   31185,
+   33026
+  ]
+ },
+ "colourAfterCrop": {
+  "basePlateMs": [
+   10563,
+   11889
+  ],
+  "beforeMs": 28035,
+  "identicalFrames": "592/592"
+ },
+ "graphicsStage": [
+  {
+   "variant": "c4",
+   "run": 1,
+   "wallMs": 52134,
+   "renderFramesMs": 33698,
+   "overlayEncodeMs": 12314,
+   "selectCompositionMs": 5563,
+   "frameMsP50": 202.7,
+   "cpuMean": 59.1,
+   "chromePeakMb": 2310,
+   "framesDifferingFromRef": 0,
+   "differingFrames": [],
+   "worstPsnr": null
+  },
+  {
+   "variant": "c2",
+   "run": 1,
+   "wallMs": 52594,
+   "renderFramesMs": 39746,
+   "overlayEncodeMs": 11881,
+   "selectCompositionMs": 737,
+   "frameMsP50": 128,
+   "cpuMean": 47.7,
+   "chromePeakMb": 1944,
+   "framesDifferingFromRef": 3,
+   "differingFrames": [
+    537,
+    538,
+    539
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c6",
+   "run": 1,
+   "wallMs": 44325,
+   "renderFramesMs": 31302,
+   "overlayEncodeMs": 11990,
+   "selectCompositionMs": 852,
+   "frameMsP50": 287,
+   "cpuMean": 66,
+   "chromePeakMb": 2624,
+   "framesDifferingFromRef": 2,
+   "differingFrames": [
+    537,
+    538
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c8",
+   "run": 1,
+   "wallMs": 53203,
+   "renderFramesMs": 39224,
+   "overlayEncodeMs": 12973,
+   "selectCompositionMs": 743,
+   "frameMsP50": 490.6,
+   "cpuMean": 78.2,
+   "chromePeakMb": 2475,
+   "framesDifferingFromRef": 1,
+   "differingFrames": [
+    537
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c4-angle",
+   "run": 1,
+   "wallMs": 76234,
+   "renderFramesMs": 61287,
+   "overlayEncodeMs": 13245,
+   "selectCompositionMs": 1457,
+   "frameMsP50": 376.1,
+   "cpuMean": 86.3,
+   "chromePeakMb": 1952,
+   "framesDifferingFromRef": 590,
+   "differingFrames": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+   ],
+   "worstPsnr": 35.2
+  },
+  {
+   "variant": "c4",
+   "run": 2,
+   "wallMs": 47688,
+   "renderFramesMs": 32301,
+   "overlayEncodeMs": 12223,
+   "selectCompositionMs": 2936,
+   "frameMsP50": 202.8,
+   "cpuMean": 56.6,
+   "chromePeakMb": 1795,
+   "framesDifferingFromRef": 3,
+   "differingFrames": [
+    537,
+    538,
+    539
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c2",
+   "run": 2,
+   "wallMs": 52432,
+   "renderFramesMs": 39576,
+   "overlayEncodeMs": 11882,
+   "selectCompositionMs": 786,
+   "frameMsP50": 125.6,
+   "cpuMean": 46,
+   "chromePeakMb": 1950,
+   "framesDifferingFromRef": 4,
+   "differingFrames": [
+    537,
+    538,
+    539,
+    540
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c6",
+   "run": 2,
+   "wallMs": 41794,
+   "renderFramesMs": 28596,
+   "overlayEncodeMs": 12138,
+   "selectCompositionMs": 877,
+   "frameMsP50": 266.4,
+   "cpuMean": 59.3,
+   "chromePeakMb": 2652,
+   "framesDifferingFromRef": 4,
+   "differingFrames": [
+    537,
+    538,
+    539,
+    540
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c8",
+   "run": 2,
+   "wallMs": 42360,
+   "renderFramesMs": 29616,
+   "overlayEncodeMs": 11785,
+   "selectCompositionMs": 762,
+   "frameMsP50": 366.6,
+   "cpuMean": 63.7,
+   "chromePeakMb": 2784,
+   "framesDifferingFromRef": 3,
+   "differingFrames": [
+    537,
+    538,
+    539
+   ],
+   "worstPsnr": 35.3
+  },
+  {
+   "variant": "c4-angle",
+   "run": 2,
+   "wallMs": 47067,
+   "renderFramesMs": 34119,
+   "overlayEncodeMs": 11827,
+   "selectCompositionMs": 913,
+   "frameMsP50": 211.4,
+   "cpuMean": 53.8,
+   "chromePeakMb": 2231,
+   "framesDifferingFromRef": 589,
+   "differingFrames": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+   ],
+   "worstPsnr": 35.2
+  }
+ ],
+ "cacheMbPerRender": {
+  "before": { "base": 28.3, "graphics": 19.1 },
+  "after": { "base": 221.3, "graphics": 202.4 }
+ }
+}

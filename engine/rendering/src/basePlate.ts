@@ -18,6 +18,14 @@ export function geometry(preset: Preset, draft: boolean): Geometry {
   return draft ? { width: even(preset.width / 2), height: even(preset.height / 2), fps: preset.fps } : { width: preset.width, height: preset.height, fps: preset.fps };
 }
 
+/**
+ * x264 settings of an intermediate pass (base plate, graphics overlay). Final quality: lossless and
+ * fast — only the delivery encode compresses (docs/measurements/render-performance.md). Draft: unchanged.
+ */
+export function intermediateEncode(draft: boolean): string[] {
+  return draft ? ["-preset", "veryfast", "-crf", "22"] : ["-preset", "ultrafast", "-qp", "0"];
+}
+
 export function activeClips(tl: Timeline) {
   return tl.tracks.video.filter((t) => t.kind === "primary").flatMap((t) => t.clips).filter((c) => c.enabled !== false);
 }
@@ -47,8 +55,9 @@ export async function renderBasePlate(
     const color = [normalizeColorimetryFilter(src.probe), ...clipColorFilters(args.color, c.sourceId, (c.sourceIn + c.sourceOut) / 2, args.analysis, args.tokens, lut)];
     const zoom = c.zoom?.[0]?.scale ?? 1;
     const kf = reframe.keyframes?.find((k) => k.clipId === c.id);
-    const f = [`setpts=PTS-STARTPTS`, `fps=${g.fps}`, `trim=end_frame=${clipFrames(c, g.fps)}`, ...color];
+    const f = [`setpts=PTS-STARTPTS`, `fps=${g.fps}`, `trim=end_frame=${clipFrames(c, g.fps)}`];
     if (reframe.mode === "fit-blur") {
+      f.push(...color);
       const fg = `scale=${g.width}:${g.height}:force_original_aspect_ratio=decrease:flags=lanczos`;
       chains.push(
         `[${i}:v]${f.join(",")},split[bg${i}][fg${i}];` +
@@ -57,7 +66,13 @@ export async function renderBasePlate(
       );
     } else {
       const win = cropWindow(sw, sh, { width: g.width, height: g.height }, kf?.cx ?? 0.5, kf?.cy ?? 0.5, (kf?.scale ?? 1) * zoom);
-      f.push(`crop=${win.w}:${win.h}:${win.x}:${win.y}`, `scale=${g.width}:${g.height}:flags=lanczos`, "setsar=1", "format=yuv420p");
+      // Colour filters are per-pixel: on the cropped window they give the same pixels for a fraction of
+      // the work (chantier 6: a 9:16 crop of a 16:9 source keeps 32 % of the pixels). Only with an even
+      // offset: on subsampled YUV an odd crop offset is rounded, so it then stays after the colour.
+      const crop = `crop=${win.w}:${win.h}:${win.x}:${win.y}`;
+      if (win.x % 2 === 0 && win.y % 2 === 0) f.push(crop, ...color);
+      else f.push(...color, crop);
+      f.push(`scale=${g.width}:${g.height}:flags=lanczos`, "setsar=1", "format=yuv420p");
       chains.push(`[${i}:v]${f.join(",")}[v${i}]`);
     }
   });
@@ -68,7 +83,9 @@ export async function renderBasePlate(
       ...inputs,
       "-filter_complex", graph,
       "-map", "[vout]", "-an",
-      "-c:v", "libx264", "-preset", draft ? "veryfast" : "medium", "-crf", draft ? "22" : "14",
+      // Intermediate, never delivered: lossless and fast (chantier 6). medium/crf14 cost ≈26 s of encoding
+      // on the reference render and added a compression generation; ultrafast/qp0 encodes in <1 s.
+      "-c:v", "libx264", ...intermediateEncode(draft),
       // Short GOP, no B-frames: Remotion seeks into this file frame by frame (B-frame reordering
       // with negative DTS makes its compositor miss frames).
       "-g", String(Math.round(g.fps / 2)), "-bf", "0", "-pix_fmt", "yuv420p", "-t", total.toFixed(3),

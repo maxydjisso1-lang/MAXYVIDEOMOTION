@@ -16,7 +16,7 @@ export interface AssFontReport {
   /** Per role: the family/bold we asked for and the PostScript name of the file we expect. */
   expected: Partial<Record<FontRole, { fontname: string; bold: boolean; postscript: string }>>;
 }
-import type { Geometry } from "./basePlate.js";
+import { intermediateEncode, type Geometry } from "./basePlate.js";
 
 /** ASS colour: &HAABBGGRR (alpha 00 = opaque). */
 export function assColor(hex: string, alpha = 0): string {
@@ -195,7 +195,7 @@ export async function renderGraphicsAss(
       } else graph += `;[l2]nullsink`;
     }
     const { stderr } = await ffmpeg(
-      ["-v", "verbose", ...inputs, "-filter_complex", graph, "-map", last, "-an", "-c:v", "libx264", "-preset", args.draft ? "veryfast" : "medium", "-crf", args.draft ? "22" : "15", "-pix_fmt", "yuv420p", "-t", args.durationSec.toFixed(3), out],
+      ["-v", "verbose", ...inputs, "-filter_complex", graph, "-map", last, "-an", "-c:v", "libx264", ...intermediateEncode(args.draft), "-pix_fmt", "yuv420p", "-t", args.durationSec.toFixed(3), out],
       { log: project.log, cwd: dir, captureStderr: true },
     );
     // libass reports every substitution: "fontselect: (Family, 700, 0) -> PostScriptName, 0, ..."

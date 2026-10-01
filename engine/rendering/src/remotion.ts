@@ -11,7 +11,7 @@ import { ffmpeg } from "../../ffmpeg/src/index.js";
 import { resolveFonts } from "../../brand/src/index.js";
 import type { BrandVideoProps } from "../../remotion/src/props.js";
 import { linkOrCopy } from "./cache.js";
-import type { Geometry } from "./basePlate.js";
+import { intermediateEncode, type Geometry } from "./basePlate.js";
 
 export interface RemotionStatus {
   available: boolean;
@@ -88,6 +88,9 @@ export async function renderGraphicsRemotion(
     mark = now;
   };
   const remotionLog = (process.env.BVE_REMOTION_LOG as "error" | "info" | "verbose" | undefined) ?? "error";
+  // Measurement instrument (chantier 6): Chrome's GL backend; unset = Remotion's default.
+  const gl = process.env.BVE_REMOTION_GL as "angle" | "egl" | "swangle" | "swiftshader" | "angle-egl" | "vulkan" | undefined;
+  const chromiumOptions = gl ? { gl } : {};
   const serveUrl = await getBundle(project.log);
   lap("bundleMs");
   const pub = join(serveUrl, "public", args.key);
@@ -128,7 +131,7 @@ export async function renderGraphicsRemotion(
   try {
     await withTempDir(async (dir) => {
       const framesDir = join(dir, "frames");
-      const composition = await selectComposition({ serveUrl, id: "BrandVideo", inputProps, logLevel: remotionLog });
+      const composition = await selectComposition({ serveUrl, id: "BrandVideo", inputProps, logLevel: remotionLog, chromiumOptions });
       lap("selectCompositionMs");
       await renderFrames({
         composition,
@@ -136,6 +139,7 @@ export async function renderGraphicsRemotion(
         inputProps,
         outputDir: framesDir,
         imageFormat: "png",
+        chromiumOptions,
         imageSequencePattern: "g-[frame].[ext]",
         concurrency: Number(process.env.REMOTION_CONCURRENCY) || Math.max(1, Math.floor(cpus().length / 2)),
         logLevel: remotionLog,
@@ -154,7 +158,7 @@ export async function renderGraphicsRemotion(
           "-i", args.basePlate,
           "-framerate", String(fps), "-start_number", String(Number(digits)), "-i", join(framesDir, `g-%0${digits.length}d.png`),
           "-filter_complex", "[0:v][1:v]overlay=0:0:format=auto:eof_action=pass,format=yuv420p[out]",
-          "-map", "[out]", "-an", "-c:v", "libx264", "-preset", args.draft ? "veryfast" : "medium", "-crf", args.draft ? "22" : "15",
+          "-map", "[out]", "-an", "-c:v", "libx264", ...intermediateEncode(args.draft),
           "-frames:v", String(durationInFrames), out,
         ],
         { log: project.log },
