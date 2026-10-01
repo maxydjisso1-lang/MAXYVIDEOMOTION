@@ -35,19 +35,25 @@ describe("reframing", () => {
 
 describe("audio cleanup chain", () => {
   const noisy: Analysis["sources"][number]["audio"] = { noiseFloorDb: -48, noiseProfile: ["broadband"], humHz: 50 };
-  it("adds processors only for measured problems", () => {
+  it("adds processors only for measured problems, and never denoises blindly", () => {
     const chain = buildDialogueChain(noisy, "standard").map((p) => p.type);
-    expect(chain).toContain("denoise-fft");
     expect(chain).toContain("dehum");
+    // Chantier 2: denoising is decided per source by planDenoise (measured SNR + voice guard),
+    // the former automatic afftdn was measured neutral to harmful.
+    expect(chain).not.toContain("denoise-fft");
+    expect(chain).not.toContain("denoise-rnn");
     const clean = buildDialogueChain({ noiseFloorDb: -80 }, "standard").map((p) => p.type);
-    expect(clean).not.toContain("denoise-fft");
     expect(clean).not.toContain("dehum");
   });
   it("compiles to FFmpeg filters and honours 'off'", () => {
     const f = compileChain(buildDialogueChain(noisy, "standard"));
-    expect(f.some((x) => x.startsWith("afftdn="))).toBe(true);
     expect(f.filter((x) => x.startsWith("bandreject=f=50")).length).toBe(1);
     expect(buildDialogueChain(noisy, "off")).toEqual([]);
+  });
+  it("compiles an RNNoise processor with an escaped model path and its strength", () => {
+    const [f] = compileChain([{ type: "denoise-rnn", params: { model: "rnnoise/sh.rnnn", mix: 0.7 } }]);
+    expect(f).toMatch(/^aresample=48000,arnndn=m='.*sh\.rnnn':mix=0\.7$/);
+    expect(f).not.toMatch(/[A-Za-z]:\//); // a Windows drive colon must be escaped inside a filtergraph
   });
 });
 
@@ -87,5 +93,20 @@ describe("color filter compilation", () => {
     const filters = clipColorFilters(doc, "s", 1, analysis);
     expect(filters[0]).toMatch(/^colorlevels=/);
     await ffmpeg(["-f", "lavfi", "-i", "testsrc2=s=160x90:d=0.2", "-vf", filters.join(","), "-f", "null", "-"]);
+  });
+});
+
+describe("filter path quoting", () => {
+  it("a Windows path with a drive letter, spaces and accents works as a filter option (real FFmpeg run)", async () => {
+    const { quoteFilterPath, ffmpeg } = await import("../../engine/ffmpeg/src/index.js");
+    const { ensureRnnoiseModel } = await import("../../engine/audio/src/index.js");
+    const { copyFile, mkdir } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+    const { TMP } = await import("../helpers.js");
+    const dir = join(TMP, "quote test é dossier");
+    await mkdir(dir, { recursive: true });
+    const model = join(dir, "model sh.rnnn");
+    await copyFile(await ensureRnnoiseModel(), model);
+    await ffmpeg(["-f", "lavfi", "-i", "sine=d=0.3", "-af", `aresample=48000,arnndn=m=${quoteFilterPath(model)}:mix=0.7`, "-f", "null", "-"]);
   });
 });

@@ -1,7 +1,7 @@
 /** Pass C — FFmpeg: dialogue (cut like the picture) + cleanup chains + music/ducking + loudness. */
 import { join } from "node:path";
 import { clipDurationSec, withTempDir, type AudioDoc, type Preset, type Project, type Timeline } from "../../core/src/index.js";
-import { compileChain, normalizeLoudness } from "../../audio/src/index.js";
+import { compileChain, ensureRnnoiseModel, normalizeLoudness } from "../../audio/src/index.js";
 import { ffmpeg } from "../../ffmpeg/src/index.js";
 import { activeClips } from "./basePlate.js";
 
@@ -10,6 +10,8 @@ const EDGE_FADE = 0.012; // avoids clicks at every cut
 export async function renderAudioMix(project: Project, args: { timeline: Timeline; audio?: AudioDoc; preset: Preset }, out: string): Promise<void> {
   const { timeline, audio, preset } = args;
   const sr = preset.audio.sampleRate;
+  // The RNNoise model is fetched once (sha256-pinned) before any chain that uses it is compiled.
+  if (audio?.dialogue.some((d) => d.chain.some((x) => x.type === "denoise-rnn" && x.enabled !== false))) await ensureRnnoiseModel();
   const clips = activeClips(timeline);
   const inputs: string[] = [];
   const chains: string[] = [];

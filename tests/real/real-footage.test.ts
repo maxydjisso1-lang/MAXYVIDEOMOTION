@@ -202,8 +202,62 @@ describe.skipIf(!ready)("real footage + Whisper", () => {
     expect(a.noiseProfile).toContain("broadband");
     await planFromSegments(dir, read<Transcript>(dir, "analysis/transcript.json").sources[0]!.segments, { captions: false });
     const { qc } = await finish(dir, "ass", { captions: false });
-    const audio = read<{ dialogue: { chain: { type: string }[] }[] }>(dir, "audio/audio.json");
-    expect(audio.dialogue[0]!.chain.map((c) => c.type)).toContain("denoise-fft");
+    const audio = read<{ dialogue: { chain: { type: string }[]; denoise?: { decision: string; summary: string } }[] }>(dir, "audio/audio.json");
+    // Chantier 2: strong noise (≈ −3 dB true SNR) is NOT denoised automatically — measured to cost intelligibility.
+    expect(audio.dialogue[0]!.denoise?.decision).toBe("skip-strong-noise");
+    expect(audio.dialogue[0]!.denoise?.summary).toMatch(/strong noise/);
+    expect(audio.dialogue[0]!.chain.map((c) => c.type).filter((t) => t.startsWith("denoise"))).toEqual([]);
     expect(qc.categories.audio?.checks.find((c) => c.id === "audio.loudness")?.status).toBe("pass");
+  });
+
+  it("denoise policy on real street noise: skip light, apply medium (voice + intelligibility preserved), refuse strong", async () => {
+    const ref = JSON.parse(readFileSync(join(REAL, "reference/cigale-fourmi.json"), "utf8")) as { span: { start: number; end: number }; text: string };
+    const work = await freshDir("real-denoise-media");
+    const { mkdir } = await import("node:fs/promises");
+    await mkdir(work, { recursive: true });
+    const speech = join(work, "speech.wav");
+    await ffmpeg(["-ss", String(ref.span.start), "-t", (ref.span.end - ref.span.start).toFixed(3), "-i", join(REAL, "speech-fr.mp3"), "-ac", "1", "-ar", "48000", speech]);
+    const noise = join(work, "noise.wav");
+    await ffmpeg(["-i", join(REAL, "street-noise.mp4"), "-vn", "-ac", "1", "-ar", "48000", noise]);
+    const sRms = await rmsLevel(speech, { start: 0, end: (await probe(speech)).durationSec });
+    const nRms = await rmsLevel(noise, { start: 0, end: (await probe(noise)).durationSec });
+    const mixAt = async (snr: number) => {
+      const out = join(work, `mix${snr}.mp4`);
+      await ffmpeg(["-f", "lavfi", "-i", "color=c=gray:s=640x360:r=25", "-i", speech, "-stream_loop", "-1", "-i", noise, "-filter_complex", `[2:a]volume=${(sRms - snr - nRms).toFixed(2)}dB[n];[1:a][n]amix=inputs=2:normalize=0:duration=first[a]`, "-map", "0:v", "-map", "[a]", "-shortest", "-c:v", "libx264", "-preset", "ultrafast", "-c:a", "aac", "-b:a", "192k", out]);
+      return out;
+    };
+    type Denoise = { decision: string; mix?: number; candidates?: { mix: number; accepted: boolean; voiceLevelDeltaDb: number }[] };
+    const decide = async (snr: number) => {
+      const d2 = await freshDir(`real-denoise-${snr}`);
+      await bveOk(null, "init", d2);
+      const [s] = await bveOk<{ id: string }[]>(d2, "ingest", await mixAt(snr));
+      await bveOk(d2, "target", "add", "reels", "--preset", "instagram/reels");
+      await bveOk(d2, "brand", "set", "examples/brands/maison-lune");
+      await bveOk(d2, "analyze");
+      await bveOk(d2, "audio", "clean");
+      return { dir: d2, sourceId: s!.id, denoise: read<{ dialogue: { denoise?: Denoise }[] }>(d2, "audio/audio.json").dialogue[0]!.denoise! };
+    };
+    expect((await decide(20)).denoise.decision).toBe("skip-clean");
+    expect((await decide(0)).denoise.decision).toBe("skip-strong-noise");
+    const medium = await decide(10);
+    expect(medium.denoise.decision).toBe("applied");
+    expect(medium.denoise.mix).toBe(0.7);
+    expect(medium.denoise.candidates![0]!.voiceLevelDeltaDb).toBeGreaterThanOrEqual(-1);
+    // The whole rendered chain (denoise + EQ + compressor + loudness): quieter noise, same intelligibility.
+    const plan = { schemaVersion: "1.0", objective: "denoise", targetDurationSec: 36, durationToleranceSec: 10, narrative: { structure: "custom" }, hook: { start: 0, end: 2, technique: "quote" }, sections: [{ id: "all", role: "context", sourceRefs: [{ sourceId: medium.sourceId, start: 0, end: 36.3 }] }], pacing: { style: "calm", removeSilences: { enabled: false } }, captions: { enabled: false }, motion: { density: "none", outro: "none" } };
+    await writeFile(join(medium.dir, "plan.json"), JSON.stringify(plan));
+    await bveOk(medium.dir, "plan", "set", join(medium.dir, "plan.json"));
+    await bveOk(medium.dir, "plan", "compile");
+    const render = await bveOk<RenderRecord>(medium.dir, "render", "--target", "reels", "--draft", "--renderer", "ass");
+    const input = join(work, "mix10.mp4");
+    const output = join(medium.dir, render.path);
+    const { decodePcm, estimateSnrDb } = await import("../../engine/audio/src/index.js");
+    const snrIn = estimateSnrDb(await decodePcm(input));
+    const snrOut = estimateSnrDb(await decodePcm(output));
+    expect(snrOut).toBeGreaterThan(snrIn + 1);
+    const werIn = wordErrorRate(ref.text, (await runWhisper(input, { language: "fr" })).segments.map((x) => x.text).join(" ")).wer;
+    const werOut = wordErrorRate(ref.text, (await runWhisper(output, { language: "fr" })).segments.map((x) => x.text).join(" ")).wer;
+    console.log(`medium noise: est. SNR ${snrIn} → ${snrOut} dB, WER ${(werIn * 100).toFixed(1)} → ${(werOut * 100).toFixed(1)} %`);
+    expect(werOut).toBeLessThanOrEqual(werIn + 0.03);
   });
 });

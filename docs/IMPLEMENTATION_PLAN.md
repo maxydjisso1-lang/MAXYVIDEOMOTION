@@ -56,7 +56,7 @@ All P0/P1 audit findings are fixed, and the result is covered by tests. See [AUD
    - `medium`/`large-v3` for final deliverables.
    - A glossary (brand names) passed to Whisper as `initial_prompt`.
    - Denoising before transcription on noisy sources.
-2. **Real audio cleanup.** Neural denoise:
+2. **Real audio cleanup.** *Chantier 2 done: SNR-driven RNNoise with a voice-preservation guard, afftdn removed from the automatic chain, strong noise left untouched and reported ([measurements/denoise.md](measurements/denoise.md)). Open: DeepFilterNet 3 measures better in light/medium noise but needs a second Python/torch stack — dependency decision pending.* Neural denoise:
    - RNNoise now (the FFmpeg filter is already available); evaluate DeepFilterNet for SNR < 10 dB.
    - Strength driven by the measured SNR.
    - A voice-preservation guard (loudness delta, speech/noise ratio before vs after).

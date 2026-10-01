@@ -48,7 +48,13 @@ The `dialogue[]` and `master` sections of `audio/audio.json` (schema: `schemas/a
 5. Report the result: "Noise floor −52 → −68 dBFS, hum 50 Hz removed, loudness normalized to −14 LUFS / −1 dBTP."
 
 ## Constraints
-- **Be honest about limits.** On real footage the Phase 1 FFT denoiser lowers a street/room floor by only ~1 dB. Tell the user when noise will remain audible. Neural denoising (RNNoise/DeepFilterNet), driven by the measured SNR, arrives in Phase 2.
+- **Denoising is measured, never blind** (docs/measurements/denoise.md). `bve audio clean` estimates the SNR of each source and records the decision in `audio.json` → `dialogue[].denoise`:
+  - `skip-clean` (≥ 22 dB): nothing to gain; neural denoise would only add artefacts.
+  - `applied` (13–22 dB): RNNoise 70 % (or 40 %), kept only if the voice guard accepts it (voice level ≥ −1 dB, timbre change ≤ 0.3 dB, SNR gain ≥ 1 dB).
+  - `skip-strong-noise` (< 13 dB): **left untouched on purpose** — every denoiser measured lowers intelligibility there (Whisper WER up to +27 points). Tell the user plainly; offer re-recording or a dedicated manual tool.
+  - `rejected-all`: the guard refused every strength; report the reasons it lists.
+- Never denoise audio before transcription: it raised the error rate in every noisy case measured.
+- Read `denoise.summary` to the user rather than claiming the audio is "clean".
 - If the "noise" may be background music (promo videos, vlogs), do not denoise without checking with the user.
 - Naturalness beats silence. Leave a little room tone and never gate speech hard.
 - Denoise before compression. Compression raises the noise floor.

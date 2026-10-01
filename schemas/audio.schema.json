@@ -4,26 +4,124 @@
   "title": "Audio decisions",
   "description": "Dialogue processing chains (audio-cleanup), music bed (music) and master bus. Compiled into FFmpeg filtergraphs; parameters stay editable.",
   "type": "object",
-  "required": ["schemaVersion", "dialogue", "master"],
+  "required": [
+    "schemaVersion",
+    "dialogue",
+    "master"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "schemaVersion": {
+      "$ref": "common.schema.json#/$defs/schemaVersion"
+    },
     "dialogue": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["sourceId", "chain"],
+        "required": [
+          "sourceId",
+          "chain"
+        ],
         "additionalProperties": false,
         "properties": {
-          "sourceId": { "$ref": "common.schema.json#/$defs/id" },
-          "preset": { "enum": ["off", "gentle", "standard", "aggressive", "custom"] },
-          "chain": { "type": "array", "items": { "$ref": "#/$defs/processor" } },
+          "sourceId": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "preset": {
+            "enum": [
+              "off",
+              "gentle",
+              "standard",
+              "aggressive",
+              "custom"
+            ]
+          },
+          "chain": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/processor"
+            }
+          },
           "measurements": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "before": { "$ref": "#/$defs/metrics" },
-              "after": { "$ref": "#/$defs/metrics" }
+              "before": {
+                "$ref": "#/$defs/metrics"
+              },
+              "after": {
+                "$ref": "#/$defs/metrics"
+              }
+            }
+          },
+          "denoise": {
+            "type": "object",
+            "description": "Measured neural-denoise decision for this source (chantier 2). Recorded even when nothing is applied.",
+            "required": [
+              "estimatedSnrDb",
+              "decision",
+              "summary"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "estimatedSnrDb": {
+                "type": "number",
+                "description": "Reference-free SNR estimate in the voice band."
+              },
+              "decision": {
+                "enum": [
+                  "skip-clean",
+                  "skip-strong-noise",
+                  "applied",
+                  "rejected-all",
+                  "unavailable"
+                ]
+              },
+              "mix": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "summary": {
+                "type": "string"
+              },
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "mix",
+                    "accepted"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "mix": {
+                      "type": "number"
+                    },
+                    "accepted": {
+                      "type": "boolean"
+                    },
+                    "reasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "voiceLevelDeltaDb": {
+                      "type": "number"
+                    },
+                    "voiceSpectralChangeDb": {
+                      "type": "number"
+                    },
+                    "snrBeforeDb": {
+                      "type": "number"
+                    },
+                    "snrAfterDb": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -34,61 +132,157 @@
       "default": [],
       "items": {
         "type": "object",
-        "required": ["assetId"],
+        "required": [
+          "assetId"
+        ],
         "additionalProperties": false,
         "properties": {
-          "assetId": { "$ref": "common.schema.json#/$defs/id" },
-          "assetIn": { "$ref": "common.schema.json#/$defs/seconds", "default": 0 },
-          "timelineStart": { "$ref": "common.schema.json#/$defs/seconds", "default": 0 },
-          "timelineEnd": { "$ref": "common.schema.json#/$defs/seconds" },
-          "gainDb": { "type": "number", "minimum": -60, "maximum": 12, "default": -14 },
-          "fadeInSec": { "type": "number", "minimum": 0, "default": 0.5 },
-          "fadeOutSec": { "type": "number", "minimum": 0, "default": 1.5 },
+          "assetId": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "assetIn": {
+            "$ref": "common.schema.json#/$defs/seconds",
+            "default": 0
+          },
+          "timelineStart": {
+            "$ref": "common.schema.json#/$defs/seconds",
+            "default": 0
+          },
+          "timelineEnd": {
+            "$ref": "common.schema.json#/$defs/seconds"
+          },
+          "gainDb": {
+            "type": "number",
+            "minimum": -60,
+            "maximum": 12,
+            "default": -14
+          },
+          "fadeInSec": {
+            "type": "number",
+            "minimum": 0,
+            "default": 0.5
+          },
+          "fadeOutSec": {
+            "type": "number",
+            "minimum": 0,
+            "default": 1.5
+          },
           "ducking": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "enabled": { "type": "boolean", "default": true },
-              "amountDb": { "type": "number", "minimum": 0, "maximum": 30, "default": 12 },
-              "attackMs": { "type": "number", "minimum": 1, "maximum": 1000, "default": 80 },
-              "releaseMs": { "type": "number", "minimum": 10, "maximum": 3000, "default": 400 }
+              "enabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "amountDb": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 30,
+                "default": 12
+              },
+              "attackMs": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 1000,
+                "default": 80
+              },
+              "releaseMs": {
+                "type": "number",
+                "minimum": 10,
+                "maximum": 3000,
+                "default": 400
+              }
             }
           },
-          "beatsRef": { "$ref": "common.schema.json#/$defs/relPath", "description": "Beat/downbeat/drop analysis file for this asset." }
+          "beatsRef": {
+            "$ref": "common.schema.json#/$defs/relPath",
+            "description": "Beat/downbeat/drop analysis file for this asset."
+          }
         }
       }
     },
     "master": {
       "type": "object",
-      "required": ["loudnessLufs", "truePeakDb"],
+      "required": [
+        "loudnessLufs",
+        "truePeakDb"
+      ],
       "additionalProperties": false,
       "properties": {
-        "loudnessLufs": { "type": "number", "minimum": -31, "maximum": -8, "description": "Usually taken from the target preset (-14 social, -23 broadcast)." },
-        "truePeakDb": { "type": "number", "minimum": -9, "maximum": 0, "default": -1 },
-        "limiter": { "type": "boolean", "default": true }
+        "loudnessLufs": {
+          "type": "number",
+          "minimum": -31,
+          "maximum": -8,
+          "description": "Usually taken from the target preset (-14 social, -23 broadcast)."
+        },
+        "truePeakDb": {
+          "type": "number",
+          "minimum": -9,
+          "maximum": 0,
+          "default": -1
+        },
+        "limiter": {
+          "type": "boolean",
+          "default": true
+        }
       }
     }
   },
   "$defs": {
     "processor": {
       "type": "object",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "enum": ["highpass", "lowpass", "dehum", "denoise-fft", "denoise-rnn", "gate", "deess", "eq", "compressor", "dereverb", "gain", "limiter"] },
-        "enabled": { "type": "boolean", "default": true },
-        "params": { "type": "object", "description": "Processor-specific; validated by the engine's processor registry." },
-        "reason": { "type": "string", "maxLength": 200 }
+        "type": {
+          "enum": [
+            "highpass",
+            "lowpass",
+            "dehum",
+            "denoise-fft",
+            "denoise-rnn",
+            "gate",
+            "deess",
+            "eq",
+            "compressor",
+            "dereverb",
+            "gain",
+            "limiter"
+          ]
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "params": {
+          "type": "object",
+          "description": "Processor-specific; validated by the engine's processor registry."
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 200
+        }
       }
     },
     "metrics": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "integratedLufs": { "type": "number" },
-        "truePeakDb": { "type": "number" },
-        "noiseFloorDb": { "type": "number" },
-        "speechToNoiseDb": { "type": "number" }
+        "integratedLufs": {
+          "type": "number"
+        },
+        "truePeakDb": {
+          "type": "number"
+        },
+        "noiseFloorDb": {
+          "type": "number"
+        },
+        "speechToNoiseDb": {
+          "type": "number"
+        }
       }
     }
   }

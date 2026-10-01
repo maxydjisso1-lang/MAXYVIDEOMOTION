@@ -171,6 +171,27 @@ export interface AudioDoc {
       before?: Metrics;
       after?: Metrics;
     };
+    /**
+     * Measured neural-denoise decision for this source (chantier 2). Recorded even when nothing is applied.
+     */
+    denoise?: {
+      /**
+       * Reference-free SNR estimate in the voice band.
+       */
+      estimatedSnrDb: number;
+      decision: "skip-clean" | "skip-strong-noise" | "applied" | "rejected-all" | "unavailable";
+      mix?: number;
+      summary: string;
+      candidates?: {
+        mix: number;
+        accepted: boolean;
+        reasons?: string[];
+        voiceLevelDeltaDb?: number;
+        voiceSpectralChangeDb?: number;
+        snrBeforeDb?: number;
+        snrAfterDb?: number;
+      }[];
+    };
   }[];
   music?: {
     /**

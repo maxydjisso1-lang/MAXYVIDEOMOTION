@@ -64,3 +64,11 @@ export function ffprobe(args: string[], opts: RunOptions = {}): Promise<RunResul
 export function escapeFilterValue(value: string): string {
   return value.replace(/\\/g, "/").replace(/([:'\[\],;=])/g, "\\$1");
 }
+
+/**
+ * A file path as a filter option value (e.g. arnndn=m=…): quoted, with ':' escaped, so a Windows
+ * drive letter survives BOTH filtergraph parsing levels. Verified with FFmpeg 9 on Windows.
+ */
+export function quoteFilterPath(path: string): string {
+  return `'${path.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "'\\''")}'`;
+}

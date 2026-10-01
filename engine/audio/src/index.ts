@@ -4,14 +4,15 @@
  */
 import { BveError, round3, SCHEMA_VERSION, type Analysis, type AudioDoc, type Preset, type Project } from "../../core/src/index.js";
 import { ffmpeg, hasFilter, type RunOptions } from "../../ffmpeg/src/index.js";
+import { denoiseProcessor, planDenoise, RNNOISE_MODEL, rnnoiseFilter, type DenoisePlan } from "./denoise.js";
 
 type Processor = AudioDoc["dialogue"][number]["chain"][number];
 export type CleanupPreset = "off" | "gentle" | "standard" | "aggressive";
 
-const STRENGTH: Record<Exclude<CleanupPreset, "off">, { nr: number; comp: number }> = {
-  gentle: { nr: 6, comp: 2 },
-  standard: { nr: 10, comp: 3 },
-  aggressive: { nr: 16, comp: 4 },
+const STRENGTH: Record<Exclude<CleanupPreset, "off">, { comp: number }> = {
+  gentle: { comp: 2 },
+  standard: { comp: 3 },
+  aggressive: { comp: 4 },
 };
 
 export function buildDialogueChain(audio: Analysis["sources"][number]["audio"], preset: CleanupPreset): Processor[] {
@@ -23,14 +24,8 @@ export function buildDialogueChain(audio: Analysis["sources"][number]["audio"], 
   if (audio.humHz) {
     chain.push({ type: "dehum", params: { frequency: audio.humHz, harmonics: 4 }, reason: `electrical hum at ${audio.humHz} Hz` });
   }
-  const floor = audio.noiseFloorDb ?? -90;
-  if (floor > -62 || audio.noiseProfile?.length) {
-    chain.push({
-      type: "denoise-fft",
-      params: { reductionDb: s.nr, noiseFloorDb: Math.round(Math.min(-20, Math.max(-80, floor))) },
-      reason: `noise floor ${floor.toFixed(1)} dBFS (${(audio.noiseProfile ?? ["broadband"]).join(", ")})`,
-    });
-  }
+  // Denoising is NOT added here: it is decided per source by planDenoise (measured SNR + voice guard).
+  // The former automatic afftdn was measured neutral to harmful (docs/measurements/denoise.md).
   chain.push({ type: "eq", params: { bands: [{ f: 250, g: -2, q: 1 }, { f: 4000, g: 1.5, q: 0.8 }] }, reason: "reduce mud, add presence" });
   chain.push({ type: "compressor", params: { thresholdDb: -20, ratio: s.comp, attackMs: 10, releaseMs: 180, makeupDb: 2 }, reason: "even out level differences between words" });
   if (preset !== "gentle") chain.push({ type: "deess", params: { intensity: 0.3 }, reason: "tame sibilance after presence boost" });
@@ -67,8 +62,8 @@ export function compileProcessor(x: Processor): string[] {
     case "denoise-fft": return [`afftdn=nr=${p(x, "reductionDb", 10)}:nf=${p(x, "noiseFloorDb", -50)}:tn=1`];
     case "denoise-rnn": {
       const model = (x.params as Record<string, unknown> | undefined)?.model;
-      if (!model || !hasFilter("arnndn")) return [`afftdn=nr=${p(x, "reductionDb", 12)}`];
-      return [`arnndn=m=${String(model)}`];
+      if (!hasFilter("arnndn")) throw new BveError("TOOL_MISSING", "This FFmpeg build has no arnndn filter (needed by denoise-rnn)", { hint: "Install a full FFmpeg build (e.g. winget install Gyan.FFmpeg)." });
+      return [rnnoiseFilter(p(x, "mix", 1), typeof model === "string" ? model : RNNOISE_MODEL.id)];
     }
     case "gate": return [`agate=threshold=${round3(10 ** (p(x, "thresholdDb", -50) / 20))}:ratio=2`];
     case "deess": return hasFilter("deesser") ? [`deesser=i=${p(x, "intensity", 0.3)}`] : [];
@@ -115,7 +110,8 @@ export async function normalizeLoudness(input: string, output: string, master: A
 
 /**
  * Project operation: cleanup level = explicit > creative plan > "standard"; loudness target from
- * the given target's preset (else the first target).
+ * the given target's preset (else the first target). Neural denoise is planned per source from
+ * the MEASURED SNR and kept only if the voice-preservation guard accepts it.
  */
 export async function cleanProjectAudio(project: Project, opts: { preset?: CleanupPreset; targetId?: string } = {}): Promise<AudioDoc> {
   const plan = await project.readDocOptional("plan");
@@ -123,6 +119,31 @@ export async function cleanProjectAudio(project: Project, opts: { preset?: Clean
   const targetId = opts.targetId ?? project.manifest.targets[0]?.id;
   if (!targetId) throw new BveError("MISSING_INPUT", "No target: the loudness target comes from a delivery preset", { hint: "bve target add ig_reels --preset instagram/reels" });
   const doc = buildAudioDoc(await project.readDoc("analysis"), await project.preset(targetId), level, await project.readDocOptional("audio"));
+  if (level !== "off") {
+    for (const d of doc.dialogue) {
+      if (!project.source(d.sourceId).probe.hasAudio) continue;
+      let plan: DenoisePlan;
+      try {
+        plan = await planDenoise(project.sourceMediaPath(d.sourceId), { log: project.log });
+      } catch (err) {
+        d.denoise = { estimatedSnrDb: 0, decision: "unavailable", summary: `neural denoise unavailable: ${(err as Error).message}` };
+        continue;
+      }
+      d.denoise = {
+        estimatedSnrDb: plan.estimatedSnrDb,
+        decision: plan.decision,
+        ...(plan.mix !== undefined ? { mix: plan.mix } : {}),
+        summary: plan.summary,
+        candidates: plan.candidates.map(({ mix, accepted, reasons, voiceLevelDeltaDb, voiceSpectralChangeDb, snrBeforeDb, snrAfterDb }) => ({ mix, accepted, reasons, voiceLevelDeltaDb, voiceSpectralChangeDb, snrBeforeDb, snrAfterDb })),
+      };
+      const chosen = plan.candidates.find((c) => c.accepted);
+      d.measurements = { ...d.measurements, before: { ...d.measurements?.before, speechToNoiseDb: plan.estimatedSnrDb }, ...(chosen ? { after: { speechToNoiseDb: chosen.snrAfterDb } } : {}) };
+      const processor = denoiseProcessor(plan);
+      if (processor) d.chain.splice(1, 0, processor); // right after the high-pass
+    }
+  }
   await project.writeDoc("audio", doc, { command: "audio clean", message: `Audio cleanup (${level}), master ${doc.master.loudnessLufs} LUFS` });
   return doc;
 }
+export * from "./quality.js";
+export * from "./denoise.js";
