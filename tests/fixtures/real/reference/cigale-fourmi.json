@@ -1,0 +1,7 @@
+{
+  "description": "Ground truth for transcription benchmarks: the fable as read in the speech-fr fixture (LibriVox, public domain). Jean de La Fontaine, Fables, livre I, fable 1 (1668), public domain text.",
+  "fixture": "speech-fr.mp3",
+  "span": { "start": 24.8, "end": 61.2, "note": "From 'La Cigale, ayant chanté' to 'dansez maintenant.' (the LibriVox preamble, the title and the closing announcement are excluded)." },
+  "language": "fr",
+  "text": "La Cigale, ayant chanté tout l'été, se trouva fort dépourvue quand la bise fut venue : pas un seul petit morceau de mouche ou de vermisseau. Elle alla crier famine chez la Fourmi sa voisine, la priant de lui prêter quelque grain pour subsister jusqu'à la saison nouvelle. « Je vous paierai, lui dit-elle, avant l'août, foi d'animal, intérêt et principal. » La Fourmi n'est pas prêteuse : c'est là son moindre défaut. « Que faisiez-vous au temps chaud ? » dit-elle à cette emprunteuse. « Nuit et jour à tout venant je chantais, ne vous déplaise. » « Vous chantiez ? j'en suis fort aise. Eh bien ! dansez maintenant. »"
+}

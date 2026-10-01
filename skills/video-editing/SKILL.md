@@ -23,6 +23,7 @@ Create a frame-accurate edit without touching the sources. It is usually compile
 - `bve reframe --target <id> --mode center|fit-blur` — per-target crop strategy.
 - `bve render --target <id> --draft` then `bve frames --target <id> --at <seconds>` to check.
 - To change structure or pacing, edit the plan and recompile (preferred), or use `bve doc get/set timeline` for manual changes.
+- Plans built from sentence ranges (`bve transcript sentences`) never keep half a sentence; plans built from Whisper segments can (measured: 2 partial sentences on a real talking head).
 - Planned (not yet available): `face`/`subject` reframing (MediaPipe), split/move/insert commands, beat snapping.
 - `bve doc get <doc>` / `bve doc set <doc> <file.json>` — read, then write back a modified document (validated against its schema, versioned, undoable). Use it for any fine adjustment that has no dedicated command yet.
 

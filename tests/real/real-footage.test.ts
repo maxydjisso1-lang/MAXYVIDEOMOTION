@@ -9,6 +9,8 @@ import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { REPO_ROOT, type Analysis, type Captions, type QcReport, type RenderRecord, type Transcript } from "../../engine/core/src/index.js";
+import { ffmpeg, probe, rmsLevel } from "../../engine/ffmpeg/src/index.js";
+import { runWhisper, wordErrorRate } from "../../engine/transcription/src/index.js";
 import { bveOk, freshDir } from "../helpers.js";
 
 const REAL = join(REPO_ROOT, "tests/fixtures/real");
@@ -98,6 +100,72 @@ describe.skipIf(!ready)("real footage + Whisper", () => {
     expect(qc.status).not.toBe("fail");
     expect(qc.categories.captions?.checks.find((c) => c.id === "captions.safe-zone")?.status).toBe("pass");
     expect(exported[0]!.path).toMatch(/\.mp4$/);
+  });
+
+  it("transcription under real street noise: WER regression thresholds and no silent failure", async () => {
+    const ref = JSON.parse(readFileSync(join(REAL, "reference/cigale-fourmi.json"), "utf8")) as { span: { start: number; end: number }; text: string };
+    const dir = await freshDir("real-wer");
+    const { mkdir } = await import("node:fs/promises");
+    await mkdir(dir, { recursive: true });
+    const speech = join(dir, "speech.wav");
+    await ffmpeg(["-ss", String(ref.span.start), "-t", (ref.span.end - ref.span.start).toFixed(3), "-i", join(REAL, "speech-fr.mp3"), "-ac", "1", "-ar", "48000", speech]);
+    const noise = join(dir, "noise.wav");
+    await ffmpeg(["-i", join(REAL, "street-noise.mp4"), "-vn", "-ac", "1", "-ar", "48000", noise]);
+    const sRms = await rmsLevel(speech, { start: 0, end: (await probe(speech)).durationSec });
+    const nRms = await rmsLevel(noise, { start: 0, end: (await probe(noise)).durationSec });
+    const mixAt = async (snr: number) => {
+      const out = join(dir, `mix${snr}.mp4`);
+      await ffmpeg(["-f", "lavfi", "-i", "color=c=gray:s=320x180:r=25", "-i", speech, "-stream_loop", "-1", "-i", noise, "-filter_complex", `[2:a]volume=${(sRms - snr - nRms).toFixed(2)}dB[n];[1:a][n]amix=inputs=2:normalize=0:duration=first[a]`, "-map", "0:v", "-map", "[a]", "-shortest", "-c:v", "libx264", "-preset", "ultrafast", "-c:a", "aac", out]);
+      return out;
+    };
+    // Measured baseline (small, VAD on): clean 14.7 %, 10 dB 17.4 %. Thresholds leave room for run-to-run noise.
+    const clean = await runWhisper(speech, { model: "small", language: "fr" });
+    expect(wordErrorRate(ref.text, clean.segments.map((s) => s.text).join(" ")).wer).toBeLessThanOrEqual(0.2);
+    const at10 = await runWhisper(await mixAt(10), { model: "small", language: "fr" });
+    expect(wordErrorRate(ref.text, at10.segments.map((s) => s.text).join(" ")).wer).toBeLessThanOrEqual(0.25);
+    // Far below 0 dB Whisper returns nothing: the engine must SAY so instead of delivering an empty transcript silently.
+    const media = await mixAt(-13);
+    const dir2 = await freshDir("real-buried");
+    await bveOk(null, "init", dir2);
+    await bveOk(dir2, "ingest", media);
+    const summary = await bveOk<{ transcription?: { words: number; warning?: string } }[]>(dir2, "analyze", "--transcribe", "--language", "fr");
+    expect(summary[0]!.transcription?.words).toBe(0);
+    expect(summary[0]!.transcription?.warning).toMatch(/No speech transcribed/);
+  });
+
+  it("sentence view: a plan built from sentences never keeps part of a sentence (segments do)", async () => {
+    const { dir, src } = await project("sentences", "talking-head.mp4");
+    await bveOk(dir, "analyze", "--transcribe", "--language", "fr");
+    const t = read<Transcript>(dir, "analysis/transcript.json");
+    const sentences = await bveOk<{ id: string; start: number; end: number; words: number; unterminated: boolean }[]>(dir, "transcript", "sentences");
+    expect(sentences.length).toBeGreaterThan(1);
+    const allWords = words(t);
+    /** Sentences whose words are only PARTLY kept by the compiled edit. */
+    const partial = async () => {
+      const tl = read<{ tracks: { video: { clips: { sourceIn: number; sourceOut: number }[] }[] } }>(dir, "timeline/timeline.json");
+      const kept = (w: { start: number; end: number }) => tl.tracks.video[0]!.clips.some((c) => (w.start + w.end) / 2 >= c.sourceIn && (w.start + w.end) / 2 < c.sourceOut);
+      return sentences.filter((s) => {
+        const ws = allWords.filter((w) => w.start >= s.start - 0.01 && w.end <= s.end + 0.01 && !w.filler);
+        const k = ws.filter(kept).length;
+        return k > 0 && k < ws.length;
+      }).length;
+    };
+    const base = { schemaVersion: "1.0", objective: "sentence test", targetDurationSec: 20, durationToleranceSec: 20, narrative: { structure: "custom" }, pacing: { style: "medium", removeSilences: { enabled: true } }, captions: { enabled: false } };
+    // BEFORE: segments (as Phase 1 plans did).
+    const segs = t.sources[0]!.segments;
+    await writeFile(join(dir, "seg-plan.json"), JSON.stringify({ ...base, hook: { start: 0, end: 3, technique: "quote", sourceRefs: [{ segmentId: segs[1]!.id }] }, sections: [{ id: "a", role: "context", sourceRefs: [{ segmentId: segs[3]!.id }] }] }));
+    await bveOk(dir, "plan", "set", join(dir, "seg-plan.json"));
+    await bveOk(dir, "plan", "compile");
+    const partialWithSegments = await partial();
+    // AFTER: the same intent expressed with sentence ranges.
+    const r = (s: { start: number; end: number }) => ({ sourceId: src.id, start: s.start, end: s.end });
+    await writeFile(join(dir, "sent-plan.json"), JSON.stringify({ ...base, hook: { start: 0, end: 3, technique: "quote", sourceRefs: [r(sentences[1]!)] }, sections: [{ id: "a", role: "context", sourceRefs: [r(sentences[0]!)] }] }));
+    await bveOk(dir, "plan", "set", join(dir, "sent-plan.json"));
+    await bveOk(dir, "plan", "compile");
+    const partialWithSentences = await partial();
+    console.log(`partial sentences in the edit — segments: ${partialWithSegments}, sentences: ${partialWithSentences}`);
+    expect(partialWithSegments).toBeGreaterThan(0); // the measured problem, reproduced
+    expect(partialWithSentences).toBe(0);
   });
 
   it("interview (2 speakers, 480p source upscaled to 1080x1920)", async () => {

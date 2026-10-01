@@ -74,6 +74,7 @@ def main() -> int:
     parser.add_argument("--language", default=None)
     parser.add_argument("--model-dir", default=None)
     parser.add_argument("--device", default="auto")
+    parser.add_argument("--no-vad", action="store_true", help="disable the Silero VAD filter (diagnostics)")
     args = parser.parse_args()
 
     try:
@@ -88,7 +89,7 @@ def main() -> int:
         read_wav_16k_mono(args.input),
         language=args.language,
         word_timestamps=True,
-        vad_filter=True,  # drops hallucinations in silences and tightens word boundaries
+        vad_filter=not args.no_vad,  # drops hallucinations in silences and tightens word boundaries
         vad_parameters={"min_silence_duration_ms": 300},
         condition_on_previous_text=False,
     )
@@ -101,6 +102,9 @@ def main() -> int:
                 "start": round(seg.start, 3),
                 "end": round(seg.end, 3),
                 "text": seg.text,
+                # Whisper's own confidence signals, kept for reliability reporting.
+                "avg_logprob": round(seg.avg_logprob, 3),
+                "no_speech_prob": round(seg.no_speech_prob, 3),
                 "words": [
                     {"word": w.word, "start": round(w.start, 3), "end": round(w.end, 3), "probability": round(w.probability, 3)}
                     for w in (seg.words or [])
@@ -117,6 +121,7 @@ def main() -> int:
                 "language_probability": round(info.language_probability, 3),
                 "model": args.model,
                 "device": f"{device}/{compute_type}",
+                "vad": not args.no_vad,
                 "segments": out_segments,
             },
             f,

@@ -19,7 +19,9 @@ Make the editorial decisions. This skill combines the **brief**, the **analysis*
 `plan/creative-plan.json` (schema: `schemas/creative-plan.schema.json`), with a `rationale` array written in plain language.
 
 ## Tools
-- `bve analysis summary --json` and `bve transcript show` (numbered segments with timecodes).
+- `bve transcript sentences` — **use this to choose material.** Sentences (and their clauses) rebuilt from Whisper's words and punctuation, each with an exact `{sourceId, start, end}` range to paste into `sourceRefs`. `unterminated: true` marks a run without final punctuation; `lowConfidence` lists words to double-check.
+- `bve transcript show` — raw Whisper segments. They are time windows, not sentences: on continuous speech they cut mid-sentence (measured 5/5 boundaries on a real talking head). Do not use `segmentId` refs for speech unless the segment ends with punctuation.
+- `bve analysis summary --json`.
 - The **storytelling** skill (structures, hook techniques, platform pacing norms).
 - `bve plan set <plan.json>` — validates the plan AND its references (unknown segment/shot ids fail) and returns a duration estimate; creates a version.
 - `bve plan validate` / `bve plan estimate` — per-section durations after silence/filler removal, and whether the total is within tolerance.
@@ -28,7 +30,7 @@ Make the editorial decisions. This skill combines the **brief**, the **analysis*
 1. **Read.** Read the brief, the analysis summary and the numbered transcript segments. Check the brand tone (`tone.do` / `tone.dont`) and motion energy.
 2. **Choose a structure.** Pick it with the storytelling skill according to objective and duration. For example, a 30 s conversion ad uses hook → problem → solution → proof → CTA.
 3. **Find the hook.** It must land in the first 1–3 s. Look for the strongest line (a bold claim, a result or a question) or the most striking visual. It may come from the middle of the source, since reordering is allowed.
-4. **Select material for each section.** Use `segmentId` refs (best for speech) or `shotId` refs (for visuals). Prefer shots with `qualityScore` ≥ 0.6 and no exposure problems.
+4. **Select material for each section.** For speech, use sentence or clause ranges from `bve transcript sentences` as `{sourceId, start, end}` refs; use a clause when a sentence is too long. Use `shotId` refs for visuals. Prefer shots with `qualityScore` ≥ 0.6 and no exposure problems.
 5. **Set the pacing** from the platform and the brand:
    - `pacing.style`
    - `avgShotSec`

@@ -273,7 +273,7 @@ Cached files are written as `<name>.partial.<ext>` and renamed on success, so an
 | Video without audio | loudnorm crashed on −∞ LUFS | silent programmes are not normalised; QC reports `audio.loudness: skip` with the reason |
 | HEVC 10-bit | analysis rejected by its schema (luma > 1) | stats are always measured on 8-bit 4:2:0 |
 | MJPEG in AVI | treated as audio-only | only `attached_pic` streams (cover art) are ignored, not a codec |
-| Continuous speech / street ambience | noise floor reported as −90 dBFS ("clean") | the floor is the 10th percentile of 100 ms RMS windows when there is no real silence; "noisy" = floor > −62 dBFS AND SNR < 30 dB |
+| Continuous speech / street ambience | noise floor reported as −90 dBFS ("clean") | the floor is the 10th percentile of 100 ms RMS windows when there is no real silence; "noisy" = floor > −62 dBFS AND loudness − floor < 30 dB (an estimate, not a true SNR) |
 | Relative input paths | analyzers failed when run with a temp working dir | inputs resolved to absolute paths |
 | Whisper tokens | "j 'exerce" in captions | apostrophe and punctuation tokens are merged into the previous word |
 | Orphan words | a 1-word cue ("mon") | a lone word joins its neighbour within the same take |
@@ -297,9 +297,9 @@ Cached files are written as `<name>.partial.<ext>` and renamed on success, so an
 |---|---|---|
 | faster-whisper `small`, int8, CPU, clear French speech (71 s) | ≈45 s; language p=1.00; 17 segments, word timestamps; minor lexical errors ("sigale") | `small` is the default. Proofreading stays a skill step. Offer `medium`/`large-v3` for final deliverables. |
 | Whisper segments on real talk | segments end mid-sentence ("… j'exerce dans le" \| "domaine …") | Phase 2: a sentence-level view, so plans never cut mid-sentence |
-| Whisper on speech at ≈0 dB SNR (street) | 0 segments, with or without VAD | extreme case is out of scope for transcription without enhancement |
+| Whisper on speech buried in street noise | 0 segments, with or without VAD | **corrected in chantier 1:** that mix was ≈ −13 dB SNR, not ≈0 dB (the loudness − noise-floor figure is not a true SNR). Measured curve: [measurements/transcription-noise.md](measurements/transcription-noise.md) |
 | Whisper on speech at ≈5 dB SNR | transcribed, more errors ("cigare", "fourmille") | Phase 2: denoise **before** transcription |
 | Phase 1 cleanup (`afftdn`) on real noise | floor −0.4 to −1.1 dB, SNR unchanged | **not sufficient** for real footage |
-| RNNoise (`arnndn`, BSD model) | talking head: SNR 15.9 → 24.1 dB with voice level preserved; street 5 dB: SNR 5 → 17 dB but voice −10 LU; street 0 dB: voice destroyed | Phase 2: neural denoise with **strength driven by measured SNR**, voice-preservation check (loudness delta), DeepFilterNet evaluation for low SNR |
+| RNNoise (`arnndn`, BSD model) | talking head: loudness−floor 15.9 → 24.1 dB with voice level preserved; street mix at true SNR ≈ −3 dB: loudness−floor 5 → 17 dB but voice −10 LU; street mix at ≈ −13 dB: voice destroyed (figures before chantier 1 used the loudness − noise-floor estimate, not a true SNR) | Phase 2: neural denoise with **strength driven by measured SNR**, voice-preservation check (loudness delta), DeepFilterNet evaluation for low SNR |
 | Remotion render, 21 s real footage, 1080×1920 | ≈3 min on this machine (whole render; on the 10 s synthetic fixture: Remotion ≈45 s vs ASS ≈20 s) | Phase 2: profile the PNG sequence stage (JPEG + separate alpha, or fewer graphics-only frames) |
 | Music vs noise | spectral flatness does not separate them on these files | Phase 2: tonal/temporal music detection before any denoise |

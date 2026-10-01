@@ -51,7 +51,7 @@ All P0/P1 audit findings are fixed, and the result is covered by tests. See [AUD
 
 ### Phase 2 — Real-world post-production (proposal, ordered by the measurements)
 
-1. **Real transcription.**
+1. **Real transcription.** *Chantier 1 done (measurement + sentence view + no silent failure): [measurements/transcription-noise.md](measurements/transcription-noise.md).* Remaining for later chantiers: denoise before transcription (chantier 2), and a glossary via `initial_prompt`.
    - A sentence-level view, so plans never cut mid-sentence.
    - `medium`/`large-v3` for final deliverables.
    - A glossary (brand names) passed to Whisper as `initial_prompt`.

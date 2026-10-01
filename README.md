@@ -131,7 +131,7 @@ Other commands:
 - `doctor`
 - `asset add`
 - `analysis summary|annotate`
-- `transcript show`
+- `transcript show` (raw Whisper segments) · `transcript sentences` (sentence and clause ranges for plans)
 - `brand tokens|validate`
 - `plan validate|estimate`
 - `timeline show`

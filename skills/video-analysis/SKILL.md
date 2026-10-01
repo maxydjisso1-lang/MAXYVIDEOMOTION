@@ -41,7 +41,8 @@ Produce `analysis/analysis.json` and `analysis/transcript.json`. These are **mea
 
 ## Constraints
 - The noise floor comes from a real silence when there is one, else from the quietest 100 ms windows (10th percentile). "Broadband" means an audible floor AND speech less than 30 dB above it. It cannot yet tell background music from noise: check the contact sheet/brief before letting audio-cleanup denoise a music bed.
-- Whisper segments are not sentences: they can end mid-sentence. When a plan must not cut mid-sentence, reference exact word-aligned `{sourceId, start, end}` ranges.
+- Whisper segments are not sentences (measured: every boundary mid-sentence on continuous speech). `bve transcript sentences` gives sentence and clause ranges built from the real punctuation.
+- Transcription accuracy (measured, `docs/measurements/transcription-noise.md`): `small` ≈ 15 % WER on clean read French (mostly spelling: "sigale" for "cigale"); degradation stays small down to ≈5 dB SNR and becomes large below 0 dB; far below 0 dB Whisper can return nothing. The mean word probability barely moves with those errors: do not treat it as an accuracy score.
 - Never put decisions (keep/cut) in analysis. Only facts and labels belong here.
 - Label only what you can see. Mark uncertain labels with `confidence` < 0.6.
 - Do not re-run transcription if `transcript.json` exists and the sources' sha256 values are unchanged. The engine caches it, so don't pass `--force` without a reason.

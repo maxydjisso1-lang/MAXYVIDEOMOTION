@@ -21,7 +21,7 @@ import { binaries, capabilities } from "../../ffmpeg/src/index.js";
 import { motionFromProjectPlan } from "../../motion/src/index.js";
 import { formatQc, runQc, waive } from "../../qc/src/index.js";
 import { extractRenderFrames, remotionStatus, renderTarget, type RendererChoice } from "../../rendering/src/index.js";
-import { fasterWhisper, importTranscript, listSegments, transcribeProject } from "../../transcription/src/index.js";
+import { fasterWhisper, importTranscript, listSegments, listSentences, transcribeProject, transcriptionReport } from "../../transcription/src/index.js";
 import { analyzeProject, annotateAnalysis, ingestSource, summarizeAnalysis, type ShotAnnotation } from "../../vision/src/index.js";
 import { fetchBrandFonts } from "../../brand/src/index.js";
 import { emit, failure } from "./output.js";
@@ -115,8 +115,11 @@ program.command("analyze").description("measure shots, exposure, color, silences
   .action(action(async (p, o: { source?: string; transcribe?: boolean; language: string; model: string }) => {
     const ids = o.source?.split(",");
     const analysis = await analyzeProject(p, ids ? { sourceIds: ids } : {});
-    if (o.transcribe) await transcribeProject(p, { language: o.language, model: o.model, ...(ids ? { sourceIds: ids } : {}) });
-    return summarizeAnalysis(analysis);
+    const summary = summarizeAnalysis(analysis);
+    if (!o.transcribe) return summary;
+    const transcript = await transcribeProject(p, { language: o.language, model: o.model, ...(ids ? { sourceIds: ids } : {}) });
+    const reports = transcriptionReport(transcript, analysis);
+    return summary.map((s) => ({ ...s, transcription: reports.find((r) => r.sourceId === s.sourceId) }));
   }));
 
 const analysis = program.command("analysis");
@@ -130,7 +133,8 @@ transcript.command("import <file>").description("import a word-level transcript 
     const t = await importTranscript(p, file);
     return { language: t.language, segments: t.sources.reduce((a, s) => a + s.segments.length, 0) };
   }));
-transcript.command("show").action(action(async (p) => listSegments(p)));
+transcript.command("show").description("Whisper segments (time windows — may cut mid-sentence)").action(action(async (p) => listSegments(p)));
+transcript.command("sentences").description("sentences and clauses as exact {sourceId,start,end} ranges for creative plans").action(action(async (p) => listSentences(p)));
 
 // ------------------------------------------------------------------ brand
 

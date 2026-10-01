@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  BveError, existsSync, readJson, REPO_ROOT, SCHEMA_VERSION, validate, withTempDir, type Project, type Transcript,
+  BveError, existsSync, readJson, REPO_ROOT, SCHEMA_VERSION, validate, withTempDir, type Analysis, type Project, type Transcript,
 } from "../../core/src/index.js";
 import { ffmpeg } from "../../ffmpeg/src/index.js";
 
@@ -45,51 +45,75 @@ function pythonBin(): string {
   return venv;
 }
 
+export interface WhisperRaw {
+  language: string;
+  language_probability?: number;
+  model: string;
+  device?: string;
+  vad?: boolean;
+  segments: { start: number; end: number; text: string; avg_logprob?: number; no_speech_prob?: number; words: { word: string; start: number; end: number; probability: number }[] }[];
+}
+
+export interface RunWhisperOptions {
+  model?: string;
+  language?: string;
+  /** Silero VAD pre-filter (default on). Off only for diagnostics. */
+  vad?: boolean;
+  log?: Project["log"];
+}
+
+/**
+ * The single path to Whisper, shared by the project provider and the benchmarks: decode any media
+ * with the engine's FFmpeg to 16 kHz mono, run the Python sidecar, return its raw output.
+ */
+export async function runWhisper(input: string, opts: RunWhisperOptions = {}): Promise<WhisperRaw> {
+  if (!existsSync(pythonBin())) {
+    throw new BveError("TOOL_MISSING", "The transcription environment is not installed", {
+      hint: "Run `uv sync --project engine/python` (installs Python 3.12 + faster-whisper), or import a transcript with `bve transcript import <file>`.",
+    });
+  }
+  return withTempDir(async (dir) => {
+    const out = join(dir, "transcript.json");
+    const wav = join(dir, "audio16k.wav");
+    await ffmpeg(["-i", input, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav], opts.log ? { log: opts.log } : {});
+    const args = ["-m", "bve_py.transcribe", "--input", wav, "--output", out, "--model", opts.model ?? "small"];
+    if (opts.language && opts.language !== "auto") args.push("--language", opts.language);
+    if (opts.vad === false) args.push("--no-vad");
+    // Models are downloaded once into ./models (gitignored) and loaded offline afterwards.
+    args.push("--model-dir", process.env.WHISPER_MODEL_DIR ?? join(REPO_ROOT, "models"));
+    await new Promise<void>((resolvePromise, reject) => {
+      const child = spawn(pythonBin(), args, { cwd: join(REPO_ROOT, "engine/python"), windowsHide: true });
+      let err = "";
+      child.stderr.on("data", (d) => {
+        err += d;
+        opts.log?.debug({ whisper: String(d).trim() }, "whisper");
+      });
+      child.on("error", reject);
+      child.on("close", (code) => (code === 0 ? resolvePromise() : reject(new BveError("TOOL_MISSING", `Transcription failed (exit ${code}): ${err.slice(-2000)}`))));
+    });
+    return JSON.parse(await readFile(out, "utf8")) as WhisperRaw;
+  });
+}
+
 export const fasterWhisper: TranscriptionProvider = {
   id: "faster-whisper",
   async available() {
     return existsSync(pythonBin());
   },
   async transcribe(project, sourceId, opts) {
-    if (!(await this.available())) {
-      throw new BveError("TOOL_MISSING", "The transcription environment is not installed", {
-        hint: "Run `uv sync --project engine/python` (installs Python 3.12 + faster-whisper), or import a transcript with `bve transcript import <file>`.",
-      });
-    }
-    const input = project.sourceMediaPath(sourceId);
     const model = opts.model ?? "small";
-    return withTempDir(async (dir) => {
-      const out = join(dir, "transcript.json");
-      // The engine's FFmpeg is the only decoder: every codec it reads can be transcribed.
-      const wav = join(dir, "audio16k.wav");
-      await ffmpeg(["-i", input, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav], { log: project.log });
-      const args = ["-m", "bve_py.transcribe", "--input", wav, "--output", out, "--model", model];
-      if (opts.language && opts.language !== "auto") args.push("--language", opts.language);
-      // Models are downloaded once into ./models (gitignored) and loaded offline afterwards.
-      args.push("--model-dir", process.env.WHISPER_MODEL_DIR ?? join(REPO_ROOT, "models"));
-      await new Promise<void>((resolvePromise, reject) => {
-        const child = spawn(pythonBin(), args, { cwd: join(REPO_ROOT, "engine/python"), windowsHide: true });
-        let err = "";
-        child.stderr.on("data", (d) => {
-          err += d;
-          project.log.debug({ whisper: String(d).trim() }, "whisper");
-        });
-        child.on("error", reject);
-        child.on("close", (code) => (code === 0 ? resolvePromise() : reject(new BveError("TOOL_MISSING", `Transcription failed (exit ${code}): ${err.slice(-2000)}`))));
-      });
-      const raw = JSON.parse(await readFile(out, "utf8")) as { language: string; segments: { start: number; end: number; text: string; words: { word: string; start: number; end: number; probability: number }[] }[] };
-      const source: TranscriptSource = {
-        sourceId,
-        segments: raw.segments.map((s, i) => ({
-          id: `seg_${String(i + 1).padStart(3, "0")}`,
-          start: s.start,
-          end: s.end,
-          text: s.text.trim(),
-          words: joinSubwordTokens(s.words.map((w) => ({ w: w.word.trim(), start: w.start, end: w.end, p: Math.round(w.probability * 1000) / 1000 })).filter((w) => w.w)),
-        })),
-      };
-      return { language: raw.language, model: `faster-whisper/${model}`, source: markFillers(source, raw.language) };
-    });
+    const raw = await runWhisper(project.sourceMediaPath(sourceId), { model, ...(opts.language ? { language: opts.language } : {}), log: project.log });
+    const source: TranscriptSource = {
+      sourceId,
+      segments: raw.segments.map((s, i) => ({
+        id: `seg_${String(i + 1).padStart(3, "0")}`,
+        start: s.start,
+        end: s.end,
+        text: s.text.trim(),
+        words: joinSubwordTokens(s.words.map((w) => ({ w: w.word.trim(), start: w.start, end: w.end, p: Math.round(w.probability * 1000) / 1000 })).filter((w) => w.w)),
+      })),
+    };
+    return { language: raw.language, model: `faster-whisper/${model}`, source: markFillers(source, raw.language) };
   },
 };
 
@@ -150,11 +174,51 @@ export function joinSubwordTokens<W extends { w: string; start: number; end: num
   const out: W[] = [];
   for (const w of words) {
     const prev = out.at(-1);
-    if (prev && (/^['’]/.test(w.w) || /^[.,!?;:…»)]+$/.test(w.w))) {
+    // "-ce", "-elle", "-vous": French inversion hyphen tokens belong to the previous word too.
+    if (prev && (/^['’]/.test(w.w) || /^-\p{L}/u.test(w.w) || /^[.,!?;:…»)]+$/.test(w.w))) {
       prev.w += w.w;
       prev.end = w.end;
       if (prev.p !== undefined && w.p !== undefined) prev.p = Math.min(prev.p, w.p);
     } else out.push({ ...w });
   }
   return out;
+}
+export * from "./metrics.js";
+export * from "./sentences.js";
+
+/** Project operation: the sentence view of the current transcript. */
+export async function listSentences(project: Project) {
+  const { toSentences } = await import("./sentences.js");
+  return toSentences(await project.readDoc("transcript"));
+}
+
+export interface TranscriptionReport {
+  sourceId: string;
+  words: number;
+  segments: number;
+  /** Seconds of non-silent audio according to the analysis (speech, music or ambience). */
+  nonSilentSec: number;
+  wordsPerMinute: number;
+  warning?: string;
+}
+
+/**
+ * Facts about a transcription, so an empty or thin result is never silent. No guessing: Whisper
+ * returns nothing both when there is no speech and when speech is buried under noise (measured:
+ * 0 segments below ≈ −10 dB SNR, docs/measurements/transcription-noise.md).
+ */
+export function transcriptionReport(transcript: Transcript, analysis?: Analysis): TranscriptionReport[] {
+  return transcript.sources.map((s) => {
+    const words = s.segments.reduce((a, g) => a + g.words.length, 0);
+    const audio = analysis?.sources.find((a) => a.sourceId === s.sourceId)?.audio;
+    const nonSilentSec = Math.round((audio?.speech ?? []).reduce((a, r) => a + r.end - r.start, 0) * 10) / 10;
+    const wordsPerMinute = nonSilentSec > 0 ? Math.round((words / nonSilentSec) * 60) : 0;
+    const report: TranscriptionReport = { sourceId: s.sourceId, words, segments: s.segments.length, nonSilentSec, wordsPerMinute };
+    if (words === 0 && nonSilentSec >= 5) {
+      report.warning = `No speech transcribed from ${nonSilentSec}s of non-silent audio: either there is no speech (music, ambience) or the speech is buried under noise (Whisper returns nothing below ≈ −10 dB SNR). Do not caption this source until a human confirms which.`;
+    } else if (words > 0 && wordsPerMinute < 40 && nonSilentSec >= 20) {
+      report.warning = `Only ${wordsPerMinute} words/min over ${nonSilentSec}s of non-silent audio: speech may be partly missed (noise, music, distant voice). Check before relying on the transcript.`;
+    }
+    return report;
+  });
 }
