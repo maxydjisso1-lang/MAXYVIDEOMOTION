@@ -33,14 +33,16 @@ Produce `analysis/analysis.json` and `analysis/transcript.json`. These are **mea
    - shot count and durations
    - exposure problems
    - loudness, noise floor and noise profile
+   - audio content: `audio.content` (speech / music / noise / silence shares, and segments) and `musicDetected`
    - speech coverage
    - transcript language and confidence
 3. Open the contact sheets. For each shot, write labels such as `talking-head`, `close-up`, `wide`, `product`, `logo`, `b-roll`, `person:<name if known>`, `text-on-screen` or `unusable`. Add short `notes` and a `qualityScore` guess where relevant (focus, framing, eye contact, energy).
 4. Write the annotations file and run `bve analysis annotate`.
-5. Report the essentials to the user in 3–6 bullets, especially problems: underexposed shots, noisy audio, hum, clipping, very long silences.
+5. Report the essentials to the user in 3–6 bullets, especially problems: underexposed shots, noisy audio, hum, clipping, very long silences. Say when a source carries a music bed: it is kept as music, never denoised as noise.
 
 ## Constraints
-- The noise floor comes from a real silence when there is one, else from the quietest 100 ms windows (10th percentile). "Broadband" means an audible floor AND speech less than 30 dB above it. It cannot yet tell background music from noise: check the contact sheet/brief before letting audio-cleanup denoise a music bed.
+- The noise floor comes from a real silence when there is one, else from the quietest 100 ms windows (10th percentile). "Broadband" means an audible floor AND speech less than 30 dB above it; it is not set when the floor is music.
+- Audio content (measured, `docs/measurements/audio-content.md`): `audio.content.segments` label each stretch `speech`, `music`, `noise`, `silence`, `speech+music` (a voice over a bed) or `speech+noise`. Speech comes from Silero VAD (the Python sidecar); the background is read in the pauses. `musicDetected` = music in ≥ 20 % of the non-silent duration. Measured on held-out recordings: music found in every music source (classical, acoustic, electronic, hip-hop, rock, under speech at +6 to +18 dB). Known limits: **a music bed heard only under continuous speech (never alone, no pause ≥ ≈1 s) is NOT detected** — the engine then sets `audio.content.speechBackgroundUnknown` (share of the source where the background under the voice could not be measured); when it is high, music cannot be ruled out: ask the user or check the brief. A ticking clock or other periodic mechanical noise can read as beat music (the safe direction: the source is then not denoised); singing is often read as speech; a very slow pad can read as noise in places. With `detector: "spectral-only"` (sidecar missing) speech detection is much weaker: install the sidecar before trusting the segments.
 - Whisper segments are not sentences (measured: every boundary mid-sentence on continuous speech). `bve transcript sentences` gives sentence and clause ranges built from the real punctuation.
 - Transcription accuracy (measured, `docs/measurements/transcription-noise.md`): `small` ≈ 15 % WER on clean read French (mostly spelling: "sigale" for "cigale"); degradation stays small down to ≈5 dB SNR and becomes large below 0 dB; far below 0 dB Whisper can return nothing. The mean word probability barely moves with those errors: do not treat it as an accuracy score.
 - Never put decisions (keep/cut) in analysis. Only facts and labels belong here.

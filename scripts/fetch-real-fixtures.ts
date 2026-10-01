@@ -6,9 +6,9 @@
  * - Idempotent: existing outputs are kept. Nothing is committed (the folder is gitignored).
  */
 import { createHash } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { existsSync, REPO_ROOT } from "../engine/core/src/index.js";
+import { existsSync, REPO_ROOT, withTempDir } from "../engine/core/src/index.js";
 import { ffmpeg, probe } from "../engine/ffmpeg/src/index.js";
 
 interface Fixture {
@@ -41,6 +41,17 @@ async function politeJson<T>(url: string): Promise<T> {
   throw new Error(`Gave up after retries: ${url}`);
 }
 
+/** Download a file, backing off when the media server rate-limits (HTTP 429). */
+async function politeBytes(url: string): Promise<Buffer> {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    await sleep(attempt ? 5000 * 2 ** attempt : 2000);
+    const res = await fetch(url, { headers: { "User-Agent": UA } });
+    if (res.ok) return Buffer.from(await res.arrayBuffer());
+    console.log(`  … HTTP ${res.status}, retrying`);
+  }
+  throw new Error(`Gave up after retries: ${url}`);
+}
+
 async function commonsInfo(title: string): Promise<{ sha1: string; original: string; derivatives: string[] }> {
   const u = `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo|videoinfo&iiprop=url|sha1&viprop=derivatives&format=json&titles=${encodeURIComponent(title)}`;
   const j = await politeJson<{ query: { pages: Record<string, { imageinfo?: { url: string; sha1: string }[]; videoinfo?: { derivatives?: { src: string }[] }[] }> } }>(u);
@@ -64,7 +75,25 @@ for (const fx of manifest.fixtures) {
     if (!url) throw new Error(`${fx.id}: variant ${fx.source.variant} not available`);
     const seg = fx.segment ?? { start: 0, duration: 30 };
     console.log(`↓ ${fx.id}: ${seg.duration}s from ${fx.source.title} [${fx.source.variant}]`);
-    await ffmpeg(["-user_agent", UA, "-ss", String(seg.start), "-t", String(seg.duration), "-i", url, "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", out]);
+    if (fx.output.endsWith(".m4a")) {
+      // Audio-only fixtures: the whole original is small. Download it politely, check the pinned sha1
+      // on the bytes themselves, then cut the segment locally (remote seeking in Ogg is unreliable).
+      const bytes = await politeBytes(url);
+      const sha1 = createHash("sha1").update(bytes).digest("hex");
+      if (fx.source.sha1 && sha1 !== fx.source.sha1) throw new Error(`${fx.id}: downloaded sha1 ${sha1} ≠ pinned ${fx.source.sha1}`);
+      await withTempDir(async (dir) => {
+        const src = join(dir, "original");
+        await writeFile(src, bytes);
+        await ffmpeg(["-ss", String(seg.start), "-t", String(seg.duration), "-i", src, "-vn", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", out]);
+      });
+    } else {
+      await ffmpeg(["-user_agent", UA, "-ss", String(seg.start), "-t", String(seg.duration), "-i", url, "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", out]);
+    }
+    const got = (await probe(out)).durationSec;
+    if (got < seg.duration * 0.9) {
+      await rm(out, { force: true });
+      throw new Error(`${fx.id}: got ${got.toFixed(1)} s instead of ${seg.duration} s`);
+    }
   } else if (fx.source?.kind === "url") {
     console.log(`↓ ${fx.id}: ${fx.source.url}`);
     const res = await fetch(fx.source.url, { headers: { "User-Agent": UA } });

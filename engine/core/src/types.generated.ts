@@ -147,9 +147,46 @@ export interface AudioAnalysis {
      */
     end: number;
   }[];
+  /**
+   * Music in ≥ 20 % of the non-silent duration (from content). A music bed is never denoised as noise.
+   */
   musicDetected?: boolean;
+  content?: AudioContent;
   noiseProfile?: ("broadband" | "hum" | "hiss" | "wind" | "traffic" | "hvac" | "reverb" | "crowd")[];
   qualityScore?: number;
+}
+/**
+ * What the audio contains, per segment: speech, music, ambient noise or silence ("speech+music" = a voice over a music bed). Measured accuracy and limits: docs/measurements/audio-content.md.
+ */
+export interface AudioContent {
+  /**
+   * spectral-only: the Python sidecar is missing, speech detection is degraded (much lower recall).
+   */
+  detector: "silero-vad+spectral" | "spectral-only";
+  segments: {
+    /**
+     * Time in seconds. Snapped to the nearest frame at render time.
+     */
+    start: number;
+    /**
+     * Time in seconds. Snapped to the nearest frame at render time.
+     */
+    end: number;
+    label: "silence" | "noise" | "music" | "speech" | "speech+noise" | "speech+music";
+  }[];
+  /**
+   * Share of the source where speech is present but the background under it could not be measured (continuous speech, no pause or background heard alone nearby). A music bed there is NOT detected (measured limit): music cannot be ruled out.
+   */
+  speechBackgroundUnknown: number;
+  /**
+   * Share of the source duration holding each class (speech+music counts for both).
+   */
+  shares: {
+    speech: number;
+    music: number;
+    noise: number;
+    silence: number;
+  };
 }
 
 /**
@@ -179,7 +216,10 @@ export interface AudioDoc {
        * Reference-free SNR estimate in the voice band.
        */
       estimatedSnrDb: number;
-      decision: "skip-clean" | "skip-strong-noise" | "applied" | "rejected-all" | "unavailable";
+      /**
+       * skip-music: the analysis found music in this source; a denoiser would remove it as noise (chantier 4).
+       */
+      decision: "skip-clean" | "skip-strong-noise" | "applied" | "rejected-all" | "unavailable" | "skip-music";
       mix?: number;
       summary: string;
       candidates?: {

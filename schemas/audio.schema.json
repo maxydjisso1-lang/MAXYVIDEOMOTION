@@ -74,8 +74,10 @@
                   "skip-strong-noise",
                   "applied",
                   "rejected-all",
-                  "unavailable"
-                ]
+                  "unavailable",
+                  "skip-music"
+                ],
+                "description": "skip-music: the analysis found music in this source; a denoiser would remove it as noise (chantier 4)."
               },
               "mix": {
                 "type": "number",

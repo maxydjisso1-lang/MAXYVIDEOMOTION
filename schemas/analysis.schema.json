@@ -77,6 +77,41 @@
         "qualityScore": { "type": "number", "minimum": 0, "maximum": 1 }
       }
     },
+    "audioContent": {
+      "type": "object",
+      "description": "What the audio contains, per segment: speech, music, ambient noise or silence (\"speech+music\" = a voice over a music bed). Measured accuracy and limits: docs/measurements/audio-content.md.",
+      "required": ["detector", "segments", "shares", "speechBackgroundUnknown"],
+      "additionalProperties": false,
+      "properties": {
+        "detector": { "enum": ["silero-vad+spectral", "spectral-only"], "description": "spectral-only: the Python sidecar is missing, speech detection is degraded (much lower recall)." },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["start", "end", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "start": { "$ref": "common.schema.json#/$defs/seconds" },
+              "end": { "$ref": "common.schema.json#/$defs/seconds" },
+              "label": { "enum": ["silence", "noise", "music", "speech", "speech+noise", "speech+music"] }
+            }
+          }
+        },
+        "speechBackgroundUnknown": { "type": "number", "minimum": 0, "maximum": 1, "description": "Share of the source where speech is present but the background under it could not be measured (continuous speech, no pause or background heard alone nearby). A music bed there is NOT detected (measured limit): music cannot be ruled out." },
+        "shares": {
+          "type": "object",
+          "description": "Share of the source duration holding each class (speech+music counts for both).",
+          "required": ["speech", "music", "noise", "silence"],
+          "additionalProperties": false,
+          "properties": {
+            "speech": { "type": "number", "minimum": 0, "maximum": 1 },
+            "music": { "type": "number", "minimum": 0, "maximum": 1 },
+            "noise": { "type": "number", "minimum": 0, "maximum": 1 },
+            "silence": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
     "audioAnalysis": {
       "type": "object",
       "additionalProperties": false,
@@ -89,7 +124,8 @@
         "humHz": { "enum": [50, 60, null] },
         "silences": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
         "speech": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/timeRange" } },
-        "musicDetected": { "type": "boolean" },
+        "musicDetected": { "type": "boolean", "description": "Music in ≥ 20 % of the non-silent duration (from content). A music bed is never denoised as noise." },
+        "content": { "$ref": "#/$defs/audioContent" },
         "noiseProfile": { "type": "array", "items": { "enum": ["broadband", "hum", "hiss", "wind", "traffic", "hvac", "reverb", "crowd"] } },
         "qualityScore": { "type": "number", "minimum": 0, "maximum": 1 }
       }

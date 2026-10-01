@@ -95,6 +95,31 @@ export async function runWhisper(input: string, opts: RunWhisperOptions = {}): P
   });
 }
 
+/** Is the Python sidecar (faster-whisper, Silero VAD) installed? */
+export const sidecarAvailable = (): boolean => existsSync(pythonBin());
+
+/**
+ * Speech probability per 32 ms (Silero VAD, the model shipped inside faster-whisper), for audio
+ * content analysis. Same decode path as Whisper: the engine's FFmpeg → 16 kHz mono WAV.
+ */
+export async function runVad(input: string, opts: { log?: Project["log"] } = {}): Promise<{ hopSec: number; probs: Float32Array }> {
+  if (!sidecarAvailable()) throw new BveError("TOOL_MISSING", "The Python sidecar is not installed", { hint: "Run `uv sync --project engine/python`." });
+  return withTempDir(async (dir) => {
+    const out = join(dir, "vad.json");
+    const wav = join(dir, "audio16k.wav");
+    await ffmpeg(["-i", input, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav], opts.log ? { log: opts.log } : {});
+    await new Promise<void>((resolvePromise, reject) => {
+      const child = spawn(pythonBin(), ["-m", "bve_py.vad", "--input", wav, "--output", out], { cwd: join(REPO_ROOT, "engine/python"), windowsHide: true });
+      let err = "";
+      child.stderr.on("data", (d) => (err += d));
+      child.on("error", reject);
+      child.on("close", (code) => (code === 0 ? resolvePromise() : reject(new BveError("TOOL_MISSING", `Speech detection failed (exit ${code}): ${err.slice(-2000)}`))));
+    });
+    const raw = JSON.parse(await readFile(out, "utf8")) as { hopSec: number; probs: number[] };
+    return { hopSec: raw.hopSec, probs: Float32Array.from(raw.probs) };
+  });
+}
+
 export const fasterWhisper: TranscriptionProvider = {
   id: "faster-whisper",
   async available() {

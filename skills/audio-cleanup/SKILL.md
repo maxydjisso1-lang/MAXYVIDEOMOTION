@@ -9,7 +9,7 @@ description: Clean and master dialogue audio (audio/audio.json) - detect and red
 Produce clear, natural and correctly loud dialogue. Processing is described as editable per-source chains, which are compiled to FFmpeg filters at render time.
 
 ## Inputs
-- `analysis/analysis.json` → `audio` (noise floor, noiseProfile, humHz, clipping, LUFS, speech ranges)
+- `analysis/analysis.json` → `audio` (noise floor, noiseProfile, humHz, clipping, LUFS, speech ranges, content segments, musicDetected)
 - `project.json` targets (the loudness target comes from the preset)
 - The `creative-plan.audio.cleanup` level, if a plan exists
 
@@ -53,9 +53,10 @@ The `dialogue[]` and `master` sections of `audio/audio.json` (schema: `schemas/a
   - `applied` (13–22 dB): RNNoise 70 % (or 40 %), kept only if the voice guard accepts it (voice level ≥ −1 dB, timbre change ≤ 0.3 dB, SNR gain ≥ 1 dB).
   - `skip-strong-noise` (< 13 dB): **left untouched on purpose** — every denoiser measured lowers intelligibility there (Whisper WER up to +27 points). Tell the user plainly; offer re-recording or a dedicated manual tool.
   - `rejected-all`: the guard refused every strength; report the reasons it lists.
+  - `skip-music`: the analysis found music in the source (`musicDetected`). A denoiser removes a music bed as if it were noise, so nothing is applied. If the user also hears unwanted noise there, ask before doing anything manual.
 - Never denoise audio before transcription: it raised the error rate in every noisy case measured.
 - Read `denoise.summary` to the user rather than claiming the audio is "clean".
-- If the "noise" may be background music (promo videos, vlogs), do not denoise without checking with the user.
+- Never denoise a music bed. The engine skips sources with `musicDetected`. It cannot see a bed that is only ever under continuous speech: then `content.speechBackgroundUnknown` is high and `denoise.summary` says "cannot be ruled out". In that case, or with `detector: "spectral-only"`, or if the user mentions music, ask before letting a denoise stand (set the processor `"enabled": false` if the user confirms music).
 - Naturalness beats silence. Leave a little room tone and never gate speech hard.
 - Denoise before compression. Compression raises the noise floor.
 - Loudness normalization happens once, on the master mix, after music. Not per clip.

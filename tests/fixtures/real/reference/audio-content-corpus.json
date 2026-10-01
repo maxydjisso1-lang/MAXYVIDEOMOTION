@@ -1,0 +1,355 @@
+{
+  "description": "Labelled corpus for the speech / music / noise / silence detection benchmark (chantier 4). Sources are the real fixtures of manifest.json (downloaded, never committed). Splits: 'dev' = the only cases used to choose thresholds; 'test' = first held-out set (measured once with frozen rules, then SEEN: its failures led to the rhythm cue and two cases moved to dev, see history); 'test2' = second held-out set, never looked at before its single measurement. Mixtures are built at benchmark time: background alone 0–6 s, speech 6–24 s over it, background alone 24–30 s.",
+  "history": [
+    "test run 1 (rules frozen on dev): electronic beat music missed (no held notes), fr-fable-b was a corpus error (span past the end of the file: 1 s of audio), rain-drops read as music (its spectrogram shows pitched harmonic stacks).",
+    "after run 1: music-electronic moved to dev; fr-fable-b fixed (45–63 s) and moved to test2; beat music and periodic noises (clocks, train) added to dev; beat music and tricky noises added as test2."
+  ],
+  "speech": [
+    {
+      "id": "fr-fable-a",
+      "fixture": "speech-fr.mp3",
+      "start": 20,
+      "duration": 18,
+      "split": [
+        "dev"
+      ],
+      "note": "French male read speech (LibriVox)"
+    },
+    {
+      "id": "talking-head",
+      "fixture": "talking-head.mp4",
+      "start": 0,
+      "duration": 18,
+      "split": [
+        "dev"
+      ],
+      "note": "French female, to camera, room ambience"
+    },
+    {
+      "id": "interview",
+      "fixture": "interview.mp4",
+      "start": 0,
+      "duration": 18,
+      "split": [
+        "test"
+      ],
+      "note": "two French speakers"
+    },
+    {
+      "id": "en-male",
+      "fixture": "speech-en-male.m4a",
+      "start": 0,
+      "duration": 18,
+      "split": [
+        "test",
+        "test2"
+      ],
+      "note": "English male read speech; reused in test2 (speech comes from the VAD, not tuned here)"
+    },
+    {
+      "id": "en-female",
+      "fixture": "speech-en-female.m4a",
+      "start": 0,
+      "duration": 18,
+      "split": [
+        "test"
+      ],
+      "note": "English female narrator"
+    },
+    {
+      "id": "fr-fable-b",
+      "fixture": "speech-fr.mp3",
+      "start": 45,
+      "duration": 18,
+      "split": [
+        "test2"
+      ],
+      "note": "same reader as fr-fable-a, other passage"
+    }
+  ],
+  "music": [
+    {
+      "id": "carefree",
+      "fixture": "music-carefree.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "stratosphere",
+      "fixture": "music-stratosphere.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "mozart",
+      "fixture": "music-mozart.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "electronic",
+      "fixture": "music-electronic.m4a",
+      "split": "dev",
+      "note": "was in test (run 1), moved to dev after it exposed beat music"
+    },
+    {
+      "id": "presenterator",
+      "fixture": "music-presenterator.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "cloudrap",
+      "fixture": "music-cloudrap.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "militaire",
+      "fixture": "music-militaire.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "sonatina",
+      "fixture": "music-sonatina.m4a",
+      "split": "test"
+    },
+    {
+      "id": "windswept",
+      "fixture": "music-windswept.m4a",
+      "split": "test"
+    },
+    {
+      "id": "weasel",
+      "fixture": "music-weasel.m4a",
+      "split": "test"
+    },
+    {
+      "id": "ghostdance",
+      "fixture": "music-ghostdance.m4a",
+      "split": "test"
+    },
+    {
+      "id": "rollin",
+      "fixture": "music-rollin.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "funkorama",
+      "fixture": "music-funkorama.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "nocadillac",
+      "fixture": "music-nocadillac.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "dnb",
+      "fixture": "music-dnb.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "hiphop",
+      "fixture": "music-hiphop.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "vibeace",
+      "fixture": "music-vibeace.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "rock",
+      "fixture": "music-rock.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "acidtechno",
+      "fixture": "music-acidtechno.m4a",
+      "split": "test2"
+    }
+  ],
+  "noise": [
+    {
+      "id": "street",
+      "fixture": "street-noise.mp4",
+      "split": "dev"
+    },
+    {
+      "id": "rain-window",
+      "fixture": "noise-rain-window.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "restaurant",
+      "fixture": "noise-restaurant.m4a",
+      "split": "dev",
+      "note": "crowd babble: distant voices are part of the noise"
+    },
+    {
+      "id": "ventilation",
+      "fixture": "noise-ventilation.m4a",
+      "split": "dev"
+    },
+    {
+      "id": "train",
+      "fixture": "noise-train.m4a",
+      "split": "dev",
+      "note": "rhythmic rail joints"
+    },
+    {
+      "id": "wall-clock",
+      "fixture": "noise-wall-clock.m4a",
+      "split": "dev",
+      "note": "periodic ticks"
+    },
+    {
+      "id": "alarm-clock",
+      "fixture": "noise-alarm-clock.m4a",
+      "split": "dev",
+      "note": "periodic ticks"
+    },
+    {
+      "id": "rain-drops",
+      "fixture": "noise-rain-drops.m4a",
+      "split": "test",
+      "note": "labelled noise a priori; its spectrogram shows pitched harmonic stacks changing about every second (likely tonal sound design)"
+    },
+    {
+      "id": "pool-hall",
+      "fixture": "noise-pool-hall.m4a",
+      "split": "test",
+      "note": "reverberant, distant voices"
+    },
+    {
+      "id": "avenue",
+      "fixture": "noise-avenue.m4a",
+      "split": "test"
+    },
+    {
+      "id": "residential",
+      "fixture": "noise-residential.m4a",
+      "split": "test"
+    },
+    {
+      "id": "classroom",
+      "fixture": "noise-classroom.m4a",
+      "split": "test"
+    },
+    {
+      "id": "fan",
+      "fixture": "noise-fan.m4a",
+      "split": "test"
+    },
+    {
+      "id": "ac-hum",
+      "fixture": "noise-ac-hum.m4a",
+      "split": "test",
+      "note": "tonal and stationary: must not read as music"
+    },
+    {
+      "id": "ac-outdoor",
+      "fixture": "noise-ac-outdoor.m4a",
+      "split": "test"
+    },
+    {
+      "id": "rain-wind",
+      "fixture": "noise-rain-wind.m4a",
+      "split": "test"
+    },
+    {
+      "id": "wind-breath",
+      "fixture": "noise-wind-breath.m4a",
+      "split": "test"
+    },
+    {
+      "id": "birds",
+      "fixture": "noise-birds.m4a",
+      "split": "test2",
+      "note": "tonal chirps"
+    },
+    {
+      "id": "applause",
+      "fixture": "noise-applause.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "clock",
+      "fixture": "noise-clock.m4a",
+      "split": "test2",
+      "note": "periodic ticks: must not read as a beat"
+    },
+    {
+      "id": "sea",
+      "fixture": "noise-sea.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "typing",
+      "fixture": "noise-typing.m4a",
+      "split": "test2"
+    },
+    {
+      "id": "laptop-keys",
+      "fixture": "noise-laptop-keys.m4a",
+      "split": "test2"
+    }
+  ],
+  "hard": [
+    {
+      "id": "pop-vocals",
+      "fixture": "music-pop-vocals.m4a",
+      "truth": "music",
+      "note": "lead vocals over music: singing counts as music, a speech flag here is a known ambiguity"
+    },
+    {
+      "id": "singing-only",
+      "fixture": "music-singing-only.m4a",
+      "truth": "music",
+      "note": "a cappella synthesised singing"
+    },
+    {
+      "id": "anthem-vocal",
+      "fixture": "music-anthem-vocal.m4a",
+      "truth": "music",
+      "note": "choir with instruments"
+    }
+  ],
+  "synthetic": [
+    {
+      "id": "digital-silence",
+      "lavfi": "anullsrc=r=48000:cl=mono",
+      "truth": "silence"
+    },
+    {
+      "id": "room-tone",
+      "lavfi": "anoisesrc=c=pink:a=0.0006:r=48000",
+      "truth": "silence",
+      "note": "pink noise ≈ −65 dBFS: no exploitable signal"
+    },
+    {
+      "id": "pink-noise",
+      "lavfi": "anoisesrc=c=pink:a=0.03:r=48000",
+      "truth": "noise"
+    },
+    {
+      "id": "brown-noise",
+      "lavfi": "anoisesrc=c=brown:a=0.05:r=48000",
+      "truth": "noise"
+    },
+    {
+      "id": "mains-hum",
+      "lavfi": "aevalsrc='0.01*sin(2*PI*50*t)+0.008*sin(2*PI*100*t)+0.006*sin(2*PI*150*t)+0.004*sin(2*PI*200*t)+0.003*sin(2*PI*250*t)':s=48000",
+      "truth": "noise",
+      "note": "electrical hum: tonal, stationary"
+    }
+  ],
+  "mixLevelsDb": {
+    "music": [
+      6,
+      12,
+      18
+    ],
+    "noise": [
+      5,
+      10,
+      20
+    ]
+  }
+}

@@ -60,7 +60,7 @@ All P0/P1 audit findings are fixed, and the result is covered by tests. See [AUD
    - RNNoise now (the FFmpeg filter is already available); evaluate DeepFilterNet for SNR < 10 dB.
    - Strength driven by the measured SNR.
    - A voice-preservation guard (loudness delta, speech/noise ratio before vs after).
-   - Music-versus-noise detection before any denoise.
+   - Music-versus-noise detection before any denoise. *Chantier 4 done: speech / music / noise / silence per segment (Silero VAD + spectral background reading), music sources are never denoised ([measurements/audio-content.md](measurements/audio-content.md)).*
    - Continuous per-source processing, instead of processing per clip.
 3. **Real color.** Cross-camera shot matching, a skin-tone qualifier, before/after stills for Claude, and per-shot confidence.
 4. **Scene detection.** Semantic labels from contact sheets as a versioned annotations document, plus best-take selection.

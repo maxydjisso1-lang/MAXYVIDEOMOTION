@@ -1,0 +1,2918 @@
+{
+ "date": "2026-10-01T15:23:45.825Z",
+ "corpus": "tests/fixtures/real/reference/audio-content-corpus.json",
+ "windowSec": 1,
+ "hopSec": 0.5,
+ "splits": {
+  "dev": {
+   "music alone": {
+    "cases": 7,
+    "before": {
+     "speech": { "tp": 0, "fp": 410, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 420, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 10, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 7, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 406, "fp": 0, "fn": 14, "precision": 1, "recall": 0.967, "f1": 0.983 },
+     "noise": { "tp": 0, "fp": 6, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 8, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 7, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 165, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 327, "fp": 0, "fn": 93, "precision": 1, "recall": 0.779, "f1": 0.876 },
+     "noise": { "tp": 0, "fp": 2, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 8, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 6, "fp": 0, "fn": 1, "precision": 1, "recall": 0.857, "f1": 0.923 }
+    }
+   },
+   "noise alone": {
+    "cases": 7,
+    "before": {
+     "speech": { "tp": 0, "fp": 420, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 420, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 41, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 64, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 315, "fp": 0, "fn": 105, "precision": 1, "recall": 0.75, "f1": 0.857 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 1
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 67, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 64, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 296, "fp": 0, "fn": 124, "precision": 1, "recall": 0.705, "f1": 0.827 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "speech alone": {
+    "cases": 2,
+    "before": {
+     "speech": { "tp": 67, "fp": 0, "fn": 1, "precision": 1, "recall": 0.985, "f1": 0.993 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 66, "fp": 0, "fn": 2, "precision": 1, "recall": 0.971, "f1": 0.985 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 2
+    },
+    "dsp": {
+     "speech": { "tp": 68, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "speech + music": {
+    "cases": 42,
+    "before": {
+     "speech": { "tp": 1449, "fp": 922, "fn": 0, "precision": 0.611, "recall": 1, "f1": 0.759 },
+     "music": { "tp": 0, "fp": 0, "fn": 2520, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 31, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 42, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1396, "fp": 0, "fn": 53, "precision": 1, "recall": 0.963, "f1": 0.981 },
+     "music": { "tp": 2424, "fp": 0, "fn": 96, "precision": 1, "recall": 0.962, "f1": 0.981 },
+     "noise": { "tp": 0, "fp": 38, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 11, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 42, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 1230, "fp": 383, "fn": 219, "precision": 0.763, "recall": 0.849, "f1": 0.803 },
+     "music": { "tp": 1558, "fp": 0, "fn": 962, "precision": 1, "recall": 0.618, "f1": 0.764 },
+     "noise": { "tp": 0, "fp": 165, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 3, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 31, "fp": 0, "fn": 11, "precision": 1, "recall": 0.738, "f1": 0.849 }
+    }
+   },
+   "speech + noise": {
+    "cases": 42,
+    "before": {
+     "speech": { "tp": 1449, "fp": 891, "fn": 0, "precision": 0.619, "recall": 1, "f1": 0.765 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 2520, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 62, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 1413, "fp": 46, "fn": 36, "precision": 0.968, "recall": 0.975, "f1": 0.972 },
+     "music": { "tp": 0, "fp": 405, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 1951, "fp": 0, "fn": 569, "precision": 1, "recall": 0.774, "f1": 0.873 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 7, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 1
+    },
+    "dsp": {
+     "speech": { "tp": 1150, "fp": 218, "fn": 299, "precision": 0.841, "recall": 0.794, "f1": 0.816 },
+     "music": { "tp": 0, "fp": 410, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 1741, "fp": 0, "fn": 779, "precision": 1, "recall": 0.691, "f1": 0.817 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 7, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "speech + music, continuous": {
+    "cases": 42,
+    "before": {
+     "speech": { "tp": 1428, "fp": 21, "fn": 0, "precision": 0.986, "recall": 1, "f1": 0.993 },
+     "music": { "tp": 0, "fp": 0, "fn": 1512, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 42, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1389, "fp": 0, "fn": 39, "precision": 1, "recall": 0.973, "f1": 0.986 },
+     "music": { "tp": 31, "fp": 0, "fn": 1481, "precision": 1, "recall": 0.021, "f1": 0.04 },
+     "noise": { "tp": 0, "fp": 113, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 1, "fp": 0, "fn": 41, "precision": 1, "recall": 0.024, "f1": 0.047 },
+     "flaggedBackgroundUnknown": 41
+    },
+    "dsp": {
+     "speech": { "tp": 1206, "fp": 12, "fn": 222, "precision": 0.99, "recall": 0.845, "f1": 0.912 },
+     "music": { "tp": 428, "fp": 0, "fn": 1084, "precision": 1, "recall": 0.283, "f1": 0.441 },
+     "noise": { "tp": 0, "fp": 132, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 15, "fp": 0, "fn": 27, "precision": 1, "recall": 0.357, "f1": 0.526 }
+    }
+   },
+   "speech + noise, continuous": {
+    "cases": 42,
+    "before": {
+     "speech": { "tp": 1427, "fp": 21, "fn": 1, "precision": 0.985, "recall": 0.999, "f1": 0.992 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 1512, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 4, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 1394, "fp": 1, "fn": 34, "precision": 0.999, "recall": 0.976, "f1": 0.988 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 113, "fp": 0, "fn": 1399, "precision": 1, "recall": 0.075, "f1": 0.139 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 42
+    },
+    "dsp": {
+     "speech": { "tp": 1131, "fp": 14, "fn": 297, "precision": 0.988, "recall": 0.792, "f1": 0.879 },
+     "music": { "tp": 0, "fp": 49, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 427, "fp": 0, "fn": 1085, "precision": 1, "recall": 0.282, "f1": 0.44 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 2, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "all": {
+    "cases": 184,
+    "before": {
+     "speech": { "tp": 5820, "fp": 2685, "fn": 2, "precision": 0.684, "recall": 1, "f1": 0.812 },
+     "music": { "tp": 0, "fp": 0, "fn": 4452, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 4452, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 108, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 91, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 5658, "fp": 88, "fn": 164, "precision": 0.985, "recall": 0.972, "f1": 0.978 },
+     "music": { "tp": 2861, "fp": 469, "fn": 1591, "precision": 0.859, "recall": 0.643, "f1": 0.735 },
+     "noise": { "tp": 2379, "fp": 157, "fn": 2073, "precision": 0.938, "recall": 0.534, "f1": 0.681 },
+     "silence": { "tp": 0, "fp": 19, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 50, "fp": 8, "fn": 41, "precision": 0.862, "recall": 0.549, "f1": 0.671 },
+     "flaggedBackgroundUnknown": 87
+    },
+    "dsp": {
+     "speech": { "tp": 4785, "fp": 859, "fn": 1037, "precision": 0.848, "recall": 0.822, "f1": 0.835 },
+     "music": { "tp": 2313, "fp": 523, "fn": 2139, "precision": 0.816, "recall": 0.52, "f1": 0.635 },
+     "noise": { "tp": 2464, "fp": 299, "fn": 1988, "precision": 0.892, "recall": 0.553, "f1": 0.683 },
+     "silence": { "tp": 0, "fp": 11, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 52, "fp": 10, "fn": 39, "precision": 0.839, "recall": 0.571, "f1": 0.68 }
+    }
+   }
+  },
+  "test": {
+   "music alone": {
+    "cases": 4,
+    "before": {
+     "speech": { "tp": 0, "fp": 240, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 240, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 4, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 232, "fp": 0, "fn": 8, "precision": 1, "recall": 0.967, "f1": 0.983 },
+     "noise": { "tp": 0, "fp": 8, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 4, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 112, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 180, "fp": 0, "fn": 60, "precision": 1, "recall": 0.75, "f1": 0.857 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 3, "fp": 0, "fn": 1, "precision": 1, "recall": 0.75, "f1": 0.857 }
+    }
+   },
+   "noise alone": {
+    "cases": 10,
+    "before": {
+     "speech": { "tp": 0, "fp": 600, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 600, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 70, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 530, "fp": 0, "fn": 70, "precision": 1, "recall": 0.883, "f1": 0.938 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 32, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 77, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 523, "fp": 0, "fn": 77, "precision": 1, "recall": 0.872, "f1": 0.931 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "speech alone": {
+    "cases": 3,
+    "before": {
+     "speech": { "tp": 100, "fp": 0, "fn": 1, "precision": 1, "recall": 0.99, "f1": 0.995 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 99, "fp": 0, "fn": 2, "precision": 1, "recall": 0.98, "f1": 0.99 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 3
+    },
+    "dsp": {
+     "speech": { "tp": 95, "fp": 0, "fn": 6, "precision": 1, "recall": 0.941, "f1": 0.969 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "speech + music": {
+    "cases": 36,
+    "before": {
+     "speech": { "tp": 1248, "fp": 714, "fn": 0, "precision": 0.636, "recall": 1, "f1": 0.778 },
+     "music": { "tp": 0, "fp": 0, "fn": 2160, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 128, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 36, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1217, "fp": 0, "fn": 31, "precision": 1, "recall": 0.975, "f1": 0.987 },
+     "music": { "tp": 2072, "fp": 0, "fn": 88, "precision": 1, "recall": 0.959, "f1": 0.979 },
+     "noise": { "tp": 0, "fp": 27, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 29, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 36, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 1049, "fp": 462, "fn": 199, "precision": 0.694, "recall": 0.841, "f1": 0.76 },
+     "music": { "tp": 1398, "fp": 0, "fn": 762, "precision": 1, "recall": 0.647, "f1": 0.786 },
+     "noise": { "tp": 0, "fp": 348, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 21, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 28, "fp": 0, "fn": 8, "precision": 1, "recall": 0.778, "f1": 0.875 }
+    }
+   },
+   "speech + noise": {
+    "cases": 90,
+    "before": {
+     "speech": { "tp": 3120, "fp": 2019, "fn": 0, "precision": 0.607, "recall": 1, "f1": 0.756 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 5400, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 51, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 3064, "fp": 8, "fn": 56, "precision": 0.997, "recall": 0.982, "f1": 0.99 },
+     "music": { "tp": 0, "fp": 567, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 4783, "fp": 0, "fn": 617, "precision": 1, "recall": 0.886, "f1": 0.939 },
+     "silence": { "tp": 0, "fp": 3, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 9, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 1
+    },
+    "dsp": {
+     "speech": { "tp": 2215, "fp": 250, "fn": 905, "precision": 0.899, "recall": 0.71, "f1": 0.793 },
+     "music": { "tp": 0, "fp": 687, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 4579, "fp": 0, "fn": 821, "precision": 1, "recall": 0.848, "f1": 0.918 },
+     "silence": { "tp": 0, "fp": 3, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 17, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "speech + music, continuous": {
+    "cases": 36,
+    "before": {
+     "speech": { "tp": 1212, "fp": 29, "fn": 0, "precision": 0.977, "recall": 1, "f1": 0.988 },
+     "music": { "tp": 0, "fp": 0, "fn": 1296, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 12, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 36, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1191, "fp": 0, "fn": 21, "precision": 1, "recall": 0.983, "f1": 0.991 },
+     "music": { "tp": 0, "fp": 0, "fn": 1296, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 94, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 36, "precision": 1, "recall": 0, "f1": 0 },
+     "flaggedBackgroundUnknown": 36
+    },
+    "dsp": {
+     "speech": { "tp": 1010, "fp": 32, "fn": 202, "precision": 0.969, "recall": 0.833, "f1": 0.896 },
+     "music": { "tp": 248, "fp": 0, "fn": 1048, "precision": 1, "recall": 0.191, "f1": 0.321 },
+     "noise": { "tp": 0, "fp": 295, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 9, "fp": 0, "fn": 27, "precision": 1, "recall": 0.25, "f1": 0.4 }
+    }
+   },
+   "speech + noise, continuous": {
+    "cases": 90,
+    "before": {
+     "speech": { "tp": 3030, "fp": 90, "fn": 0, "precision": 0.971, "recall": 1, "f1": 0.985 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 3240, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 2995, "fp": 0, "fn": 35, "precision": 1, "recall": 0.988, "f1": 0.994 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 232, "fp": 0, "fn": 3008, "precision": 1, "recall": 0.072, "f1": 0.134 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 90
+    },
+    "dsp": {
+     "speech": { "tp": 2112, "fp": 75, "fn": 918, "precision": 0.966, "recall": 0.697, "f1": 0.81 },
+     "music": { "tp": 0, "fp": 344, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 1488, "fp": 0, "fn": 1752, "precision": 1, "recall": 0.459, "f1": 0.629 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 14, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "hard (singing)": {
+    "cases": 3,
+    "before": {
+     "speech": { "tp": 0, "fp": 180, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 180, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 3, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 38, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 78, "fp": 0, "fn": 102, "precision": 1, "recall": 0.433, "f1": 0.605 },
+     "noise": { "tp": 0, "fp": 74, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 3, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 34, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 113, "fp": 0, "fn": 67, "precision": 1, "recall": 0.628, "f1": 0.771 },
+     "noise": { "tp": 0, "fp": 67, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 3, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "synthetic": {
+    "cases": 5,
+    "before": {
+     "speech": { "tp": 0, "fp": 120, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 120, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 80, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 120, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 80, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 120, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 80, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "all": {
+    "cases": 274,
+    "before": {
+     "speech": { "tp": 8710, "fp": 3812, "fn": 1, "precision": 0.696, "recall": 1, "f1": 0.82 },
+     "music": { "tp": 0, "fp": 0, "fn": 3696, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 9360, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 80, "fp": 192, "fn": 0, "precision": 0.294, "recall": 1, "f1": 0.455 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 76, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 8566, "fp": 8, "fn": 145, "precision": 0.999, "recall": 0.983, "f1": 0.991 },
+     "music": { "tp": 2304, "fp": 637, "fn": 1392, "precision": 0.783, "recall": 0.623, "f1": 0.694 },
+     "noise": { "tp": 5665, "fp": 129, "fn": 3695, "precision": 0.978, "recall": 0.605, "f1": 0.748 },
+     "silence": { "tp": 80, "fp": 33, "fn": 0, "precision": 0.708, "recall": 1, "f1": 0.829 },
+     "sourceMusic": { "tp": 40, "fp": 10, "fn": 36, "precision": 0.8, "recall": 0.526, "f1": 0.635 },
+     "flaggedBackgroundUnknown": 130
+    },
+    "dsp": {
+     "speech": { "tp": 6481, "fp": 963, "fn": 2230, "precision": 0.871, "recall": 0.744, "f1": 0.802 },
+     "music": { "tp": 1826, "fp": 1108, "fn": 1870, "precision": 0.622, "recall": 0.494, "f1": 0.551 },
+     "noise": { "tp": 6710, "fp": 643, "fn": 2650, "precision": 0.913, "recall": 0.717, "f1": 0.803 },
+     "silence": { "tp": 80, "fp": 25, "fn": 0, "precision": 0.762, "recall": 1, "f1": 0.865 },
+     "sourceMusic": { "tp": 40, "fp": 32, "fn": 36, "precision": 0.556, "recall": 0.526, "f1": 0.541 }
+    }
+   }
+  },
+  "test2": {
+   "music alone": {
+    "cases": 8,
+    "before": {
+     "speech": { "tp": 0, "fp": 479, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 480, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 8, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 5, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 470, "fp": 0, "fn": 10, "precision": 1, "recall": 0.979, "f1": 0.989 },
+     "noise": { "tp": 0, "fp": 10, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 8, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 135, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 383, "fp": 0, "fn": 97, "precision": 1, "recall": 0.798, "f1": 0.888 },
+     "noise": { "tp": 0, "fp": 13, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 7, "fp": 0, "fn": 1, "precision": 1, "recall": 0.875, "f1": 0.933 }
+    }
+   },
+   "noise alone": {
+    "cases": 6,
+    "before": {
+     "speech": { "tp": 0, "fp": 360, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 360, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 56, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 304, "fp": 0, "fn": 56, "precision": 1, "recall": 0.844, "f1": 0.916 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 0, "fp": 164, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "music": { "tp": 0, "fp": 7, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 238, "fp": 0, "fn": 122, "precision": 1, "recall": 0.661, "f1": 0.796 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "speech alone": {
+    "cases": 1,
+    "before": {
+     "speech": { "tp": 32, "fp": 0, "fn": 1, "precision": 1, "recall": 0.97, "f1": 0.985 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 31, "fp": 0, "fn": 2, "precision": 1, "recall": 0.939, "f1": 0.969 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 1
+    },
+    "dsp": {
+     "speech": { "tp": 33, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "speech + music": {
+    "cases": 48,
+    "before": {
+     "speech": { "tp": 1632, "fp": 1096, "fn": 0, "precision": 0.598, "recall": 1, "f1": 0.749 },
+     "music": { "tp": 0, "fp": 0, "fn": 2880, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 8, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 48, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1568, "fp": 13, "fn": 64, "precision": 0.992, "recall": 0.961, "f1": 0.976 },
+     "music": { "tp": 2790, "fp": 0, "fn": 90, "precision": 1, "recall": 0.969, "f1": 0.984 },
+     "noise": { "tp": 0, "fp": 34, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 48, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 1537, "fp": 382, "fn": 95, "precision": 0.801, "recall": 0.942, "f1": 0.866 },
+     "music": { "tp": 2116, "fp": 0, "fn": 764, "precision": 1, "recall": 0.735, "f1": 0.847 },
+     "noise": { "tp": 0, "fp": 75, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 42, "fp": 0, "fn": 6, "precision": 1, "recall": 0.875, "f1": 0.933 }
+    }
+   },
+   "speech + noise": {
+    "cases": 36,
+    "before": {
+     "speech": { "tp": 1223, "fp": 734, "fn": 1, "precision": 0.625, "recall": 0.999, "f1": 0.769 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 2160, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 102, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 1177, "fp": 0, "fn": 47, "precision": 1, "recall": 0.962, "f1": 0.98 },
+     "music": { "tp": 0, "fp": 264, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 1884, "fp": 0, "fn": 276, "precision": 1, "recall": 0.872, "f1": 0.932 },
+     "silence": { "tp": 0, "fp": 11, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 6, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "flaggedBackgroundUnknown": 0
+    },
+    "dsp": {
+     "speech": { "tp": 1155, "fp": 376, "fn": 69, "precision": 0.754, "recall": 0.944, "f1": 0.838 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 1307, "fp": 0, "fn": 853, "precision": 1, "recall": 0.605, "f1": 0.754 },
+     "silence": { "tp": 0, "fp": 11, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    }
+   },
+   "speech + music, continuous": {
+    "cases": 48,
+    "before": {
+     "speech": { "tp": 1584, "fp": 45, "fn": 0, "precision": 0.972, "recall": 1, "f1": 0.986 },
+     "music": { "tp": 0, "fp": 0, "fn": 1728, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "silence": { "tp": 0, "fp": 6, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 48, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 1538, "fp": 2, "fn": 46, "precision": 0.999, "recall": 0.971, "f1": 0.985 },
+     "music": { "tp": 0, "fp": 0, "fn": 1728, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 161, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 48, "precision": 1, "recall": 0, "f1": 0 },
+     "flaggedBackgroundUnknown": 48
+    },
+    "dsp": {
+     "speech": { "tp": 1489, "fp": 45, "fn": 95, "precision": 0.971, "recall": 0.94, "f1": 0.955 },
+     "music": { "tp": 225, "fp": 0, "fn": 1503, "precision": 1, "recall": 0.13, "f1": 0.23 },
+     "noise": { "tp": 0, "fp": 42, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "silence": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "sourceMusic": { "tp": 7, "fp": 0, "fn": 41, "precision": 1, "recall": 0.146, "f1": 0.255 }
+    }
+   },
+   "speech + noise, continuous": {
+    "cases": 36,
+    "before": {
+     "speech": { "tp": 1186, "fp": 34, "fn": 2, "precision": 0.972, "recall": 0.998, "f1": 0.985 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 0, "fp": 0, "fn": 1296, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 13, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "vad": {
+     "speech": { "tp": 1159, "fp": 0, "fn": 29, "precision": 1, "recall": 0.976, "f1": 0.988 },
+     "music": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "noise": { "tp": 112, "fp": 0, "fn": 1184, "precision": 1, "recall": 0.086, "f1": 0.159 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 0, "precision": 1, "recall": 1, "f1": 1 },
+     "flaggedBackgroundUnknown": 36
+    },
+    "dsp": {
+     "speech": { "tp": 1103, "fp": 29, "fn": 85, "precision": 0.974, "recall": 0.928, "f1": 0.951 },
+     "music": { "tp": 0, "fp": 33, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "noise": { "tp": 152, "fp": 0, "fn": 1144, "precision": 1, "recall": 0.117, "f1": 0.21 },
+     "silence": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 1, "fn": 0, "precision": 0, "recall": 1, "f1": 0 }
+    }
+   },
+   "all": {
+    "cases": 183,
+    "before": {
+     "speech": { "tp": 5657, "fp": 2748, "fn": 4, "precision": 0.673, "recall": 0.999, "f1": 0.804 },
+     "music": { "tp": 0, "fp": 0, "fn": 5088, "precision": 1, "recall": 0, "f1": 0 },
+     "noise": { "tp": 0, "fp": 0, "fn": 3816, "precision": 1, "recall": 0, "f1": 0 },
+     "silence": { "tp": 0, "fp": 130, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 0, "fp": 0, "fn": 104, "precision": 1, "recall": 0, "f1": 0 }
+    },
+    "vad": {
+     "speech": { "tp": 5473, "fp": 20, "fn": 188, "precision": 0.996, "recall": 0.967, "f1": 0.981 },
+     "music": { "tp": 3260, "fp": 320, "fn": 1828, "precision": 0.911, "recall": 0.641, "f1": 0.752 },
+     "noise": { "tp": 2300, "fp": 205, "fn": 1516, "precision": 0.918, "recall": 0.603, "f1": 0.728 },
+     "silence": { "tp": 0, "fp": 12, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 56, "fp": 7, "fn": 48, "precision": 0.889, "recall": 0.538, "f1": 0.671 },
+     "flaggedBackgroundUnknown": 85
+    },
+    "dsp": {
+     "speech": { "tp": 5317, "fp": 1131, "fn": 344, "precision": 0.825, "recall": 0.939, "f1": 0.878 },
+     "music": { "tp": 2724, "fp": 40, "fn": 2364, "precision": 0.986, "recall": 0.535, "f1": 0.694 },
+     "noise": { "tp": 1697, "fp": 130, "fn": 2119, "precision": 0.929, "recall": 0.445, "f1": 0.601 },
+     "silence": { "tp": 0, "fp": 12, "fn": 0, "precision": 0, "recall": 1, "f1": 0 },
+     "sourceMusic": { "tp": 56, "fp": 1, "fn": 48, "precision": 0.982, "recall": 0.538, "f1": 0.696 }
+    }
+   }
+  }
+ },
+ "perCase": [
+  {
+   "case": "music:carefree",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:stratosphere",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:mozart",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:electronic",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:presenterator",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:cloudrap",
+   "split": "dev",
+   "labels": { "music": 78, "silence": 13, "noise": 8 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:militaire",
+   "split": "dev",
+   "labels": { "music": 98, "noise": 2 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:sonatina",
+   "split": "test",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:windswept",
+   "split": "test",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:weasel",
+   "split": "test",
+   "labels": { "music": 87, "noise": 13 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:ghostdance",
+   "split": "test",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:rollin",
+   "split": "test2",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:funkorama",
+   "split": "test2",
+   "labels": { "music": 83, "noise": 17 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:nocadillac",
+   "split": "test2",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:dnb",
+   "split": "test2",
+   "labels": { "music": 97, "speech+music": 3 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:hiphop",
+   "split": "test2",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:vibeace",
+   "split": "test2",
+   "labels": { "music": 97, "speech+music": 3 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:rock",
+   "split": "test2",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "music:acidtechno",
+   "split": "test2",
+   "labels": { "music": 98, "speech+music": 2 },
+   "sourceMusic": true
+  },
+  {
+   "case": "noise:street",
+   "split": "dev",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:rain-window",
+   "split": "dev",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:restaurant",
+   "split": "dev",
+   "labels": { "speech": 68, "noise": 32 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:ventilation",
+   "split": "dev",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:train",
+   "split": "dev",
+   "labels": { "noise": 93, "music": 7 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:wall-clock",
+   "split": "dev",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:alarm-clock",
+   "split": "dev",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "noise:rain-drops",
+   "split": "test",
+   "labels": { "music": 100 },
+   "sourceMusic": true
+  },
+  {
+   "case": "noise:pool-hall",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:avenue",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:residential",
+   "split": "test",
+   "labels": { "noise": 83, "music": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:classroom",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:fan",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:ac-hum",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:ac-outdoor",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:rain-wind",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:wind-breath",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:birds",
+   "split": "test2",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:applause",
+   "split": "test2",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:clock",
+   "split": "test2",
+   "labels": { "music": 93, "noise": 7 },
+   "sourceMusic": true
+  },
+  {
+   "case": "noise:sea",
+   "split": "test2",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:typing",
+   "split": "test2",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "noise:laptop-keys",
+   "split": "test2",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:fr-fable-a",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 14, "silence": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:talking-head",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:interview",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:en-male",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 6, "silence": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:en-female",
+   "split": "test",
+   "labels": { "speech": 89, "silence": 6, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech:fr-fable-b",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 8, "silence": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/carefree@6",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/carefree@12",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/carefree@18",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/stratosphere@6",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/stratosphere@12",
+   "split": "dev",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/stratosphere@18",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/mozart@6",
+   "split": "dev",
+   "labels": { "speech+music": 69, "music": 17, "speech": 14 },
+   "sourceMusic": true
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/mozart@12",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/mozart@18",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/electronic@6",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/electronic@12",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/electronic@18",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/presenterator@6",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/presenterator@12",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/presenterator@18",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/cloudrap@6",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/cloudrap@12",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/cloudrap@18",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/militaire@6",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/militaire@12",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-a/militaire@18",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/street@5",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/street@10",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/street@20",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/rain-window@5",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/rain-window@10",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/rain-window@20",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/restaurant@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/restaurant@10",
+   "split": "dev",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/restaurant@20",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/ventilation@5",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/ventilation@10",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/ventilation@20",
+   "split": "dev",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/train@5",
+   "split": "dev",
+   "labels": { "speech": 81, "noise": 19 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/train@10",
+   "split": "dev",
+   "labels": { "speech": 81, "noise": 19 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/train@20",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/wall-clock@5",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/wall-clock@10",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/wall-clock@20",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/alarm-clock@5",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/alarm-clock@10",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-a/alarm-clock@20",
+   "split": "dev",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/carefree@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/carefree@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/carefree@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/stratosphere@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/stratosphere@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/stratosphere@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/mozart@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/mozart@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/mozart@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/electronic@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/electronic@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/electronic@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/presenterator@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/presenterator@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/presenterator@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/cloudrap@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/cloudrap@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/cloudrap@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/militaire@6",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/militaire@12",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:talking-head/militaire@18",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/street@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/street@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/street@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/rain-window@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/rain-window@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/rain-window@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/restaurant@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/restaurant@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/restaurant@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/ventilation@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/ventilation@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/ventilation@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/train@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/train@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/train@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/wall-clock@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/wall-clock@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/wall-clock@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/alarm-clock@5",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/alarm-clock@10",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:talking-head/alarm-clock@20",
+   "split": "dev",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/sonatina@6",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/sonatina@12",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/sonatina@18",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/windswept@6",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/windswept@12",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/windswept@18",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/weasel@6",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/weasel@12",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/weasel@18",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/ghostdance@6",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/ghostdance@12",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:interview/ghostdance@18",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-drops@5",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-drops@10",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-drops@20",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/pool-hall@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/pool-hall@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/pool-hall@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/avenue@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/avenue@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/avenue@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/residential@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/residential@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/residential@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/classroom@5",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/classroom@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/classroom@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/fan@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/fan@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/fan@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-hum@5",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-hum@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-hum@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-outdoor@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-outdoor@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/ac-outdoor@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-wind@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-wind@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/rain-wind@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/wind-breath@5",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/wind-breath@10",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:interview/wind-breath@20",
+   "split": "test",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/sonatina@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/sonatina@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/sonatina@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/windswept@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/windswept@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/windswept@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/weasel@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/weasel@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/weasel@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/ghostdance@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/ghostdance@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/ghostdance@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rollin@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rollin@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rollin@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/funkorama@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/funkorama@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/funkorama@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/nocadillac@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/nocadillac@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/nocadillac@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/dnb@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/dnb@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/dnb@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/hiphop@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/hiphop@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/hiphop@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/vibeace@6",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/vibeace@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/vibeace@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rock@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rock@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/rock@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/acidtechno@6",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/acidtechno@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-male/acidtechno@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-drops@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-drops@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-drops@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/pool-hall@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/pool-hall@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/pool-hall@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/avenue@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/avenue@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/avenue@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/residential@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/residential@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/residential@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/classroom@5",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/classroom@10",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/classroom@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/fan@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/fan@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/fan@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-hum@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-hum@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-hum@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-outdoor@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-outdoor@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/ac-outdoor@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-wind@5",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-wind@10",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/rain-wind@20",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/wind-breath@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/wind-breath@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/wind-breath@20",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/birds@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/birds@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/birds@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/applause@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/applause@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/applause@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/clock@5",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/clock@10",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/clock@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/sea@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/sea@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/sea@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/typing@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/typing@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/typing@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/laptop-keys@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/laptop-keys@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-male/laptop-keys@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/sonatina@6",
+   "split": "test",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/sonatina@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/sonatina@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/windswept@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/windswept@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/windswept@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/weasel@6",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/weasel@12",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/weasel@18",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/ghostdance@6",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/ghostdance@12",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:en-female/ghostdance@18",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 8, "silence": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-drops@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-drops@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-drops@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/pool-hall@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/pool-hall@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/pool-hall@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/avenue@5",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/avenue@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/avenue@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/residential@5",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/residential@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/residential@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/classroom@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/classroom@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/classroom@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/fan@5",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/fan@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/fan@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-hum@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-hum@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-hum@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-outdoor@5",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-outdoor@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/ac-outdoor@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-wind@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-wind@10",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/rain-wind@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/wind-breath@5",
+   "split": "test",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/wind-breath@10",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:en-female/wind-breath@20",
+   "split": "test",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rollin@6",
+   "split": "test2",
+   "labels": { "speech": 81, "noise": 19 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rollin@12",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rollin@18",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/funkorama@6",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/funkorama@12",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/funkorama@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/nocadillac@6",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/nocadillac@12",
+   "split": "test2",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/nocadillac@18",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/dnb@6",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/dnb@12",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/dnb@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/hiphop@6",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/hiphop@12",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/hiphop@18",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/vibeace@6",
+   "split": "test2",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/vibeace@12",
+   "split": "test2",
+   "labels": { "speech": 83, "noise": 17 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/vibeace@18",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rock@6",
+   "split": "test2",
+   "labels": { "speech": 81, "noise": 19 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rock@12",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/rock@18",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/acidtechno@6",
+   "split": "test2",
+   "labels": { "speech": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/acidtechno@12",
+   "split": "test2",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+music continuous:fr-fable-b/acidtechno@18",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/birds@5",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/birds@10",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/birds@20",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 8, "silence": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/applause@5",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/applause@10",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/applause@20",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/clock@5",
+   "split": "test2",
+   "labels": { "speech": 94, "noise": 6 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/clock@10",
+   "split": "test2",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/clock@20",
+   "split": "test2",
+   "labels": { "speech": 97, "noise": 3 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/sea@5",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/sea@10",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/sea@20",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/typing@5",
+   "split": "test2",
+   "labels": { "speech": 86, "noise": 14 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/typing@10",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/typing@20",
+   "split": "test2",
+   "labels": { "speech": 92, "noise": 8 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/laptop-keys@5",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/laptop-keys@10",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "speech+noise continuous:fr-fable-b/laptop-keys@20",
+   "split": "test2",
+   "labels": { "speech": 89, "noise": 11 },
+   "sourceMusic": false
+  },
+  {
+   "case": "hard:pop-vocals",
+   "split": "test",
+   "labels": { "noise": 70, "music": 30 },
+   "sourceMusic": true
+  },
+  {
+   "case": "hard:singing-only",
+   "split": "test",
+   "labels": { "speech": 47, "music": 25, "speech+music": 17, "noise": 12 },
+   "sourceMusic": true
+  },
+  {
+   "case": "hard:anthem-vocal",
+   "split": "test",
+   "labels": { "music": 58, "noise": 42 },
+   "sourceMusic": true
+  },
+  {
+   "case": "synthetic:digital-silence",
+   "split": "test",
+   "labels": { "silence": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "synthetic:room-tone",
+   "split": "test",
+   "labels": { "silence": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "synthetic:pink-noise",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "synthetic:brown-noise",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  },
+  {
+   "case": "synthetic:mains-hum",
+   "split": "test",
+   "labels": { "noise": 100 },
+   "sourceMusic": false
+  }
+ ],
+ "sourceMusicErrors": [
+  { "case": "noise:alarm-clock", "split": "dev", "detected": true },
+  { "case": "noise:rain-drops", "split": "test", "detected": true },
+  { "case": "noise:clock", "split": "test2", "detected": true },
+  { "case": "speech+music continuous:fr-fable-a/carefree@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/carefree@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/carefree@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/stratosphere@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/stratosphere@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/stratosphere@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/mozart@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/mozart@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/electronic@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/electronic@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/electronic@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/presenterator@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/presenterator@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/presenterator@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/cloudrap@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/cloudrap@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/cloudrap@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/militaire@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/militaire@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:fr-fable-a/militaire@18", "split": "dev", "detected": false },
+  { "case": "speech+noise:fr-fable-a/alarm-clock@5", "split": "dev", "detected": true },
+  { "case": "speech+noise:fr-fable-a/alarm-clock@10", "split": "dev", "detected": true },
+  { "case": "speech+noise:fr-fable-a/alarm-clock@20", "split": "dev", "detected": true },
+  { "case": "speech+music continuous:talking-head/carefree@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/carefree@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/carefree@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/stratosphere@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/stratosphere@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/stratosphere@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/mozart@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/mozart@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/mozart@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/electronic@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/electronic@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/electronic@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/presenterator@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/presenterator@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/presenterator@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/cloudrap@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/cloudrap@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/cloudrap@18", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/militaire@6", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/militaire@12", "split": "dev", "detected": false },
+  { "case": "speech+music continuous:talking-head/militaire@18", "split": "dev", "detected": false },
+  { "case": "speech+noise:talking-head/wall-clock@10", "split": "dev", "detected": true },
+  { "case": "speech+noise:talking-head/alarm-clock@5", "split": "dev", "detected": true },
+  { "case": "speech+noise:talking-head/alarm-clock@10", "split": "dev", "detected": true },
+  { "case": "speech+noise:talking-head/alarm-clock@20", "split": "dev", "detected": true },
+  { "case": "speech+music continuous:interview/sonatina@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/sonatina@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/sonatina@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/windswept@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/windswept@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/windswept@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/weasel@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/weasel@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/weasel@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/ghostdance@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/ghostdance@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:interview/ghostdance@18", "split": "test", "detected": false },
+  { "case": "speech+noise:interview/rain-drops@5", "split": "test", "detected": true },
+  { "case": "speech+noise:interview/rain-drops@10", "split": "test", "detected": true },
+  { "case": "speech+noise:interview/rain-drops@20", "split": "test", "detected": true },
+  { "case": "speech+music continuous:en-male/sonatina@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/sonatina@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/sonatina@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/windswept@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/windswept@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/windswept@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/weasel@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/weasel@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/weasel@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/ghostdance@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/ghostdance@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/ghostdance@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-male/rollin@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/rollin@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/rollin@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/funkorama@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/funkorama@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/funkorama@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/nocadillac@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/nocadillac@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/nocadillac@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/dnb@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/dnb@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/dnb@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/hiphop@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/hiphop@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/hiphop@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/vibeace@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/vibeace@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/vibeace@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/rock@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/rock@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/rock@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/acidtechno@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/acidtechno@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:en-male/acidtechno@18", "split": "test2", "detected": false },
+  { "case": "speech+noise:en-male/rain-drops@5", "split": "test", "detected": true },
+  { "case": "speech+noise:en-male/rain-drops@10", "split": "test", "detected": true },
+  { "case": "speech+noise:en-male/rain-drops@20", "split": "test", "detected": true },
+  { "case": "speech+noise:en-male/clock@5", "split": "test2", "detected": true },
+  { "case": "speech+noise:en-male/clock@10", "split": "test2", "detected": true },
+  { "case": "speech+noise:en-male/clock@20", "split": "test2", "detected": true },
+  { "case": "speech+music continuous:en-female/sonatina@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/sonatina@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/sonatina@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/windswept@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/windswept@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/windswept@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/weasel@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/weasel@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/weasel@18", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/ghostdance@6", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/ghostdance@12", "split": "test", "detected": false },
+  { "case": "speech+music continuous:en-female/ghostdance@18", "split": "test", "detected": false },
+  { "case": "speech+noise:en-female/rain-drops@5", "split": "test", "detected": true },
+  { "case": "speech+noise:en-female/rain-drops@10", "split": "test", "detected": true },
+  { "case": "speech+noise:en-female/rain-drops@20", "split": "test", "detected": true },
+  { "case": "speech+music continuous:fr-fable-b/rollin@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/rollin@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/rollin@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/funkorama@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/funkorama@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/funkorama@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/nocadillac@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/nocadillac@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/nocadillac@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/dnb@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/dnb@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/dnb@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/hiphop@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/hiphop@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/hiphop@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/vibeace@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/vibeace@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/vibeace@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/rock@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/rock@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/rock@18", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/acidtechno@6", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/acidtechno@12", "split": "test2", "detected": false },
+  { "case": "speech+music continuous:fr-fable-b/acidtechno@18", "split": "test2", "detected": false },
+  { "case": "speech+noise:fr-fable-b/clock@5", "split": "test2", "detected": true },
+  { "case": "speech+noise:fr-fable-b/clock@10", "split": "test2", "detected": true },
+  { "case": "speech+noise:fr-fable-b/clock@20", "split": "test2", "detected": true }
+ ]
+}

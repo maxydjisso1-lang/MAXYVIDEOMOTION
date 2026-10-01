@@ -94,6 +94,788 @@
       },
       "license": "CC BY-SA 4.0 (derived from street-noise) + public domain speech",
       "attribution": "Derived from the street-noise and speech-fr fixtures"
+    },
+    {
+      "id": "music-carefree",
+      "output": "music-carefree.m4a",
+      "use": "Music: upbeat acoustic bed (ukulele, percussion), typical brand-video background",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - Carefree.ogg",
+        "variant": "original",
+        "sha1": "c35c07c3ea9d5c0f610c9f119e1041f9d2ab4244"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-stratosphere",
+      "output": "music-stratosphere.m4a",
+      "use": "Music: orchestral, computer generated",
+      "source": {
+        "kind": "commons",
+        "title": "File:Stratosphere, (MacLeod, Kevin).oga",
+        "variant": "original",
+        "sha1": "111b266cf4187465a0653bdedf2378aa6a82d8f1"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 3.0 US",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-mozart",
+      "output": "music-mozart.m4a",
+      "use": "Music: solo piano, live recording",
+      "source": {
+        "kind": "commons",
+        "title": "File:Mozart, Wolfgang Amadeus — Piano Sonata No. 10 in C major, K. 330 — 1st movement — Bui-Nguyen Trieu-Tuong — MusOpen Project.mp3",
+        "variant": "original",
+        "sha1": "7219388491147339182c22562ff4c1ba5b1557ac"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY-SA 3.0",
+      "attribution": "Bui-Nguyen Trieu-Tuong, Musopen project, via Wikimedia Commons"
+    },
+    {
+      "id": "music-sonatina",
+      "output": "music-sonatina.m4a",
+      "use": "Music: light classical",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - Sonatina.ogg",
+        "variant": "original",
+        "sha1": "c199a0ba4c34e3465d7cc0462a9c0ac2bf7bf851"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-windswept",
+      "output": "music-windswept.m4a",
+      "use": "Music: ambient / cinematic",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - Windswept.ogg",
+        "variant": "original",
+        "sha1": "60f89e11241a2a52cec75f0cd0bb9c31fb0c7346"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-weasel",
+      "output": "music-weasel.m4a",
+      "use": "Music: pizzicato strings, comedic, fast",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - Scheming Weasel (faster).wav",
+        "variant": "original",
+        "sha1": "95593b6585d1c04f380a927a3ae6c456fa86e51a"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 4.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-ghostdance",
+      "output": "music-ghostdance.m4a",
+      "use": "Music: sparse orchestral, 6/8",
+      "source": {
+        "kind": "commons",
+        "title": "File:Ghost Dance (MacLeod, Kevin) (ISRC USUAN1100573).oga",
+        "variant": "original",
+        "sha1": "837215914ad4f427ad073e2d2336cefe39eeedc6"
+      },
+      "segment": {
+        "start": 20,
+        "duration": 30
+      },
+      "license": "CC BY 3.0 US",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-electronic",
+      "output": "music-electronic.m4a",
+      "use": "Music: electronic",
+      "source": {
+        "kind": "commons",
+        "title": "File:07-automatization.opus",
+        "variant": "original",
+        "sha1": "5f8fe8576c11ca6aa396950c269ca1d0c6695cdf"
+      },
+      "segment": {
+        "start": 20,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Complex Numbers (Victor Argonov project), via Wikimedia Commons"
+    },
+    {
+      "id": "music-pop-vocals",
+      "output": "music-pop-vocals.m4a",
+      "use": "Music with lead vocals (pop/rap): hard case, singing over music",
+      "source": {
+        "kind": "commons",
+        "title": "File:DÉJATE LLEVAR Videoclip - iLeoVlogs y DalasReview.ogg",
+        "variant": "original",
+        "sha1": "25b18c7982eed30940379fe33a8d7fb9895b30f0"
+      },
+      "segment": {
+        "start": 40,
+        "duration": 30
+      },
+      "license": "CC BY-SA 3.0",
+      "attribution": "i Leo Vlogs, Dalas Review, Christian Villanueva, Kaos Producción, via Wikimedia Commons"
+    },
+    {
+      "id": "music-singing-only",
+      "output": "music-singing-only.m4a",
+      "use": "Singing voice alone (synthesised singer): hard case, music without instruments",
+      "source": {
+        "kind": "commons",
+        "title": "File:JamieP - Machine Love (Snippet, Vocals Only).ogg",
+        "variant": "original",
+        "sha1": "888cfe7cf55005f5bb319022418fa4966cceea79"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Jamie \"JamieP\" Paige, via Wikimedia Commons"
+    },
+    {
+      "id": "music-anthem-vocal",
+      "output": "music-anthem-vocal.m4a",
+      "use": "Choir with instruments: hard case, sung words",
+      "source": {
+        "kind": "commons",
+        "title": "File:Amar Sonar Bangla - official vocal music of the National anthem of Bangladesh.ogg",
+        "variant": "original",
+        "sha1": "7e250180991e9e100d628ca2987f9662502f76ee"
+      },
+      "segment": {
+        "start": 20,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "Press Information Department, Bangladesh, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-rain-window",
+      "output": "noise-rain-window.m4a",
+      "use": "Noise: rain on a window",
+      "source": {
+        "kind": "commons",
+        "title": "File:Rain against the window.ogg",
+        "variant": "original",
+        "sha1": "9d37ead83781913c95c026559a9ea3490c765d72"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "cori, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-restaurant",
+      "output": "noise-restaurant.m4a",
+      "use": "Noise: restaurant, crowd babble and cutlery",
+      "source": {
+        "kind": "commons",
+        "title": "File:Restaurant ambience.ogg",
+        "variant": "original",
+        "sha1": "34e0b1f53ebe79dc106cdc89accd89fbae0a9e8c"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "stephan, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-rain-drops",
+      "output": "noise-rain-drops.m4a",
+      "use": "Noise: rain drops",
+      "source": {
+        "kind": "commons",
+        "title": "File:Rain drops (Gravity Sound).wav",
+        "variant": "original",
+        "sha1": "b6d0276f1286fcfec8ad59c8213ea64bf5891f81"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 4.0",
+      "attribution": "Gravity Sound, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-pool-hall",
+      "output": "noise-pool-hall.m4a",
+      "use": "Noise: reverberant indoor pool hall, distant voices",
+      "source": {
+        "kind": "commons",
+        "title": "File:Indoor swimming pool hall.ogg",
+        "variant": "original",
+        "sha1": "324289a32d90c3aed063ff8ac5038af384a3f69e"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "stephan, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-avenue",
+      "output": "noise-avenue.m4a",
+      "use": "Noise: street to avenue traffic",
+      "source": {
+        "kind": "commons",
+        "title": "File:De una calle tranquila a una avenida.ogg",
+        "variant": "original",
+        "sha1": "b3f9261b7a8161781013b9aed633a95c89a5b3e1"
+      },
+      "segment": {
+        "start": 60,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "CaroRandolph, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-residential",
+      "output": "noise-residential.m4a",
+      "use": "Noise: residential street",
+      "source": {
+        "kind": "commons",
+        "title": "File:20220623 Noise pollution. Tomaszów Mazowiecki (60,000 population town), residential area.oga",
+        "variant": "original",
+        "sha1": "e8093c718f6942a50480ff83ea265ee9e0ab3579"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "WrS.tm.pl, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-classroom",
+      "output": "noise-classroom.m4a",
+      "use": "Noise: classroom / office room ambience",
+      "source": {
+        "kind": "commons",
+        "title": "File:Ambient classroom mono.ogg",
+        "variant": "original",
+        "sha1": "681577aa5ae0111b4e6985eed2db889492a0111a"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "rcrossley, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-ventilation",
+      "output": "noise-ventilation.m4a",
+      "use": "Noise: building ventilation (stationary)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Sistema de ventilación.ogg",
+        "variant": "original",
+        "sha1": "a2edf08c14452cbcae1d47f6d10e76a5fa4257f5"
+      },
+      "segment": {
+        "start": 5,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Marhesky, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-fan",
+      "output": "noise-fan.m4a",
+      "use": "Noise: small studio fan (stationary)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Ventilador de estudio.ogg",
+        "variant": "original",
+        "sha1": "075da39c5ba4d4ff64c9a18e926206985f54bc17"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 15
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Hippocampuz, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-ac-hum",
+      "output": "noise-ac-hum.m4a",
+      "use": "Noise: air-conditioner hum (tonal, stationary): must not read as music",
+      "source": {
+        "kind": "commons",
+        "title": "File:Air conditioner hum (Gravity Sound).wav",
+        "variant": "original",
+        "sha1": "fc60ea75940b09e95b7a3b7e1441c03af1e9ae09"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 14
+      },
+      "license": "CC BY 4.0",
+      "attribution": "Gravity Sound, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-ac-outdoor",
+      "output": "noise-ac-outdoor.m4a",
+      "use": "Noise: outdoor AC unit fan",
+      "source": {
+        "kind": "commons",
+        "title": "File:Resident air-conditioned out door unit.ogg",
+        "variant": "original",
+        "sha1": "2372e58c6f90e4e50bccf7df3133ebfa36ee6d34"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 29
+      },
+      "license": "CC0",
+      "attribution": "Ranch9613, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-rain-wind",
+      "output": "noise-rain-wind.m4a",
+      "use": "Noise: rain and wind",
+      "source": {
+        "kind": "commons",
+        "title": "File:Rain and wind in London 2026 08 28.wav",
+        "variant": "original",
+        "sha1": "3d83ac8d05fc41ca67a76d407f101f71951e5fd1"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Acabashi, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-wind-breath",
+      "output": "noise-wind-breath.m4a",
+      "use": "Noise: wind-like blowing",
+      "source": {
+        "kind": "commons",
+        "title": "File:Windy breath.ogg",
+        "variant": "original",
+        "sha1": "1369fef2a4533397705e69dee3abb1629d684676"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 20
+      },
+      "license": "Public domain",
+      "attribution": "stilgar, via Wikimedia Commons"
+    },
+    {
+      "id": "speech-en-male",
+      "output": "speech-en-male.m4a",
+      "use": "Speech: English male read speech",
+      "source": {
+        "kind": "commons",
+        "title": "File:LibriVox - Cool Air (Lovecraft).mp3",
+        "variant": "original",
+        "sha1": "da5bdef9a91fa0d8e8436d10bddbe947644d22b8"
+      },
+      "segment": {
+        "start": 60,
+        "duration": 30
+      },
+      "license": "Public domain (LibriVox)",
+      "attribution": "Douglas Wood (LibriVox), via Wikimedia Commons"
+    },
+    {
+      "id": "speech-en-female",
+      "output": "speech-en-female.m4a",
+      "use": "Speech: English female narrator (full-cast reading)",
+      "source": {
+        "kind": "commons",
+        "title": "File:LibriVox - Winnie-the-Pooh (1926) 01.mp3",
+        "variant": "original",
+        "sha1": "0f9a834a06b6ffd977d012c7e164fb6a5e4f0a90"
+      },
+      "segment": {
+        "start": 120,
+        "duration": 30
+      },
+      "license": "Public domain (LibriVox)",
+      "attribution": "Lynette Caulkins et al. (LibriVox), via Wikimedia Commons"
+    },
+    {
+      "id": "music-presenterator",
+      "output": "music-presenterator.m4a",
+      "use": "Music: corporate electronic beat (typical brand bed)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - 04 - Presenterator.ogg",
+        "variant": "original",
+        "sha1": "6969cb0a0ba26e7d7d438721c96a9c1f5883268c"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-cloudrap",
+      "output": "music-cloudrap.m4a",
+      "use": "Music: cloud-rap beat, 140 BPM (4 bars, looped by the benchmark)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Cloud rap beat.ogg",
+        "variant": "original",
+        "sha1": "fd181358d929552fc7ad33fd8723b852012af1e1"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 11
+      },
+      "license": "CC0",
+      "attribution": "Zanahary, via Wikimedia Commons"
+    },
+    {
+      "id": "music-militaire",
+      "output": "music-militaire.m4a",
+      "use": "Music: electronic snare line and bass",
+      "source": {
+        "kind": "commons",
+        "title": "File:Militaire Electronic (ISRC USUAN1100442).mp3",
+        "variant": "original",
+        "sha1": "da40d1b915405a23edea4ca492247b79f2ad353a"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-rollin",
+      "output": "music-rollin.m4a",
+      "use": "Music: electronic",
+      "source": {
+        "kind": "commons",
+        "title": "File:Rollin at 5 - electronic (ISRC USUAN1400028).mp3",
+        "variant": "original",
+        "sha1": "f0b5612b6081d05e9a69996fb31819673c87fb1c"
+      },
+      "segment": {
+        "start": 20,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-funkorama",
+      "output": "music-funkorama.m4a",
+      "use": "Music: funk with electronic drum kit",
+      "source": {
+        "kind": "commons",
+        "title": "File:Funkorama (MacLeod, Kevin) (ISRC USUAN1100474).oga",
+        "variant": "original",
+        "sha1": "77ca54876fc023e87327fbdf1f5ca12efb426f19"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC BY 3.0 US",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-nocadillac",
+      "output": "music-nocadillac.m4a",
+      "use": "Music: electronic / techno",
+      "source": {
+        "kind": "commons",
+        "title": "File:Loyalty Freak Music - No Cadillac.ogg",
+        "variant": "original",
+        "sha1": "09080319fb4db364fa82c49d2b71ddd3dea68a16"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC0",
+      "attribution": "Loyalty Freak Music, via Wikimedia Commons"
+    },
+    {
+      "id": "music-dnb",
+      "output": "music-dnb.m4a",
+      "use": "Music: drum and bass",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kirill-T - The Radiance Of The Black Sun (Drum & Bass).ogg",
+        "variant": "original",
+        "sha1": "1e6ee4e6cbe5c98091f0acb37a104fda71d89d21"
+      },
+      "segment": {
+        "start": 60,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kirill-T (Umusic Records), via Wikimedia Commons"
+    },
+    {
+      "id": "music-hiphop",
+      "output": "music-hiphop.m4a",
+      "use": "Music: slow synth hip-hop instrumental",
+      "source": {
+        "kind": "commons",
+        "title": "File:Friendly Evil Gangsta Synth Hip Hop.ogg",
+        "variant": "original",
+        "sha1": "4927325282f73c64855042153cfd15bb0ccab976"
+      },
+      "segment": {
+        "start": 30,
+        "duration": 30
+      },
+      "license": "CC0",
+      "attribution": "Mesostic, via Wikimedia Commons"
+    },
+    {
+      "id": "music-vibeace",
+      "output": "music-vibeace.m4a",
+      "use": "Music: funk / lounge",
+      "source": {
+        "kind": "commons",
+        "title": "File:Kevin MacLeod - Vibe Ace.ogg",
+        "variant": "original",
+        "sha1": "740ea04f7aa838947c56de0e960b1d4048e8c862"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-rock",
+      "output": "music-rock.m4a",
+      "use": "Music: rock (drums, guitars)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Rock on Chicago (ISRC USUAN1100093).mp3",
+        "variant": "original",
+        "sha1": "7b918735e555c34a5dde27d97ce8a2b66b6bd298"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 3.0",
+      "attribution": "Kevin MacLeod (incompetech.com), via Wikimedia Commons"
+    },
+    {
+      "id": "music-acidtechno",
+      "output": "music-acidtechno.m4a",
+      "use": "Music: acid techno, 124 BPM",
+      "source": {
+        "kind": "commons",
+        "title": "File:MJ-PIA - Solarity (Acid-Techno).ogg",
+        "variant": "original",
+        "sha1": "d5c8e8c04940d529c3660eb050fafd49536b1fbc"
+      },
+      "segment": {
+        "start": 40,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "MJ-PIA, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-birds",
+      "output": "noise-birds.m4a",
+      "use": "Noise: birdsong in a wood (tonal chirps: must not read as music)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Bourne woods Birdsong 2020-06-25 0745.mp3",
+        "variant": "original",
+        "sha1": "6a5c9784f9437af1ef96d7516e191133848f6b9e"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Robert EA Harvey, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-applause",
+      "output": "noise-applause.m4a",
+      "use": "Noise: applause and cheering",
+      "source": {
+        "kind": "commons",
+        "title": "File:Applause ii.ogg",
+        "variant": "original",
+        "sha1": "bbb0d85e4cb1fa6bcb7d0245f1aedfc160cee0ed"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 10
+      },
+      "license": "Public domain",
+      "attribution": "thore, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-clock",
+      "output": "noise-clock.m4a",
+      "use": "Noise: clock ticking (periodic: must not read as a beat)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Clock ticking.ogg",
+        "variant": "original",
+        "sha1": "d50a33931b3cb1217b41357b1601d3865c340ca5"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 18
+      },
+      "license": "Public domain",
+      "attribution": "natalie, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-sea",
+      "output": "noise-sea.m4a",
+      "use": "Noise: sea waves on a shore",
+      "source": {
+        "kind": "commons",
+        "title": "File:Sea waves.wav",
+        "variant": "original",
+        "sha1": "25aa8b978bacd6d88adf78f0c0da83e4c51cff66"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 20
+      },
+      "license": "CC BY-SA 4.0",
+      "attribution": "Ganesh Mohan T, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-typing",
+      "output": "noise-typing.m4a",
+      "use": "Noise: mechanical keyboard typing",
+      "source": {
+        "kind": "commons",
+        "title": "File:Typing - Model M 1986.ogg",
+        "variant": "original",
+        "sha1": "99004320c87964668f91cbb9e039c3513200289d"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 12
+      },
+      "license": "CC0",
+      "attribution": "Raymangold22, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-laptop-keys",
+      "output": "noise-laptop-keys.m4a",
+      "use": "Noise: laptop keyboard typing",
+      "source": {
+        "kind": "commons",
+        "title": "File:Laptop keyboard.ogg",
+        "variant": "original",
+        "sha1": "aeea0229ffdb2420ed02ba2a4e351d10b4c45c29"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "Public domain",
+      "attribution": "russiandoll, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-alarm-clock",
+      "output": "noise-alarm-clock.m4a",
+      "use": "Noise: alarm clock ticking (periodic)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Alarm clock ticking.ogg",
+        "variant": "original",
+        "sha1": "0b8f8f2e821d1b052d725f08bd5b0be539c09d44"
+      },
+      "segment": {
+        "start": 0,
+        "duration": 20
+      },
+      "license": "Public domain",
+      "attribution": "ezwa, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-wall-clock",
+      "output": "noise-wall-clock.m4a",
+      "use": "Noise: wall clock ticking (periodic)",
+      "source": {
+        "kind": "commons",
+        "title": "File:WWS Wallclockwithweightticking.ogg",
+        "variant": "original",
+        "sha1": "dc15cd851954e0be0560d77d2c649866b6172ae5"
+      },
+      "segment": {
+        "start": 10,
+        "duration": 30
+      },
+      "license": "CC BY 4.0",
+      "attribution": "Work With Sounds / Technical Museum of Slovenia, via Wikimedia Commons"
+    },
+    {
+      "id": "noise-train",
+      "output": "noise-train.m4a",
+      "use": "Noise: inside a moving train (rhythmic rail joints)",
+      "source": {
+        "kind": "commons",
+        "title": "File:Southeastern 465043 between New Cross and Lee, Jan 2022.ogg",
+        "variant": "original",
+        "sha1": "ee2b9d8c49cf95577c8b507c8051a19dff6b7c20"
+      },
+      "segment": {
+        "start": 120,
+        "duration": 30
+      },
+      "license": "CC0",
+      "attribution": "TheFrog001, via Wikimedia Commons"
     }
   ]
 }

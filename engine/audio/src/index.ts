@@ -5,6 +5,7 @@
 import { BveError, round3, SCHEMA_VERSION, type Analysis, type AudioDoc, type Preset, type Project } from "../../core/src/index.js";
 import { ffmpeg, hasFilter, type RunOptions } from "../../ffmpeg/src/index.js";
 import { denoiseProcessor, planDenoise, RNNOISE_MODEL, rnnoiseFilter, type DenoisePlan } from "./denoise.js";
+import { decodePcm, estimateSnrDb } from "./quality.js";
 
 type Processor = AudioDoc["dialogue"][number]["chain"][number];
 export type CleanupPreset = "off" | "gentle" | "standard" | "aggressive";
@@ -111,17 +112,27 @@ export async function normalizeLoudness(input: string, output: string, master: A
 /**
  * Project operation: cleanup level = explicit > creative plan > "standard"; loudness target from
  * the given target's preset (else the first target). Neural denoise is planned per source from
- * the MEASURED SNR and kept only if the voice-preservation guard accepts it.
+ * the MEASURED SNR and kept only if the voice-preservation guard accepts it — unless the analysis
+ * found music in the source: a denoiser removes a music bed as noise (chantier 4), so it is skipped.
  */
 export async function cleanProjectAudio(project: Project, opts: { preset?: CleanupPreset; targetId?: string } = {}): Promise<AudioDoc> {
   const plan = await project.readDocOptional("plan");
   const level = opts.preset ?? (plan?.audio?.cleanup as CleanupPreset | undefined) ?? "standard";
   const targetId = opts.targetId ?? project.manifest.targets[0]?.id;
   if (!targetId) throw new BveError("MISSING_INPUT", "No target: the loudness target comes from a delivery preset", { hint: "bve target add ig_reels --preset instagram/reels" });
-  const doc = buildAudioDoc(await project.readDoc("analysis"), await project.preset(targetId), level, await project.readDocOptional("audio"));
+  const analysis = await project.readDoc("analysis");
+  const doc = buildAudioDoc(analysis, await project.preset(targetId), level, await project.readDocOptional("audio"));
   if (level !== "off") {
     for (const d of doc.dialogue) {
       if (!project.source(d.sourceId).probe.hasAudio) continue;
+      const measured = analysis.sources.find((s) => s.sourceId === d.sourceId)?.audio;
+      if (measured?.musicDetected) {
+        const snr = estimateSnrDb(await decodePcm(project.sourceMediaPath(d.sourceId)));
+        const share = Math.round((measured.content?.shares.music ?? 0) * 100);
+        d.denoise = { estimatedSnrDb: snr, decision: "skip-music", summary: `music detected in ${share} % of the source: a denoiser would remove it as noise, so the source is left untouched (the SNR estimate counts the music as noise). If there is also unwanted noise, ask the user.` };
+        d.measurements = { ...d.measurements, before: { ...d.measurements?.before, speechToNoiseDb: snr } };
+        continue;
+      }
       let plan: DenoisePlan;
       try {
         plan = await planDenoise(project.sourceMediaPath(d.sourceId), { log: project.log });
@@ -129,11 +140,12 @@ export async function cleanProjectAudio(project: Project, opts: { preset?: Clean
         d.denoise = { estimatedSnrDb: 0, decision: "unavailable", summary: `neural denoise unavailable: ${(err as Error).message}` };
         continue;
       }
+      const unknown = measured?.content?.speechBackgroundUnknown ?? 0;
       d.denoise = {
         estimatedSnrDb: plan.estimatedSnrDb,
         decision: plan.decision,
         ...(plan.mix !== undefined ? { mix: plan.mix } : {}),
-        summary: plan.summary,
+        summary: unknown >= 0.5 ? `${plan.summary}. Note: the background under the voice could not be measured on ${Math.round(unknown * 100)} % of the source (continuous speech): a music bed there cannot be ruled out — check before trusting the denoise.` : plan.summary,
         candidates: plan.candidates.map(({ mix, accepted, reasons, voiceLevelDeltaDb, voiceSpectralChangeDb, snrBeforeDb, snrAfterDb }) => ({ mix, accepted, reasons, voiceLevelDeltaDb, voiceSpectralChangeDb, snrBeforeDb, snrAfterDb })),
       };
       const chosen = plan.candidates.find((c) => c.accepted);
@@ -147,3 +159,4 @@ export async function cleanProjectAudio(project: Project, opts: { preset?: Clean
 }
 export * from "./quality.js";
 export * from "./denoise.js";
+export * from "./content.js";

@@ -6,6 +6,8 @@ import {
   capabilities, detectBlack, detectSceneCuts, detectSilences, estimateNoiseFloor, extractFrame, ffmpeg, frameStats, measureLoudness, rmsLevel,
   type FrameStats,
 } from "../../ffmpeg/src/index.js";
+import { classifyWindows, contentFeatures, contentSegments, contentShares, decodePcm, sourceHasMusic, speechBackgroundUnknown } from "../../audio/src/index.js";
+import { runVad, sidecarAvailable } from "../../transcription/src/index.js";
 
 type SourceAnalysis = Analysis["sources"][number];
 type AudioAnalysis = SourceAnalysis["audio"];
@@ -55,11 +57,32 @@ function shotStats(frames: FrameStats[], range: Range, bitDepth: number) {
   };
 }
 
+/**
+ * Speech / music / noise / silence per segment (chantier 4, docs/measurements/audio-content.md).
+ * Speech comes from Silero VAD (Python sidecar); without it a weaker spectral-only fallback is used and named.
+ */
+async function analyzeContent(project: Project, input: string, duration: number): Promise<NonNullable<AudioAnalysis["content"]>> {
+  let speechProb: Float32Array | undefined;
+  if (sidecarAvailable()) {
+    try {
+      speechProb = (await runVad(input, { log: project.log })).probs;
+    } catch (err) {
+      project.log.warn({ err: (err as Error).message }, "speech detection failed: spectral-only content analysis");
+    }
+  }
+  const windows = contentFeatures(await decodePcm(input), speechProb ? { speechProb } : {});
+  const classes = classifyWindows(windows);
+  const segments = contentSegments(windows, classes.map((c) => c.label), duration);
+  return { detector: speechProb ? "silero-vad+spectral" : "spectral-only", segments, shares: contentShares(segments), speechBackgroundUnknown: speechBackgroundUnknown(classes) };
+}
+
 async function analyzeAudio(project: Project, input: string, duration: number): Promise<AudioAnalysis> {
-  const [silencesRaw, loud] = await Promise.all([
+  const [silencesRaw, loud, content] = await Promise.all([
     detectSilences(input, { noiseDb: -35, minSec: 0.3, log: project.log }),
     measureLoudness(input, { log: project.log }),
+    analyzeContent(project, input, duration),
   ]);
+  const musicDetected = sourceHasMusic(content.shares);
   const silences = silencesRaw.map((s) => ({ start: round3(s.start), end: round3(Math.min(s.end, duration)) }));
   // A real silence gives the exact floor; without one (continuous speech, street ambience) the
   // 10th percentile of 100 ms RMS windows does. "No silence" must never read as "clean".
@@ -68,8 +91,9 @@ async function analyzeAudio(project: Project, input: string, duration: number): 
     ? await rmsLevel(input, { start: longest.start + 0.05, end: longest.end - 0.05 }, { log: project.log })
     : (await estimateNoiseFloor(input, { log: project.log })).noiseFloorDb;
   // Noisy = an audible floor AND a poor speech-to-noise ratio (a quiet room tone under loud speech is fine).
+  // A music bed is not a noise floor: no "broadband" verdict when the floor is music.
   const snr = loud.integratedLufs - noiseFloorDb;
-  const noiseProfile: NonNullable<AudioAnalysis["noiseProfile"]> = noiseFloorDb > -62 && snr < 30 ? ["broadband"] : [];
+  const noiseProfile: NonNullable<AudioAnalysis["noiseProfile"]> = !musicDetected && noiseFloorDb > -62 && snr < 30 ? ["broadband"] : [];
   const speech = invertRanges(silences, duration).map((r) => ({ start: round3(r.start), end: round3(r.end) }));
   return {
     integratedLufs: round3(loud.integratedLufs),
@@ -80,6 +104,8 @@ async function analyzeAudio(project: Project, input: string, duration: number): 
     silences,
     speech,
     noiseProfile,
+    musicDetected,
+    content,
     qualityScore: round3(clamp01((snr - 10) / 40)),
   };
 }
@@ -172,10 +198,14 @@ export function summarizeAnalysis(analysis: Analysis) {
     problems: [
       ...s.shots.filter((sh) => sh.exposure !== "ok").map((sh) => `shot ${sh.id} exposure ${sh.exposure}`),
       ...(s.audio.clipping ? ["audio clipping"] : []),
-      ...((s.audio.noiseFloorDb ?? -90) > -62 ? [`audible noise floor ${s.audio.noiseFloorDb} dBFS`] : []),
+      ...(s.audio.musicDetected
+        ? [`music in ${Math.round((s.audio.content?.shares.music ?? 0) * 100)} % of the source: a music bed, not noise (no denoise)`]
+        : (s.audio.noiseFloorDb ?? -90) > -62 ? [`audible noise floor ${s.audio.noiseFloorDb} dBFS`] : []),
+      ...((s.audio.content?.speechBackgroundUnknown ?? 0) >= 0.5 && !s.audio.musicDetected ? [`background under the voice not measurable on ${Math.round(s.audio.content!.speechBackgroundUnknown * 100)} % (continuous speech): a music bed there cannot be ruled out`] : []),
+      ...(s.audio.content?.detector === "spectral-only" ? ["speech detection degraded (Python sidecar missing): run `uv sync --project engine/python`"] : []),
       ...(s.blackSegments ?? []).map((b) => `black ${b.start}-${b.end}`),
     ],
-    audio: { lufs: s.audio.integratedLufs, truePeak: s.audio.truePeakDb, noiseFloorDb: s.audio.noiseFloorDb, silences: s.audio.silences?.length, speechSec: round3((s.audio.speech ?? []).reduce((a, r) => a + r.end - r.start, 0)) },
+    audio: { lufs: s.audio.integratedLufs, truePeak: s.audio.truePeakDb, noiseFloorDb: s.audio.noiseFloorDb, silences: s.audio.silences?.length, speechSec: round3((s.audio.speech ?? []).reduce((a, r) => a + r.end - r.start, 0)), content: s.audio.content?.shares },
     contactSheets: s.contactSheets,
   }));
 }
