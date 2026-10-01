@@ -1,0 +1,11 @@
+{
+  "name": "maxyvideomotion",
+  "owner": { "name": "maxydjisso1-lang" },
+  "plugins": [
+    {
+      "name": "brand-video-engine",
+      "source": "./",
+      "description": "AI-native, brand-aware video post-production for Claude: Brand DNA -> style tokens -> deterministic FFmpeg/Remotion rendering, with QC-gated export."
+    }
+  ]
+}
