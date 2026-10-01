@@ -1,0 +1,541 @@
+{
+  "date": "2026-10-01T11:52:55.301Z",
+  "machine": {
+    "cpus": 8,
+    "cpuModel": "Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz",
+    "ramGb": 8,
+    "platform": "win32",
+    "ffmpeg": "9.0.2-full_build-www.gyan.dev",
+    "node": "v25.2.1"
+  },
+  "baseline": {
+    "wallSec": 200.568,
+    "render": {
+      "level": 30,
+      "time": "2026-10-01T11:56:25.982Z",
+      "profile": "render",
+      "targetId": "reels",
+      "draft": false,
+      "renderer": "remotion",
+      "frames": 592,
+      "durationSec": 19.733,
+      "cacheHits": [],
+      "stagesMs": {
+        "base": 68248,
+        "graphics": 88177,
+        "audio": 3511,
+        "final-encode": 37543
+      },
+      "totalMs": 200508,
+      "msg": "render timings"
+    },
+    "remotion": {
+      "level": 30,
+      "time": "2026-10-01T11:55:44.590Z",
+      "profile": "remotion",
+      "frames": 592,
+      "concurrency": 4,
+      "bundleMs": 21,
+      "assetsMs": 14,
+      "selectCompositionMs": 4921,
+      "renderFramesMs": 35751,
+      "overlayEncodeMs": 47204,
+      "frameMs": {
+        "mean": 232,
+        "p50": 218.4,
+        "p95": 308.8,
+        "max": 861.4
+      },
+      "slowestFrames": [
+        {
+          "frame": 1,
+          "ms": 861.4
+        },
+        {
+          "frame": 3,
+          "ms": 860.1
+        },
+        {
+          "frame": 2,
+          "ms": 859.2
+        },
+        {
+          "frame": 0,
+          "ms": 858
+        },
+        {
+          "frame": 451,
+          "ms": 419.9
+        },
+        {
+          "frame": 108,
+          "ms": 383.1
+        },
+        {
+          "frame": 587,
+          "ms": 370.9
+        },
+        {
+          "frame": 585,
+          "ms": 366.5
+        },
+        {
+          "frame": 588,
+          "ms": 365.8
+        },
+        {
+          "frame": 586,
+          "ms": 363.6
+        }
+      ],
+      "msg": "remotion timings"
+    },
+    "seekMs": {
+      "mean": 7.1,
+      "p50": 3,
+      "p95": 21,
+      "max": 135
+    },
+    "seekSamples": 1027,
+    "gl": "\u001b[40m openBrowser() \u001b[49m \u001b[90mOpening browser: gl = undefined, executable = D:\\brand-video-engine\\node_modules\\.remotion\\chrome-headless-shell\\win64\\chrome-headless-shell-win64\\chrome-headless-shell.exe, enableMultiProcessOnLinux = true\u001b[39m",
+    "perStage": {
+      "base": {
+        "ms": 68248,
+        "cpu": {
+          "mean": 98.5,
+          "p50": 100,
+          "p95": 100,
+          "max": 100
+        },
+        "gpu": {
+          "mean": 1.1,
+          "p50": 0.9,
+          "p95": 2.1,
+          "max": 2.8
+        },
+        "peakMemMb": {
+          "chrome": 1657,
+          "ffmpeg": 562,
+          "node": 498
+        }
+      },
+      "graphics": {
+        "ms": 88177,
+        "cpu": {
+          "mean": 73.4,
+          "p50": 71,
+          "p95": 100,
+          "max": 100
+        },
+        "gpu": {
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 1.5
+        },
+        "peakMemMb": {
+          "chrome": 2207,
+          "node": 132,
+          "ffmpeg": 893
+        }
+      },
+      "audio": {
+        "ms": 3511,
+        "cpu": {
+          "mean": 100,
+          "p50": 100,
+          "p95": 100,
+          "max": 100
+        },
+        "gpu": {
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0
+        },
+        "peakMemMb": {
+          "chrome": 1329,
+          "ffmpeg": 855,
+          "node": 127
+        }
+      },
+      "final-encode": {
+        "ms": 37543,
+        "cpu": {
+          "mean": 92.7,
+          "p50": 98,
+          "p95": 100,
+          "max": 100
+        },
+        "gpu": {
+          "mean": 0,
+          "p50": 0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "peakMemMb": {
+          "chrome": 1325,
+          "ffmpeg": 756,
+          "node": 127
+        }
+      }
+    },
+    "cpuWhole": {
+      "mean": 85.6,
+      "p50": 100,
+      "p95": 100,
+      "max": 100
+    },
+    "gpuWhole": {
+      "mean": 0.3,
+      "p50": 0,
+      "p95": 1.6,
+      "max": 2.8
+    }
+  },
+  "attribution": {
+    "Title": {
+      "frames": 4,
+      "mean": 859.7,
+      "p50": 860.1,
+      "p95": 861.4,
+      "max": 861.4
+    },
+    "Title+captions": {
+      "frames": 86,
+      "mean": 243.6,
+      "p50": 240.6,
+      "p95": 322.2,
+      "max": 354.6
+    },
+    "captions": {
+      "frames": 229,
+      "mean": 216.8,
+      "p50": 209.3,
+      "p95": 283,
+      "max": 383.1
+    },
+    "Transition+captions": {
+      "frames": 66,
+      "mean": 249.3,
+      "p50": 247.8,
+      "p95": 308.9,
+      "max": 361.2
+    },
+    "Transition": {
+      "frames": 11,
+      "mean": 229.1,
+      "p50": 215,
+      "p95": 305.7,
+      "max": 305.7
+    },
+    "nothing (watermark only)": {
+      "frames": 28,
+      "mean": 187.7,
+      "p50": 192.3,
+      "p95": 230,
+      "max": 231.2
+    },
+    "CTA+captions": {
+      "frames": 90,
+      "mean": 231.7,
+      "p50": 226.7,
+      "p95": 275.1,
+      "max": 419.9
+    },
+    "BrandOutro": {
+      "frames": 78,
+      "mean": 233.4,
+      "p50": 222.3,
+      "p95": 363.6,
+      "max": 370.9
+    }
+  },
+  "layoutJs": {
+    "frames": 592,
+    "totalMs": 67,
+    "perFrameMs": 0.113
+  },
+  "isolation": [
+    {
+      "label": "empty",
+      "wallMs": 73662,
+      "renderFramesMs": 28070,
+      "overlayEncodeMs": 41183,
+      "frameMs": {
+        "mean": 181.5,
+        "p50": 175,
+        "p95": 244.9,
+        "max": 391.1
+      },
+      "concurrency": 4
+    },
+    {
+      "label": "captions-only",
+      "wallMs": 71127,
+      "renderFramesMs": 29011,
+      "overlayEncodeMs": 41006,
+      "frameMs": {
+        "mean": 188.5,
+        "p50": 184.3,
+        "p95": 238.9,
+        "max": 433.8
+      },
+      "concurrency": 4
+    },
+    {
+      "label": "motion-only",
+      "wallMs": 73749,
+      "renderFramesMs": 28926,
+      "overlayEncodeMs": 43732,
+      "frameMs": {
+        "mean": 188.9,
+        "p50": 177.5,
+        "p95": 279,
+        "max": 487.6
+      },
+      "concurrency": 4
+    },
+    {
+      "label": "full",
+      "wallMs": 73487,
+      "renderFramesMs": 31796,
+      "overlayEncodeMs": 40477,
+      "frameMs": {
+        "mean": 206.5,
+        "p50": 201.6,
+        "p95": 283.9,
+        "max": 459.3
+      },
+      "concurrency": 4
+    }
+  ],
+  "concurrency": [
+    {
+      "label": "full-c1",
+      "wallMs": 99754,
+      "renderFramesMs": 56085,
+      "overlayEncodeMs": 42274,
+      "frameMs": {
+        "mean": 93.1,
+        "p50": 88.8,
+        "p95": 122.5,
+        "max": 161.3
+      },
+      "concurrency": 1
+    },
+    {
+      "label": "full-c2",
+      "wallMs": 80139,
+      "renderFramesMs": 38565,
+      "overlayEncodeMs": 40505,
+      "frameMs": {
+        "mean": 127,
+        "p50": 124.6,
+        "p95": 172.2,
+        "max": 244.3
+      },
+      "concurrency": 2
+    },
+    {
+      "label": "full-c4",
+      "wallMs": 73754,
+      "renderFramesMs": 32393,
+      "overlayEncodeMs": 40333,
+      "frameMs": {
+        "mean": 211.5,
+        "p50": 203.2,
+        "p95": 293.3,
+        "max": 572.6
+      },
+      "concurrency": 4
+    },
+    {
+      "label": "full-c8",
+      "wallMs": 70213,
+      "renderFramesMs": 29306,
+      "overlayEncodeMs": 39761,
+      "frameMs": {
+        "mean": 370.3,
+        "p50": 366,
+        "p95": 505.2,
+        "max": 743.8
+      },
+      "concurrency": 8
+    }
+  ],
+  "screenshotFormat": [
+    {
+      "format": "png",
+      "frames": 592,
+      "wallMs": 30500,
+      "avgFrameKb": 109
+    },
+    {
+      "format": "jpeg",
+      "frames": 592,
+      "wallMs": 27393,
+      "avgFrameKb": 29
+    }
+  ],
+  "draft": {
+    "wallSec": 55.143,
+    "render": {
+      "level": 30,
+      "time": "2026-10-01T12:08:41.630Z",
+      "profile": "render",
+      "targetId": "reels",
+      "draft": true,
+      "renderer": "remotion",
+      "frames": 592,
+      "durationSec": 19.733,
+      "cacheHits": [],
+      "stagesMs": {
+        "base": 26292,
+        "graphics": 22594,
+        "audio": 2872,
+        "final-encode": 3333
+      },
+      "totalMs": 55124,
+      "msg": "render timings"
+    },
+    "remotion": {
+      "level": 30,
+      "time": "2026-10-01T12:08:35.181Z",
+      "profile": "remotion",
+      "frames": 592,
+      "concurrency": 4,
+      "bundleMs": 0,
+      "assetsMs": 8,
+      "selectCompositionMs": 796,
+      "renderFramesMs": 17237,
+      "overlayEncodeMs": 4323,
+      "frameMs": {
+        "mean": 109.1,
+        "p50": 106.8,
+        "p95": 152.2,
+        "max": 276.8
+      },
+      "slowestFrames": [
+        {
+          "frame": 0,
+          "ms": 276.8
+        },
+        {
+          "frame": 2,
+          "ms": 275.8
+        },
+        {
+          "frame": 3,
+          "ms": 274.9
+        },
+        {
+          "frame": 1,
+          "ms": 263.5
+        },
+        {
+          "frame": 479,
+          "ms": 177.2
+        },
+        {
+          "frame": 281,
+          "ms": 176.2
+        },
+        {
+          "frame": 283,
+          "ms": 175.9
+        },
+        {
+          "frame": 487,
+          "ms": 175.2
+        },
+        {
+          "frame": 489,
+          "ms": 174.6
+        },
+        {
+          "frame": 282,
+          "ms": 174.5
+        }
+      ],
+      "msg": "remotion timings"
+    }
+  },
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 19.733333
+  },
+  "baselineRuns": [
+    {
+      "run": "1 (quick, sampler with broken CPU counter)",
+      "wallSec": 179.8,
+      "stagesMs": {
+        "base": 51169,
+        "graphics": 88087,
+        "audio": 3364,
+        "final-encode": 35294
+      },
+      "remotion": {
+        "selectCompositionMs": 9028,
+        "renderFramesMs": 35098,
+        "overlayEncodeMs": 43733
+      }
+    },
+    {
+      "run": "2 (full profile)",
+      "wallSec": 200.568,
+      "stagesMs": {
+        "base": 68248,
+        "graphics": 88177,
+        "audio": 3511,
+        "final-encode": 37543
+      },
+      "remotion": {
+        "selectCompositionMs": 4921,
+        "renderFramesMs": 35751,
+        "overlayEncodeMs": 47204
+      }
+    },
+    {
+      "run": "3 (quick, seek capture)",
+      "wallSec": 219.846,
+      "stagesMs": {
+        "base": 61053,
+        "graphics": 108284,
+        "audio": 3812,
+        "final-encode": 44061
+      },
+      "remotion": {
+        "selectCompositionMs": 9198,
+        "renderFramesMs": 45302,
+        "overlayEncodeMs": 53529
+      }
+    }
+  ],
+  "ffmpegPasses": {
+    "date": "2026-10-01T12:19:56.906Z",
+    "project": ".\\tests\\.tmp\\profile\\reference",
+    "results": [
+      {
+        "pass": "base plate",
+        "fullMs": 54729,
+        "decodeFilterMs": 30663,
+        "encodeMs": 24066,
+        "encoder": "libx264",
+        "preset": "medium",
+        "crf": "14"
+      },
+      {
+        "pass": "final encode",
+        "fullMs": 39976,
+        "decodeFilterMs": 3705,
+        "encodeMs": 36271,
+        "encoder": "libx264",
+        "preset": "medium",
+        "crf": "18"
+      }
+    ]
+  }
+}

@@ -18,6 +18,17 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
   if (bad.length) {
     throw new BveError("SOURCE_MODIFIED", `Source(s) changed or missing since ingest: ${bad.map((b) => `${b.id} (${b.reason})`).join(", ")}`, { hint: "Restore the original file, or re-ingest and re-analyse." });
   }
+  // Profiling (chantier 3): wall time of each stage, logged to logs/bve.jsonl. No behaviour change.
+  const t0 = performance.now();
+  const stageTimes: Record<string, number> = {};
+  const timed = async <T>(stage: string, fn: () => Promise<T>): Promise<T> => {
+    const start = performance.now();
+    try {
+      return await fn();
+    } finally {
+      stageTimes[stage] = Math.round(performance.now() - start);
+    }
+  };
   const tokens = await ensureFreshTokens(project, preset.fps);
   const [timeline, color, analysis, audio, captions, motion] = await Promise.all([
     project.readDoc("timeline"),
@@ -47,7 +58,7 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
   // Pass A — base plate
   const reframe = timeline.reframe?.[targetId] ?? { mode: "center" };
   const baseKey = stageKey("base", { clips: timeline.tracks.video, reframe, color, shots: analysis?.sources.map((s) => s.shots.map((x) => [x.id, x.start, x.end])), grade: tokens.grade, lut: tokens.grade.lut ? assetHashes[tokens.grade.lut] : null, g, draft, sourceHashes });
-  const base = await cached(project, `renders/cache/base-${baseKey}.mp4`, (tmp) => renderBasePlate(project, { timeline, color, analysis, tokens, preset, targetId, draft }, tmp));
+  const base = await timed("base", () => cached(project, `renders/cache/base-${baseKey}.mp4`, (tmp) => renderBasePlate(project, { timeline, color, analysis, tokens, preset, targetId, draft }, tmp)));
   if (base.hit) hits.push("base");
 
   // Pass B — graphics (motion + captions), renderer chosen by capability
@@ -72,7 +83,7 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
     }
     graphicsKey = stageKey("graphics", { baseKey, renderer, tokens, motion, captions, safe: preset.safeZone, g, draft, assetHashes });
     const key = graphicsKey;
-    const gfx = await cached(project, `renders/cache/gfx-${key}.mp4`, (tmp) =>
+    const gfx = await timed("graphics", () => cached(project, `renders/cache/gfx-${key}.mp4`, (tmp) =>
       renderer === "remotion"
         ? renderGraphicsRemotion(project, { basePlate: base.path, key, tokens, motion, captions, preset, geometry: g, durationSec, draft }, tmp)
         : renderGraphicsAss(project, { basePlate: base.path, tokens, motion, captions, preset, geometry: g, durationSec, draft }, tmp).then(async (r) => {
@@ -80,7 +91,7 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
             // Keep libass' font choice with the cached graphics so cache hits stay verifiable.
             await writeJsonAtomic(project.writable(`renders/cache/gfx-${key}.fonts.json`), r);
           }),
-    );
+    ));
     if (gfx.hit && renderer === "ass" && existsSync(project.abs(`renders/cache/gfx-${key}.fonts.json`))) {
       assFonts = await readJson<AssFontReport>(project.abs(`renders/cache/gfx-${key}.fonts.json`));
     }
@@ -90,7 +101,7 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
 
   // Pass C — audio mix
   const mixKey = stageKey("mix", { clips: timeline.tracks.video, audio, loud: preset.loudness, sr: preset.audio.sampleRate, sourceHashes });
-  const mix = await cached(project, `renders/cache/mix-${mixKey}.wav`, (tmp) => renderAudioMix(project, { timeline, audio, preset }, tmp));
+  const mix = await timed("audio", () => cached(project, `renders/cache/mix-${mixKey}.wav`, (tmp) => renderAudioMix(project, { timeline, audio, preset }, tmp)));
   if (mix.hit) hits.push("mix");
 
   // Final encode to the delivery preset
@@ -105,10 +116,10 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
   const aud = preset.audio.codec === "aac" ? ["-c:a", "aac", "-b:a", `${preset.audio.bitrateKbps ?? 256}k`] : ["-c:a", preset.audio.codec];
   // Browser-rendered frames arrive full range (yuvj); deliverables must be broadcast/TV range BT.709.
   const levels = ["-vf", `scale=out_range=tv:out_color_matrix=bt709,format=${preset.video.pixFmt}`, "-color_range", "tv"];
-  await ffmpeg(
+  await timed("final-encode", () => ffmpeg(
     ["-i", picture, "-i", mix.path, "-map", "0:v:0", "-map", "1:a:0", ...levels, ...video, "-r", String(g.fps), ...aud, "-ar", String(preset.audio.sampleRate), "-t", durationSec.toFixed(3), ...(ext === "mp4" ? ["-movflags", "+faststart"] : []), out],
     { log: project.log },
-  );
+  ));
 
   // Fonts actually used. Remotion loads only project files and fails the render if one cannot load;
   // libass reports its own choice, so a silent substitution is detected and downgraded here.
@@ -139,5 +150,6 @@ export async function renderTarget(project: Project, targetId: string, opts: { d
     createdAt: new Date().toISOString(),
   };
   await writeRenderRecord(project, record);
+  project.log.info({ profile: "render", targetId, draft, renderer, frames: totalFrames, durationSec, cacheHits: hits, stagesMs: stageTimes, totalMs: Math.round(performance.now() - t0) }, "render timings");
   return record;
 }

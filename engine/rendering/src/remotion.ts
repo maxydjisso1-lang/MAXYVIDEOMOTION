@@ -79,7 +79,17 @@ export async function renderGraphicsRemotion(
   out: string,
 ): Promise<void> {
   const { renderFrames, selectComposition } = await import("@remotion/renderer");
+  // Profiling (chantier 3): sub-stage wall times + Remotion's own per-frame times. No behaviour change.
+  const prof: Record<string, number> = {};
+  let mark = performance.now();
+  const lap = (name: string) => {
+    const now = performance.now();
+    prof[name] = Math.round(now - mark);
+    mark = now;
+  };
+  const remotionLog = (process.env.BVE_REMOTION_LOG as "error" | "info" | "verbose" | undefined) ?? "error";
   const serveUrl = await getBundle(project.log);
+  lap("bundleMs");
   const pub = join(serveUrl, "public", args.key);
   let logoSrc: string | undefined;
   const logo = args.tokens.logo?.primary;
@@ -113,10 +123,13 @@ export async function renderGraphicsRemotion(
     ...(logoSrc ? { logoSrc } : {}),
     fontFaces,
   };
+  lap("assetsMs");
+  const frameMs: number[] = new Array(durationInFrames).fill(0);
   try {
     await withTempDir(async (dir) => {
       const framesDir = join(dir, "frames");
-      const composition = await selectComposition({ serveUrl, id: "BrandVideo", inputProps, logLevel: "error" });
+      const composition = await selectComposition({ serveUrl, id: "BrandVideo", inputProps, logLevel: remotionLog });
+      lap("selectCompositionMs");
       await renderFrames({
         composition,
         serveUrl,
@@ -125,10 +138,14 @@ export async function renderGraphicsRemotion(
         imageFormat: "png",
         imageSequencePattern: "g-[frame].[ext]",
         concurrency: Number(process.env.REMOTION_CONCURRENCY) || Math.max(1, Math.floor(cpus().length / 2)),
-        logLevel: "error",
+        logLevel: remotionLog,
         onStart: () => undefined,
-        onFrameUpdate: (done) => project.log.debug({ frame: done, of: durationInFrames }, "remotion frames"),
+        // Remotion reports each frame's wall time (seek + screenshot + write).
+        onFrameUpdate: (_done, frame, ms) => {
+          frameMs[frame] = Math.round(ms * 10) / 10;
+        },
       });
+      lap("renderFramesMs");
       const files = (await readdir(framesDir)).filter((n) => /^g-\d+\.png$/.test(n)).sort();
       if (files.length !== durationInFrames) throw new Error(`expected ${durationInFrames} graphics frames, got ${files.length}`);
       const digits = /^g-(\d+)\.png$/.exec(files[0]!)![1]!;
@@ -142,6 +159,21 @@ export async function renderGraphicsRemotion(
         ],
         { log: project.log },
       );
+      lap("overlayEncodeMs");
+      const sorted = [...frameMs].sort((a, b) => a - b);
+      const q = (p: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))] ?? 0;
+      project.log.info(
+        {
+          profile: "remotion",
+          frames: durationInFrames,
+          concurrency: Number(process.env.REMOTION_CONCURRENCY) || Math.max(1, Math.floor(cpus().length / 2)),
+          ...prof,
+          frameMs: { mean: Math.round((frameMs.reduce((a, b) => a + b, 0) / Math.max(1, frameMs.length)) * 10) / 10, p50: q(0.5), p95: q(0.95), max: sorted.at(-1) ?? 0 },
+          slowestFrames: frameMs.map((ms, frame) => ({ frame, ms })).sort((a, b) => b.ms - a.ms).slice(0, 10),
+        },
+        "remotion timings",
+      );
+      project.log.debug({ profile: "remotion-frames", frameMs }, "remotion per-frame times");
     }, project.abs(".cache/tmp"));
   } catch (err) {
     throw new BveError("RENDER_FAILED", `Remotion render failed: ${err instanceof Error ? err.message : String(err)}`, { cause: err, hint: "Retry with `--renderer ass` to use the FFmpeg/libass fallback." });
@@ -149,3 +181,6 @@ export async function renderGraphicsRemotion(
     await rm(pub, { recursive: true, force: true });
   }
 }
+
+/** The cached Remotion bundle (exposed for profiling diagnostics, scripts/profile-render.ts). */
+export const remotionBundle = (log: Project["log"]) => getBundle(log);

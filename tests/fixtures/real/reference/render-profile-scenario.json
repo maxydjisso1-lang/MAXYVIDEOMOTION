@@ -1,0 +1,27 @@
+{
+  "description": "Reference scenario for render profiling (chantier 3). Keep it unchanged so future measurements stay comparable.",
+  "fixture": "talking-head.mp4",
+  "transcript": "talking-head.transcript.json",
+  "transcriptNote": "faster-whisper small output for the talking-head fixture (CC BY-SA 4.0, Simbanematick via Wikimedia Commons); derived text under the same license.",
+  "brandKit": "examples/brands/maison-lune",
+  "target": { "id": "reels", "preset": "instagram/reels" },
+  "renderer": "remotion",
+  "plan": {
+    "schemaVersion": "1.0",
+    "objective": "Render profiling reference: vertical brand portrait",
+    "targetDurationSec": 20,
+    "durationToleranceSec": 5,
+    "narrative": { "structure": "story-arc" },
+    "hook": { "start": 0, "end": 5, "technique": "quote", "onScreenText": "Entrepreneure", "sourceRefs": [{ "sourceId": "src_talking_head", "start": 11.64, "end": 16.72 }] },
+    "sections": [
+      { "id": "intro", "role": "context", "sourceRefs": [{ "sourceId": "src_talking_head", "start": 0, "end": 4.14 }] },
+      { "id": "roots", "role": "testimonial", "sourceRefs": [{ "sourceId": "src_talking_head", "start": 17.58, "end": 27.48 }] }
+    ],
+    "pacing": { "style": "medium", "punchIns": true, "removeSilences": { "enabled": true } },
+    "captions": { "enabled": true },
+    "motion": { "density": "low", "outro": "BrandOutro" },
+    "logo": { "watermark": true },
+    "cta": { "text": "Découvrir la marque", "durationSec": 3 },
+    "audio": { "cleanup": "gentle" }
+  }
+}

@@ -73,7 +73,7 @@ All P0/P1 audit findings are fixed, and the result is covered by tests. See [AUD
 
 Every item follows **Schema → Core → Engine → CLI → Skill → Tests** and extends the real-footage suite.
 
-Performance to address in Phase 2: a Remotion render of 21 s at 1080×1920 takes ≈3 min on this machine. Profile the PNG sequence stage.
+Performance (chantier 3, profiled, not yet optimised): [measurements/render-profile.md](measurements/render-profile.md). On the reference scenario (19.7 s, 592 frames) the median is 200.6 s. About half of it is three software H.264 encodes in series. Chrome frame capture takes 18 %, the `colorbalance` filter about 10 %, and the animation content itself is minor.
 
 ## Dependencies
 
